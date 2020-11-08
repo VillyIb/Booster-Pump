@@ -1,6 +1,4 @@
-﻿using BoosterPumpLibrary.SerialConverter;
-
-namespace BoosterPumpLibrary.SerialConverter
+﻿namespace NCD_API_SerialConverter.Commands
 {
     public class NCP_API_Hard_Reboot_Command : NCP_API_Stop_Command
     {

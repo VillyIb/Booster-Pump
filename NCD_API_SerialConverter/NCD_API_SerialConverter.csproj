@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="SerialConverter\" />
+    <ProjectReference Include="..\BoosterPumpLibrary\BoosterPumpLibrary.csproj" />
   </ItemGroup>
 
 </Project>

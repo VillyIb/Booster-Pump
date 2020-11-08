@@ -4,17 +4,19 @@ using NSubstitute;
 using System.Collections.Generic;
 using Xunit;
 using BoosterPumpLibrary.Modules;
+using System;
+using BoosterPumpLibrary.Commands;
 
 namespace BoosterPumpTest
 {
     public class AS1115_ModuleShould
     {
         private readonly AS1115_Module sut;
-        private readonly INCD_API_SerialPort fakeSerialPort;
+        private readonly IModuleCommunication fakeSerialPort;
 
         public AS1115_ModuleShould()
         {
-            fakeSerialPort = Substitute.For<INCD_API_SerialPort>();
+            fakeSerialPort = Substitute.For<IModuleCommunication>();
             sut = new AS1115_Module(fakeSerialPort);
         }
 
@@ -24,106 +26,202 @@ namespace BoosterPumpTest
             sut.Init();
             sut.Send();
 
-            var byteSequence1 = new byte[] { 0xAA, 0x04, 0xBE, 0x00, 0x0C, 0x01, 0x79 };
-            var byteSequence2 = new byte[] { 0xAA, 0x04, 0xBE, 0x00, 0x0E, 0x00, 0x7A };
-
-            // register:                                                     09    0A    0B    
-            var byteSequence3 = new byte[] { 0xAA, 0x06, 0xBE, 0x00, 0x09, 0x07, 0x0F, 0x02, 0x8F };
-
-            fakeSerialPort.Received().Write(Arg.Is<IEnumerable<byte>>(s => s.SequenceEqual(byteSequence1)));
-            fakeSerialPort.Received().Write(Arg.Is<IEnumerable<byte>>(s => s.SequenceEqual(byteSequence2)));
-            fakeSerialPort.Received().Write(Arg.Is<IEnumerable<byte>>(s => s.SequenceEqual(byteSequence3)));
+            fakeSerialPort.Received(3).Execute(Arg.Any<WriteCommand>());
 
             Received.InOrder(() =>
             {
-                fakeSerialPort.Write(Arg.Is<IEnumerable<byte>>(s => s.SequenceEqual(byteSequence1)));
-                fakeSerialPort.Write(Arg.Is<IEnumerable<byte>>(s => s.SequenceEqual(byteSequence2)));
-                fakeSerialPort.Write(Arg.Is<IEnumerable<byte>>(s => s.SequenceEqual(byteSequence3)));
+                fakeSerialPort.Received().Execute(Arg.Is<WriteCommand>(c => c.I2C_DataAsHex == "00 0C 01 "));
+                fakeSerialPort.Received().Execute(Arg.Is<WriteCommand>(c => c.I2C_DataAsHex == "00 0E 00 "));
+                //                                                                                    98 0A 0B
+                fakeSerialPort.Received().Execute(Arg.Is<WriteCommand>(c => c.I2C_DataAsHex == "00 09 07 0F 02 "));
             });
         }
 
         [Fact]
         public void SettingIllegalValueShowEEE()
         {
-            var expected = new byte[] { 0xAA, 0x06, 0xBE, 0x00, 0x01, 0x0B, 0x0B, 0x0B, 0x90 };
-
             sut.SetBcdValue(-100f); // 'EEE'
-            fakeSerialPort.Received().Write(Arg.Any<IEnumerable<byte>>());
-            fakeSerialPort.Received().Write(Arg.Is<IEnumerable<byte>>(s => s.SequenceEqual(expected)));
+            fakeSerialPort.Received(1).Execute(Arg.Any<WriteCommand>());
+            fakeSerialPort.Received().Execute(Arg.Is<WriteCommand>(c => c.I2C_DataAsHex == "00 01 0B 0B 0B "));
         }
 
         [Fact]
         public void SettingMinus98ShowSame()
         {
-            var expected = new byte[] { 0xAA, 0x06, 0xBE, 0x00, 0x01, 0x0A, 0x09, 0x08, 0x8A };
-
             sut.SetBcdValue(-98f); // '-98'
-            fakeSerialPort.Received().Write(Arg.Any<IEnumerable<byte>>());
-            fakeSerialPort.Received().Write(Arg.Is<IEnumerable<byte>>(s => s.SequenceEqual(expected)));
+            fakeSerialPort.Received(1).Execute(Arg.Any<WriteCommand>());
+            fakeSerialPort.Received().Execute(Arg.Is<WriteCommand>(c => c.I2C_DataAsHex == "00 01 0A 09 08 "));
 
         }
 
         [Fact]
         public void SettingMinus7point5ValueShows_7dot5()
         {
-            var expected = new byte[] { 0xAA, 0x06, 0xBE, 0x00, 0x01, 0x0A, 0x87, 0x05, 0x05 };
-
             sut.SetBcdValue(-7.5f); // '-7.5'
-            fakeSerialPort.Received().Write(Arg.Any<IEnumerable<byte>>());
-            fakeSerialPort.Received().Write(Arg.Is<IEnumerable<byte>>(s => s.SequenceEqual(expected)));
+            fakeSerialPort.Received(1).Execute(Arg.Any<WriteCommand>());
+            fakeSerialPort.Received().Execute(Arg.Is<WriteCommand>(c => c.I2C_DataAsHex == "00 01 0A 87 05 "));
         }
 
         [Fact]
         public void SettingMinus75ValueShows_75()
         {
-            var expected = new byte[] { 0xAA, 0x06, 0xBE, 0x00, 0x01, 0x0A, 0x07, 0x05, 0x85 };
-
             sut.SetBcdValue(-75f); // '-75'
-            fakeSerialPort.Received().Write(Arg.Any<IEnumerable<byte>>());
-            fakeSerialPort.Received().Write(Arg.Is<IEnumerable<byte>>(s => s.SequenceEqual(expected)));
+            fakeSerialPort.Received(1).Execute(Arg.Any<WriteCommand>());
+            fakeSerialPort.Received().Execute(Arg.Is<WriteCommand>(c => c.I2C_DataAsHex == "00 01 0A 07 05 "));
         }
 
 
         [Fact]
         public void SettingZeroValueShows000()
         {
-            var expected = new byte[] { 0xAA, 0x06, 0xBE, 0x00, 0x01, 0x80, 0x00, 0x00, 0xEF };
-
             sut.SetBcdValue(0f); // '0.00'
-            fakeSerialPort.Received().Write(Arg.Any<IEnumerable<byte>>());
-            fakeSerialPort.Received().Write(Arg.Is<IEnumerable<byte>>(s => s.SequenceEqual(expected)));
+            fakeSerialPort.Received(1).Execute(Arg.Any<WriteCommand>());
+            fakeSerialPort.Received().Execute(Arg.Is<WriteCommand>(c => c.I2C_DataAsHex == "00 01 80 00 00 "));
         }
 
         [Fact]
         public void Setting1dot23ValueShowsSequence()
         {
-            var expected = new byte[] { 0xAA, 0x06, 0xBE, 0x00, 0x01, 0x81, 0x02, 0x03, 0xF5 };
-
             sut.SetBcdValue(1.23f); // '1.23'
-            fakeSerialPort.Received().Write(Arg.Any<IEnumerable<byte>>());
-            fakeSerialPort.Received().Write(Arg.Is<IEnumerable<byte>>(s => s.SequenceEqual(expected)));
+            fakeSerialPort.Received(1).Execute(Arg.Any<WriteCommand>());
+            fakeSerialPort.Received().Execute(Arg.Is<WriteCommand>(c => c.I2C_DataAsHex == "00 01 81 02 03 "));
         }
 
         [Fact]
         public void Setting12dot3ValueShowsSequence()
         {
-            var expected = new byte[] { 0xAA, 0x06, 0xBE, 0x00, 0x01, 0x01, 0x82, 0x03, 0xF5 };
-
             sut.SetBcdValue(12.3f); // '12.3'
-            fakeSerialPort.Received().Write(Arg.Any<IEnumerable<byte>>());
-            fakeSerialPort.Received().Write(Arg.Is<IEnumerable<byte>>(s => s.SequenceEqual(expected)));
+            fakeSerialPort.Received(1).Execute(Arg.Any<WriteCommand>());
+            fakeSerialPort.Received().Execute(Arg.Is<WriteCommand>(c => c.I2C_DataAsHex == "00 01 01 82 03 "));
         }
 
         [Fact]
         public void Setting999Shows999()
         {
-            var expected = new byte[] { 0xAA, 0x06, 0xBE, 0x00, 0x01, 0x09, 0x09, 0x09, 0x8A };
-
             sut.SetBcdValue(999f); // '999'
-            fakeSerialPort.Received().Write(Arg.Any<IEnumerable<byte>>());
-            fakeSerialPort.Received().Write(Arg.Is<IEnumerable<byte>>(s => s.SequenceEqual(expected)));
+            fakeSerialPort.Received(1).Execute(Arg.Any<WriteCommand>());
+            fakeSerialPort.Received().Execute(Arg.Is<WriteCommand>(c => c.I2C_DataAsHex == "00 01 09 09 09 "));
         }
 
+        [Fact]
+        public void SettingHexABC()
+        {
+            sut.SetHexVaue(new byte[] { 0x0A, 0x0B, 0x0C }); // 'ABC'
+            sut.Send();
+            fakeSerialPort.Received(1).Execute(Arg.Any<WriteCommand>());
+            fakeSerialPort.Received().Execute(Arg.Is<WriteCommand>(c => c.I2C_DataAsHex == "00 01 0A 0B 0C "));
+        }
+
+        [Fact]
+        public void SettingDigit0Intensity()
+        {
+            sut.Digit0Intensity(0x0B);
+            sut.Send();
+            fakeSerialPort.Received(1).Execute(Arg.Any<WriteCommand>());
+            fakeSerialPort.Received().Execute(Arg.Is<WriteCommand>(c => c.I2C_DataAsHex == "00 10 0B "));
+        }
+
+        [Fact]
+        public void SettingDigit1Intensity()
+        {
+            sut.Digit1Intensity(0x0C);
+            sut.Send();
+            fakeSerialPort.Received(1).Execute(Arg.Any<WriteCommand>());
+            fakeSerialPort.Received().Execute(Arg.Is<WriteCommand>(c => c.I2C_DataAsHex == "00 10 C0 "));
+        }
+
+        [Fact]
+        public void SettingDigit2Intensity()
+        {
+            sut.Digit2Intensity(0x0D);
+            sut.Send();
+            fakeSerialPort.Received(1).Execute(Arg.Any<WriteCommand>());
+            fakeSerialPort.Received().Execute(Arg.Is<WriteCommand>(c => c.I2C_DataAsHex == "00 11 0D "));
+        }
+
+        [Fact]
+        public void SetAllDecodeOff()
+        {
+            sut.SetNoDecoding();
+            sut.Send();
+            fakeSerialPort.Received(1).Execute(Arg.Any<WriteCommand>());
+            fakeSerialPort.Received().Execute(Arg.Is<WriteCommand>(c => c.I2C_DataAsHex == "00 09 00 "));
+        }
+
+        [Fact]
+        public void SetHexDecoding()
+        {
+            sut.SetHexDecoding();
+            sut.Send();
+
+            fakeSerialPort.Received(2).Execute(Arg.Any<WriteCommand>());
+
+            Received.InOrder(() =>
+            {
+                fakeSerialPort.Execute(Arg.Is<WriteCommand>(c => c.I2C_DataAsHex == "00 0E 04 "));
+                fakeSerialPort.Execute(Arg.Is<WriteCommand>(c => c.I2C_DataAsHex == "00 09 07 "));
+            });
+        }
+
+        [Fact]
+        public void SetBcdDecoding()
+        {
+            sut.SetBcdDecoding();
+            sut.Send();
+
+            fakeSerialPort.Received(2).Execute(Arg.Any<WriteCommand>());
+
+            Received.InOrder(() =>
+            {
+                fakeSerialPort.Execute(Arg.Is<WriteCommand>(c => c.I2C_DataAsHex == "00 0E 00 "));
+                fakeSerialPort.Execute(Arg.Is<WriteCommand>(c => c.I2C_DataAsHex == "00 09 07 "));
+            });
+        }
+
+        [Fact]
+        public void BlinkFast()
+        {
+            sut.BlinkFast();
+            sut.Send();
+            fakeSerialPort.Received(1).Execute(Arg.Any<WriteCommand>());
+            fakeSerialPort.Received().Execute(Arg.Is<WriteCommand>(c => c.I2C_DataAsHex == "00 0E 10 "));
+        }
+
+        [Fact]
+        public void BlinkOff()
+        {
+            sut.BlinkOff();
+            sut.Send();
+            fakeSerialPort.Received(1).Execute(Arg.Any<WriteCommand>());
+            fakeSerialPort.Received().Execute(Arg.Is<WriteCommand>(c => c.I2C_DataAsHex == "00 0E 00 "));
+        }
+
+        [Fact]
+        public void BlinkSlow()
+        {
+            sut.BlinkSlow();
+            sut.Send();
+            fakeSerialPort.Received(1).Execute(Arg.Any<WriteCommand>());
+            fakeSerialPort.Received().Execute(Arg.Is<WriteCommand>(c => c.I2C_DataAsHex == "00 0E 30 "));
+        }
+
+        [Fact]
+        public void SetShutdownModeDown()
+        {
+            sut.SetShutdownModeDown();
+            sut.Send();
+            fakeSerialPort.Received(1).Execute(Arg.Any<WriteCommand>());
+            fakeSerialPort.Received().Execute(Arg.Is<WriteCommand>(c => c.I2C_DataAsHex == "00 0C 00 "));
+        }
+
+        [Fact]
+        public void SetShutdownModeNormalResetFeature()
+        {
+            sut.SetShutdownModeNormalResetFeature();
+            sut.Send();
+            fakeSerialPort.Received(1).Execute(Arg.Any<WriteCommand>());
+            fakeSerialPort.Received().Execute(Arg.Is<WriteCommand>(c => c.I2C_DataAsHex == "00 0C 01 "));
+        }
 
 
     }

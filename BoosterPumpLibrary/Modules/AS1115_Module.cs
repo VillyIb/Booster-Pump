@@ -5,16 +5,14 @@ using System.Linq;
 
 namespace BoosterPumpLibrary.Modules
 {
-
     using ModuleBase;
     using Commands;
-    using SerialConverter;
-
+    
     public class AS1115_Module
     {
         // see:https://s3.amazonaws.com/controleverything.media/controleverything/Production%20Run%2013/45_AS1115_I2CL_3CE_AMB/Datasheets/AS1115_Datasheet_EN_v2.pdf
 
-        private readonly INCD_API_SerialPort serialPort;
+        private readonly IModuleCommunication serialPort;
 
         private Register RegDigit0 = new Register(0x01, "Digit 0", "N0");
         private Register RegDigit1 = new Register(0x02, "Digit 1", "N0");
@@ -36,7 +34,7 @@ namespace BoosterPumpLibrary.Modules
         private AS1115_Module()
         { }
 
-        public AS1115_Module(INCD_API_SerialPort serialPort)
+        public AS1115_Module(IModuleCommunication serialPort)
         {
             this.serialPort = serialPort;
         }
@@ -87,11 +85,7 @@ namespace BoosterPumpLibrary.Modules
 
                 var writeCommand = new WriteCommand { Address = Address, Payload = currentCommand };
 
-                var apiCommand = new NCD_API_Packet_Write_Command(writeCommand);
-
-                var encodedData = apiCommand.ApiEncodedData().ToArray();
-
-                serialPort.Write(encodedData);
+                serialPort.Execute(writeCommand);
             }
         }
 
@@ -102,56 +96,26 @@ namespace BoosterPumpLibrary.Modules
         {
             SetPrimarySettingsDirty();
             SetShutdownModeNormalResetFeature();
-            SetDcdDecoding();
+            SetBcdDecoding();
             SetGlobalIntensity(0x0F);
             SetDigitsVisible(0x03);
         }
 
-        public void SetDigit0DecodeOn()
+        protected void SetAllDecodeOn()
         {
             RegDecodingEnabled.SetDataRegisterBit(BitPattern.D0, true);
-        }
-
-        public void SetDigit1DecodeOn()
-        {
             RegDecodingEnabled.SetDataRegisterBit(BitPattern.D1, true);
-        }
-
-        public void SetDigit2DecodeOn()
-        {
             RegDecodingEnabled.SetDataRegisterBit(BitPattern.D2, true);
         }
 
-        public void SetAllDecodeOn()
-        {
-            SetDigit0DecodeOn();
-            SetDigit1DecodeOn();
-            SetDigit2DecodeOn();
-        }
-
-        public void SetDigit0DecodeOff()
+        public void SetNoDecoding()
         {
             RegDecodingEnabled.SetDataRegisterBit(BitPattern.D0, false);
-        }
-
-        public void SetDigit1DecodeOff()
-        {
             RegDecodingEnabled.SetDataRegisterBit(BitPattern.D1, false);
-        }
-
-        public void SetDigit2DecodeOff()
-        {
             RegDecodingEnabled.SetDataRegisterBit(BitPattern.D2, false);
         }
 
-        public void SetAllDecodeOff()
-        {
-            SetDigit0DecodeOff();
-            SetDigit1DecodeOff();
-            SetDigit2DecodeOff();
-        }
-
-        public void SetDcdDecoding()
+        public void SetBcdDecoding()
         {
             SetAllDecodeOn();
             RegFeatureRegister.SetDataRegisterBit(BitPattern.D2, false);

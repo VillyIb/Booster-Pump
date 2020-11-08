@@ -1,11 +1,8 @@
-﻿using BoosterPumpLibrary.SerialConverter;
-
-using System.Collections.Generic;
-using System.Linq;
-
-namespace BoosterPumpLibrary.SerialConverter
+﻿namespace NCD_API_SerialConverter.Commands
 {
-    using Commands;
+    using System.Collections.Generic;
+    using System.Linq;
+    using BoosterPumpLibrary.Commands;
 
     public class NCD_API_Packet_Write_Command : NCD_API_Packet_Command_Base<WriteCommand>
     {

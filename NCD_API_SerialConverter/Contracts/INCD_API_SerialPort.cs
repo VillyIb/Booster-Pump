@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace BoosterPumpLibrary.Contracts
+namespace NCD_API_SerialConverter.Contracts
 {
     /// <summary>
     /// Low level contract for sending to- and receiving data from a NCD device.
@@ -13,6 +13,6 @@ namespace BoosterPumpLibrary.Contracts
         /// <param name="byteSequence"></param>
         void Write(IEnumerable<byte> byteSequence);
 
-        IEnumerable<byte> Read();        
+        IEnumerable<byte> Read();
     }
 }

@@ -1,9 +1,9 @@
-﻿namespace BoosterPumpLibrary.SerialConverter
+﻿namespace NCD_API_SerialConverter.Commands
 {
     using System.Linq;
-    
+
     using System.Collections.Generic;
-    using Commands;
+    using BoosterPumpLibrary.Commands;
 
     public class NCP_API_Scan_Command : NCD_API_Packet_Command_Base<CommandBase>
     {

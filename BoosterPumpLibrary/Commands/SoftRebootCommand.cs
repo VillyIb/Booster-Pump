@@ -1,5 +1,5 @@
 ﻿namespace BoosterPumpLibrary.Commands
 {
-    public class SoftRebootCommand : StopCommand
+    public class SoftRebootCommand : SimpleCommandBase
     { }
 }

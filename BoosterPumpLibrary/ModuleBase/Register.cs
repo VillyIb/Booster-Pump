@@ -31,13 +31,13 @@
         {
             if (value)
             {
-                if ((Value & mask) > 0) { return; }
+                //if ((Value & mask) > 0) { return; }
                 Value = (byte)(Value | mask);
                 IsDirty = true;
             }
             else
             {
-                if ((Value & mask) == 0) { return; }
+                //if ((Value & mask) == 0) { return; }
                 Value = (byte)(Value & ~mask);
                 IsDirty = true;
             }

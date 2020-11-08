@@ -1,10 +1,8 @@
-﻿//
-using System.Collections.Generic;
-using System.Text;
-
-namespace BoosterPumpLibrary.SerialConverter
+﻿namespace NCD_API_SerialConverter.Commands
 {
-    using Commands;
+    using System.Collections.Generic;
+    using System.Text;
+    using BoosterPumpLibrary.Commands;
 
     public abstract class NCD_API_Packet_Command_Base<T> where T : CommandBase
     {
