@@ -1,4 +1,4 @@
-﻿namespace NCD_API_SerialConverter.Commands
+﻿namespace SerialConverter.Commands
 {
     using System.Collections.Generic;
     using BoosterPumpLibrary.Commands;
