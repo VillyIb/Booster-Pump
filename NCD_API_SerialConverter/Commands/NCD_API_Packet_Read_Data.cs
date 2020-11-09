@@ -1,4 +1,4 @@
-﻿namespace SerialConverter.Commands
+﻿namespace NCD_API_SerialConverter.Commands
 {
     using System.Collections.Generic;
     using System.Text;

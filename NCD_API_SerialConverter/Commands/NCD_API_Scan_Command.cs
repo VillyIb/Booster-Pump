@@ -1,15 +1,14 @@
-﻿namespace SerialConverter.Commands
+﻿namespace NCD_API_SerialConverter.Commands
 {
     using System.Linq;
-
     using System.Collections.Generic;
     using BoosterPumpLibrary.Commands;
 
-    public class NCP_API_Scan_Command : NCD_API_Packet_Command_Base<CommandBase>
+    public class NCD_API_Scan_Command : NCD_API_Command_Base<CommandBase>
     {
         public override byte Length => (byte)(Payload.Count() + 1);
 
-        public override byte Command => 0xC1;
+        public override byte Command => CommandCodes.Scan;
 
         public byte[] Payload => new byte[] { 0x00 };
 

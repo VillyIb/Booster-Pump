@@ -1,18 +1,17 @@
-﻿namespace SerialConverter.Commands
+﻿namespace NCD_API_SerialConverter.Commands
 {
     using System.Collections.Generic;
     using System.Linq;
     using BoosterPumpLibrary.Commands;
 
-    public class NCD_API_Packet_Write_Read_Command : NCD_API_Packet_Command_Base<WriteReadCommand>
+    public class NCD_API_Packet_Write_Read_Command : NCD_API_Command_Base<WriteReadCommand>
     {
-
         public NCD_API_Packet_Write_Read_Command(WriteReadCommand backingValue) : base(backingValue)
         { }
 
         public override byte Length => (byte)(Payload.Count() + 4);
 
-        public override byte Command => 0xC0;
+        public override byte Command => CommandCodes.WriteRead;
 
         public byte[] Payload => BackingValue.Payload.ToArray();
 

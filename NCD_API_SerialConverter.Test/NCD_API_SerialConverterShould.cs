@@ -1,17 +1,15 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
-using System.Text;
 using Xunit;
 
 namespace SerialConverter.Test
 {
     using NSubstitute;
-    using Commands;
     using NCD_API_SerialConverter.Contracts;
     using BoosterPumpLibrary.Commands;
-    using System.Net.Http.Headers;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using NCD_API_SerialConverter.Commands;
+    using NCD_API_SerialConverter;
 
     public class NCD_API_SerialConverterShould
     {
@@ -20,77 +18,134 @@ namespace SerialConverter.Test
 
         private byte Address { get; set; }
 
-        private byte[] Payload { get; set; }
-
-        private byte Lenght { get; set; }
-
-        private byte Command { get; set; }
-
-        private byte Checksum { get; set; }
         public NCD_API_SerialConverterShould()
         {
             fakeSerialPort = Substitute.For<INCD_API_SerialPort>();
             sud = new SerialConverter(fakeSerialPort);
 
             Address = 0x41;
-            Payload = new byte[] { 0x01, 0x02, 0x03, 0xC, 0x0E, 0x0F };
         }
-
-
-
-        private IEnumerable<byte> Expected()
-        {
-            yield return 0xAA;
-            yield return Lenght;
-            yield return Command;
-            yield return Address;
-            foreach(var current in Payload)
-            {
-                yield return current;
-            }
-            yield return Checksum;           
-        }
-
-
-
-        [Fact]
-        public void WriteByteSequenceForEcecuteWriteCommand()
-        {
-           
-            Command = 0xBE;
-            Lenght = (byte)(Payload.Length + 2);
-            Checksum = 0xE0;
-
-            var writeCommand = new WriteCommand { Address = Address, Payload = Payload };
-            var ncdCommand = new NCD_API_Packet_Write_Command(writeCommand);
-            sud.Execute(ncdCommand);
-
-            CollectionAssert.AreEqual(Expected().ToList(), ncdCommand.ApiEncodedData().ToList());
-
-
-            fakeSerialPort.Received().Write(Arg.Any<IEnumerable<byte>>());
-            fakeSerialPort.Received().Write(Arg.Is<IEnumerable<byte>>(seq => Expected().ToArray().SequenceEqual(seq.ToArray())));
-        }
-
 
         [Fact]
         public void WriteByteSequenceForEcecuteReadCommand()
         {
-
-            Command = 0xBF;
-            Payload = new byte[] { 0x05 };
-            Lenght = (byte)(Payload.Length + 2);
-            Checksum = 0xFA;
-
-            var command = new ReadCommand { Address = Address, LengthRequested = 5 };
+            var command = new ReadCommand { Address = Address, LengthRequested = 1 };
             var ncdCommand = new NCD_API_Packet_Read_Command(command);
             sud.Execute(ncdCommand);
 
-            var exp = Expected().ToArray();
+            var expected = new byte[] { 0xAA, 0x03, 0xBF, 0x41, 0x01, 0xAE };
 
             fakeSerialPort.Received().Write(Arg.Any<IEnumerable<byte>>());
-            fakeSerialPort.Received().Write(Arg.Is<IEnumerable<byte>>(seq => Expected().ToArray().SequenceEqual(seq)));
+            fakeSerialPort.Received().Write(Arg.Is<IEnumerable<byte>>(seq => expected.Count() == seq.Count()));
+            fakeSerialPort.Received().Write(Arg.Is<IEnumerable<byte>>(seq => expected.SequenceEqual(seq)));
         }
 
+        [Fact]
+        public void WriteByteSequenceForEcecuteWriteCommand()
+        {
+            var command = new WriteCommand { Address = Address, Payload = new byte[] { 0x03, 0x00 } };
+            var ncdCommand = new NCD_API_Packet_Write_Command(command);
+            sud.Execute(ncdCommand);
+
+            var expected = (new byte[] { 0xAA, 0x04, 0xBE, 0x41, 0x03, 0x00, 0xB0 });
+
+            expected.SequenceEqual(ncdCommand.ApiEncodedData());
+
+            fakeSerialPort.Received().Write(Arg.Any<IEnumerable<byte>>());
+            fakeSerialPort.Received().Write(Arg.Is<IEnumerable<byte>>(seq => expected.Count() == seq.Count()));
+            fakeSerialPort.Received().Write(Arg.Is<IEnumerable<byte>>(seq => expected.SequenceEqual(seq)));
+        }
+
+        [Fact]
+        public void WriteByteSequenceForEcecuteWriteReadCommand()
+        {
+            Address = 0x68;
+            var command = new WriteReadCommand { Address = Address, Payload = new byte[] { 0x10 }, Delay = 0x16, LengthRequested = 0x02 };
+            var ncdCommand = new NCD_API_Packet_Write_Read_Command(command);
+            sud.Execute(ncdCommand);
+
+            var expected = (new byte[] { 0xAA, 0x05, 0xC0, 0x68, 0x02, 0x16, 0x10, 0xFF });
+
+            expected.SequenceEqual(ncdCommand.ApiEncodedData());
+
+            fakeSerialPort.Received().Write(Arg.Any<IEnumerable<byte>>());
+            fakeSerialPort.Received().Write(Arg.Is<IEnumerable<byte>>(seq => expected.Count() == seq.Count()));
+            fakeSerialPort.Received().Write(Arg.Is<IEnumerable<byte>>(seq => expected.SequenceEqual(seq)));
+        }
+
+        [Fact]
+        public void WriteByteSequenceForScanCommand()
+        {
+            var ncdCommand = new NCD_API_Scan_Command();
+            sud.Execute(ncdCommand);
+
+            var expected = (new byte[] { 0xAA, 0x02, 0xC1, 0x00, 0x6D });
+
+            expected.SequenceEqual(ncdCommand.ApiEncodedData());
+
+            fakeSerialPort.Received().Write(Arg.Any<IEnumerable<byte>>());
+            fakeSerialPort.Received().Write(Arg.Is<IEnumerable<byte>>(seq => expected.Count() == seq.Count()));
+            fakeSerialPort.Received().Write(Arg.Is<IEnumerable<byte>>(seq => expected.SequenceEqual(seq)));
+        }
+
+        [Fact]
+        public void WriteByteSequenceForSoftRebootCommand()
+        {
+            var ncdCommand = new NCD_API_Converter_Soft_Reboot_Command();
+            sud.Execute(ncdCommand);
+
+            var expected = (new byte[] { 0xAA, 0x03, 0xFE, 0x21, 0xBC, 0x88 });
+
+            expected.SequenceEqual(ncdCommand.ApiEncodedData());
+
+            fakeSerialPort.Received().Write(Arg.Any<IEnumerable<byte>>());
+            fakeSerialPort.Received().Write(Arg.Is<IEnumerable<byte>>(seq => expected.Count() == seq.Count()));
+            fakeSerialPort.Received().Write(Arg.Is<IEnumerable<byte>>(seq => expected.SequenceEqual(seq)));
+        }
+
+        [Fact]
+        public void WriteByteSequenceForHardRebootCommand()
+        {
+            var ncdCommand = new NCD_API_Converter_Hard_Reboot_Command();
+            sud.Execute(ncdCommand);
+
+            var expected = (new byte[] { 0xAA, 0x03, 0xFE, 0x21, 0xBD, 0x89 });
+
+            expected.SequenceEqual(ncdCommand.ApiEncodedData());
+
+            fakeSerialPort.Received().Write(Arg.Any<IEnumerable<byte>>());
+            fakeSerialPort.Received().Write(Arg.Is<IEnumerable<byte>>(seq => expected.Count() == seq.Count()));
+            fakeSerialPort.Received().Write(Arg.Is<IEnumerable<byte>>(seq => expected.SequenceEqual(seq)));
+        }
+
+        [Fact]
+        public void WriteByteSequenceForStopCommand()
+        {
+            var ncdCommand = new NCD_API_Converter_Stop_Command();
+            sud.Execute(ncdCommand);
+
+            var expected = (new byte[] { 0xAA, 0x03, 0xFE, 0x21, 0xBB, 0x87 });
+
+            expected.SequenceEqual(ncdCommand.ApiEncodedData());
+
+            fakeSerialPort.Received().Write(Arg.Any<IEnumerable<byte>>());
+            fakeSerialPort.Received().Write(Arg.Is<IEnumerable<byte>>(seq => expected.Count() == seq.Count()));
+            fakeSerialPort.Received().Write(Arg.Is<IEnumerable<byte>>(seq => expected.SequenceEqual(seq)));
+        }
+
+        [Fact]
+        public void WriteByteSequenceForTest2WayCommand()
+        {
+            var ncdCommand = new NCD_API_Converter_Test2Way_Command();
+            sud.Execute(ncdCommand);
+
+            var expected = (new byte[] { 0xAA, 0x02, 0xFE, 0x21, 0xCB });
+
+            expected.SequenceEqual(ncdCommand.ApiEncodedData());
+
+            fakeSerialPort.Received().Write(Arg.Any<IEnumerable<byte>>());
+            fakeSerialPort.Received().Write(Arg.Is<IEnumerable<byte>>(seq => expected.Count() == seq.Count()));
+            fakeSerialPort.Received().Write(Arg.Is<IEnumerable<byte>>(seq => expected.SequenceEqual(seq)));
+        }
     }
 }
