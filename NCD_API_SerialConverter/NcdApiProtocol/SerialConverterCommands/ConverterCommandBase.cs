@@ -1,16 +1,17 @@
-﻿namespace NCD_API_SerialConverter.Commands
+﻿namespace NCD_API_SerialConverter.NcdApiProtocol.SerialConverterCommands
 {
     using System.Linq;
     using System.Collections.Generic;
-    using NCD_API_SerialConverter.NcdApiProtocol.SerialConverterCommands;
+    using BoosterPumpLibrary.Commands;
+    using NCD_API_SerialConverter.Commands;
 
-    public class NCD_API_Converter_Scan_Command : ConverterCommandBase
+    public abstract class ConverterCommandBase : NCD_API_Command_Base<CommandBase>
     {
         public override byte Length => (byte)(Payload.Count() + 1);
 
-        public override byte Command => CommandCodes.Scan;
-              
-        public override byte[] Payload => new byte[] { 0x00 };
+        public override byte Command => 0xFE;
+
+        public abstract byte[] Payload { get; }
 
         public override IEnumerable<byte> CommandData()
         {
