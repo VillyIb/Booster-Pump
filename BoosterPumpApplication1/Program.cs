@@ -1,7 +1,5 @@
 ﻿using BoosterPumpLibrary.Modules;
 using NCD_API_SerialConverter;
-using System;
-using System.Threading;
 
 namespace BoosterPumpApplication1
 {
@@ -9,8 +7,6 @@ namespace BoosterPumpApplication1
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
-
             var serialPort = new SerialPortDecorator("COM4");
             var serialConverter = new SerialConverter(serialPort);
 
@@ -22,11 +18,10 @@ namespace BoosterPumpApplication1
 
                 displayModule.Init();
 
-                for (int count = 0; count < 700; count += 11)
+                for (float count = 0.1f; count < 1000f; count += 0.1f)
                 {
-                    displayModule.SetBcdValue(count / 7f);
+                    displayModule.SetBcdValue(count);
                     displayModule.Send();
-                    Thread.Sleep(100);
                 }
             }
             finally
