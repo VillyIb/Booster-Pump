@@ -3,7 +3,7 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    public class ConverterTest2Way : ConverterCommandBase
+    public class ConverterTest2Way : ConverterBase
     {
         public override byte Length => (byte)(Payload.Count() + 1);
 

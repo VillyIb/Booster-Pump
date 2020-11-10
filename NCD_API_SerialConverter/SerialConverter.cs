@@ -41,7 +41,7 @@
             return Execute(ncdApiCommand.ApiEncodedData());
         }
 
-        public IDataFromDevice Execute(ConverterCommandBase command)
+        public IDataFromDevice Execute(ConverterBase command)
         {
             return Execute(command.ApiEncodedData());
         }
