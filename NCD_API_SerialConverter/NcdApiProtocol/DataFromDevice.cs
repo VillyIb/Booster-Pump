@@ -17,10 +17,12 @@
 
         public byte Checksum { get; set; }
 
-        public bool VerifyChecksum
+        public bool CheckConsistency
         {
             get
             {
+                if(ByteCount != Payload.Length) { return false; }
+
                 var checksum = Header + ByteCount;
                 foreach (var current in Payload)
                 {
