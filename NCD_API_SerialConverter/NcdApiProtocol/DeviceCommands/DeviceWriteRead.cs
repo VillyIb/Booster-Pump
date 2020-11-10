@@ -1,8 +1,9 @@
-﻿namespace NCD_API_SerialConverter.Commands
+﻿namespace NCD_API_SerialConverter.NcdApiProtocol.DeviceCommands
 {
     using System.Collections.Generic;
     using System.Linq;
     using BoosterPumpLibrary.Commands;
+    using NCD_API_SerialConverter.Commands;
 
     public class DeviceWriteRead : NCD_API_Command_Base<WriteReadCommand>
     {

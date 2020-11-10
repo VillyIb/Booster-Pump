@@ -2,8 +2,8 @@
 {
     using BoosterPumpLibrary.Commands;
     using BoosterPumpLibrary.Contracts;
-    using NCD_API_SerialConverter.Commands;
     using NCD_API_SerialConverter.Contracts;
+    using NCD_API_SerialConverter.NcdApiProtocol.DeviceCommands;
     using NCD_API_SerialConverter.NcdApiProtocol.SerialConverterCommands;
     using System.Collections.Generic;
 
