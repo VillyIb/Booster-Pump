@@ -3,6 +3,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.IO.Ports;
+using System.Diagnostics.CodeAnalysis;
 
 namespace NCD_API_SerialConverter
 {    
@@ -15,11 +16,11 @@ namespace NCD_API_SerialConverter
 
         protected List<byte> Buffer;
 
-        protected NCD_API_Packet_Read_Data ReadResult { get; private set; }
+        protected DataFromDevice ReadResult { get; private set; }
 
         private readonly Func<int> ReadFromSerialPort;
 
-        [ExcludeforCodeCoverage]
+        [ExcludeFromCodeCoverage]
         public ReadNcdApiFormat(Func<int> readFromSerialPort)
         {
             this.ReadFromSerialPort = readFromSerialPort;
@@ -80,11 +81,11 @@ namespace NCD_API_SerialConverter
             }
         }
 
-        public NCD_API_Packet_Read_Data Read()
+        public DataFromDevice Read()
         {
             RawBuffer = new List<int>();
             Buffer = new List<byte>();
-            ReadResult = new NCD_API_Packet_Read_Data();
+            ReadResult = new DataFromDevice();
 
             if (null == SerialPort || !SerialPort.IsOpen)
             {

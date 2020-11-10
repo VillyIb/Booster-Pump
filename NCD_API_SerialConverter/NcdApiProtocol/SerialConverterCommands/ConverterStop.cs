@@ -2,7 +2,7 @@
 {
     using NCD_API_SerialConverter.NcdApiProtocol.SerialConverterCommands;
 
-    public class NCD_API_Converter_Stop_Command : ConverterCommandBase
+    public class ConverterStop : ConverterCommandBase
     {
         public override byte[] Payload => new byte[] { 0x21, 0xBB };
     }

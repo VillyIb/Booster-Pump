@@ -6,10 +6,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Ports;
 using System.Text;
+using System.Diagnostics.CodeAnalysis;
 
 namespace NCD_API_SerialConverter
 {
-    [ExcludeforCodeCoverage]
+    [ExcludeFromCodeCoverage]
     public class SerialPortDecorator : INCD_API_SerialPort, IDisposable
     {
         protected SerialPort SerialPort { get; private set; }
@@ -20,7 +21,6 @@ namespace NCD_API_SerialConverter
         private readonly int BaudRate;
         private readonly int Timeout;
 
-        [ExcludeforCodeCoverage]
         public SerialPortDecorator(string portName)
         {
             PortName = portName;
@@ -79,7 +79,7 @@ namespace NCD_API_SerialConverter
         /// Reads input into NCD API specific format.
         /// </summary>
         /// <returns></returns>
-        public NCD_API_Packet_Read_Data Read()
+        public DataFromDevice Read()
         {
             return ReadUtil.Read();
         }

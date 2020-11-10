@@ -4,21 +4,27 @@
     using System.Linq;
     using BoosterPumpLibrary.Commands;
 
-    public class NCD_API_Packet_Write_Command : NCD_API_Command_Base<WriteCommand>
+    public class DeviceWriteRead : NCD_API_Command_Base<WriteReadCommand>
     {
-        public NCD_API_Packet_Write_Command(WriteCommand backingValue) : base(backingValue)
+        public DeviceWriteRead(WriteReadCommand backingValue) : base(backingValue)
         { }
 
-        public override byte Length => (byte)(Payload.Count() + 2);
+        public override byte Length => (byte)(Payload.Count() + 4);
 
-        public override byte Command => CommandCodes.Write;
+        public override byte Command => CommandCodes.WriteRead;
 
         public byte[] Payload => BackingValue.Payload.ToArray();
+
+        public byte LengthRequested => BackingValue.LengthRequested;
+
+        public byte Delay => BackingValue.Delay;
 
         public override IEnumerable<byte> CommandData()
         {
             yield return Command;
             yield return Address ?? 0x00;
+            yield return LengthRequested;
+            yield return Delay;
             foreach (var current in Payload)
             {
                 yield return current;

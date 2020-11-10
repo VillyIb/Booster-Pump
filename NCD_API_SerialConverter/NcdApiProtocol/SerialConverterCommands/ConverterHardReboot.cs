@@ -2,7 +2,7 @@
 
 namespace NCD_API_SerialConverter.Commands
 {
-    public class NCD_API_Converter_Hard_Reboot_Command : ConverterCommandBase
+    public class ConverterHardReboot : ConverterCommandBase
     {
         public override byte[] Payload => new byte[] { 0x21, 0xBD };
     }

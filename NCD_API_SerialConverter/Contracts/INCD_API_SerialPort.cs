@@ -14,6 +14,6 @@ namespace NCD_API_SerialConverter.Contracts
         /// <param name="byteSequence"></param>
         void Write(IEnumerable<byte> byteSequence);
 
-        NCD_API_Packet_Read_Data Read();
+        DataFromDevice Read();
     }
 }

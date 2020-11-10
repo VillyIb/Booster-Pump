@@ -4,6 +4,7 @@
     using BoosterPumpLibrary.Contracts;
     using NCD_API_SerialConverter.Commands;
     using NCD_API_SerialConverter.Contracts;
+    using NCD_API_SerialConverter.NcdApiProtocol.SerialConverterCommands;
     using System.Collections.Generic;
 
     public class SerialConverter : ISerialConverter // ,  IModuleCommunication
@@ -24,43 +25,23 @@
 
         public IDataFromDevice Execute(ReadCommand command)
         {
-            IX ncdApiCommand = new NCD_API_Packet_Read_Command(command);
+            IX ncdApiCommand = new DeviceRead(command);
             return Execute(ncdApiCommand.ApiEncodedData());
         }
 
         public IDataFromDevice Execute(WriteCommand command)
         {
-            IX ncdApiCommand = new NCD_API_Packet_Write_Command(command);
+            IX ncdApiCommand = new DeviceWrite(command);
             return Execute(ncdApiCommand.ApiEncodedData());
         }
 
         public IDataFromDevice Execute(WriteReadCommand command)
         {
-            IX ncdApiCommand = new NCD_API_Packet_Write_Read_Command(command);
+            IX ncdApiCommand = new DeviceWriteRead(command);
             return Execute(ncdApiCommand.ApiEncodedData());
         }
 
-        public IDataFromDevice Execute(ConverterHardReboot command)
-        {
-            return Execute(command.ApiEncodedData());
-        }
-
-        public IDataFromDevice Execute(ConverterSoftReboot command)
-        {
-            return Execute(command.ApiEncodedData());
-        }
-
-        public IDataFromDevice Execute(ConverterStop command)
-        {
-            return Execute(command.ApiEncodedData());
-        }
-
-        public IDataFromDevice Execute(ConverterTest2Way command)
-        {
-            return Execute(command.ApiEncodedData());
-        }
-
-        public IDataFromDevice Execute(ConverterScan command)
+        public IDataFromDevice Execute(ConverterCommandBase command)
         {
             return Execute(command.ApiEncodedData());
         }

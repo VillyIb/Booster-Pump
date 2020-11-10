@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using NCD_API_SerialConverter.NcdApiProtocol.SerialConverterCommands;
 
-    public class NCD_API_Converter_Scan_Command : ConverterCommandBase
+    public class ConverterScan : ConverterCommandBase
     {
         public override byte Length => (byte)(Payload.Count() + 1);
 

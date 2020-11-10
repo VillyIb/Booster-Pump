@@ -7,7 +7,7 @@
     /// <summary>
     /// Data retured from device.
     /// </summary>
-    public class NCD_API_Packet_Read_Data : IDataFromDevice
+    public class DataFromDevice : IDataFromDevice
     {
         public byte Header { get; set; }
 

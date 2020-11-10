@@ -4,7 +4,7 @@
     using System.Linq;
     using NCD_API_SerialConverter.NcdApiProtocol.SerialConverterCommands;
 
-    public class NCD_API_Converter_Test2Way_Command : ConverterCommandBase
+    public class ConverterTest2Way : ConverterCommandBase
     {
         public override byte Length => (byte)(Payload.Count() + 1);
 

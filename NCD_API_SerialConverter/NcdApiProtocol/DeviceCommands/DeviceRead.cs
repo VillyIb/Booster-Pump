@@ -3,9 +3,9 @@
     using System.Collections.Generic;
     using BoosterPumpLibrary.Commands;
 
-    public class NCD_API_Packet_Read_Command : NCD_API_Command_Base<ReadCommand>
+    public class DeviceRead : NCD_API_Command_Base<ReadCommand>
     {
-        public NCD_API_Packet_Read_Command(ReadCommand backingValue) : base(backingValue)
+        public DeviceRead(ReadCommand backingValue) : base(backingValue)
         { }
 
         public override byte Length => 0x03;
