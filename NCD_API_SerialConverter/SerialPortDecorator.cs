@@ -26,13 +26,14 @@ namespace NCD_API_SerialConverter
             PortName = portName;
             BaudRate = 115200;
             Timeout = 1000; // ms
-            ReadUtil = new ReadNcdApiFormat(ReadByte);
+            ReadUtil = new ReadNcdApiFormat(ReadByte, ReadBlock);
         }
 
         public void Open()
         {
             if (null != SerialPort && SerialPort.IsOpen) { SerialPort.Close(); }
             SerialPort = new SerialPort(PortName, BaudRate);
+            SerialPort.Open();
             SerialPort.ReadTimeout = Timeout;
         }
 
@@ -73,6 +74,14 @@ namespace NCD_API_SerialConverter
         protected int ReadByte()
         {
             return SerialPort.ReadByte();
+        }
+
+        protected IEnumerable<byte> ReadBlock()
+        {
+            int bytesToRead = SerialPort.BytesToRead;
+            var buffer = new byte[bytesToRead];
+            var actualRead = SerialPort.Read(buffer, 0, bytesToRead);
+            return buffer.Take(actualRead);
         }
 
         /// <summary>

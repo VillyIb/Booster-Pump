@@ -18,19 +18,20 @@ namespace NCD_API_SerialConverter
 
         protected DataFromDevice ReadResult { get; private set; }
 
-        private readonly Func<int> ReadFromSerialPort;
+        private readonly Func<int> FuncReadByte;
+
+        private readonly Func<IEnumerable<byte>> FuncReadBlock;
 
         [ExcludeFromCodeCoverage]
-        public ReadNcdApiFormat(Func<int> readFromSerialPort)
+        public ReadNcdApiFormat(Func<int> readByte, Func<IEnumerable<byte>> readBlock)
         {
-            this.ReadFromSerialPort = readFromSerialPort;
+            FuncReadByte = readByte;
+            FuncReadBlock = readBlock;
         }
-
-        protected SerialPort SerialPort { get; set; }
 
         protected int RawRead()
         {
-            var value = ReadFromSerialPort();
+            var value = FuncReadByte();
             RawBuffer.Add(value);
             return value;
         }
@@ -62,17 +63,15 @@ namespace NCD_API_SerialConverter
         {
             if (ReadResult.ByteCount > 0)
             {
-                int bytesToRead = SerialPort.BytesToRead;
-                var buffer = new byte[bytesToRead];
-                var actualRead = SerialPort.Read(buffer, 0, bytesToRead);
-                Buffer.AddRange(buffer.Take(actualRead));
-                RawBuffer.AddRange(buffer.Take(actualRead).Select(t => (int)t));
+                var buffer = FuncReadBlock();
+                Buffer.AddRange(buffer);
+                RawBuffer.AddRange(buffer.Select(t => (int)t));
             }
         }
 
         protected void ReadRest()
         {
-            var stopAtIndex = ReadResult.ByteCount + 3;
+            var stopAtIndex = ReadResult.ByteCount + 1;
             while (Buffer.Count < stopAtIndex)
             {
                 var current = RawRead(); // timeout if input is corrupt.
@@ -87,10 +86,10 @@ namespace NCD_API_SerialConverter
             Buffer = new List<byte>();
             ReadResult = new DataFromDevice();
 
-            if (null == SerialPort || !SerialPort.IsOpen)
-            {
-                throw new InvalidOperationException();
-            }
+            //if (null == SerialPort || !SerialPort.IsOpen)
+            //{
+            //    throw new InvalidOperationException();
+            //}
 
             try
             {
@@ -106,13 +105,13 @@ namespace NCD_API_SerialConverter
             }
             finally
             {
-                SerialPort = null;
+
             }
 
             ReadResult.Payload = Buffer.Take(Buffer.Count - 1).ToArray();
             ReadResult.Checksum = Buffer.Last();
 
-            if(!ReadResult.VerifyChecksum)
+            if (!ReadResult.CheckConsistency)
             {
                 throw new ApplicationException("Checksum verification failed");
             }
