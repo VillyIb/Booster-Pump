@@ -1,5 +1,4 @@
-﻿using NCD_API_SerialConverter.Commands;
-using NCD_API_SerialConverter.Contracts;
+﻿using NCD_API_SerialConverter.Contracts;
 using System;
 using System.Linq;
 using System.Collections.Generic;
@@ -7,6 +6,7 @@ using System.IO;
 using System.IO.Ports;
 using System.Text;
 using System.Diagnostics.CodeAnalysis;
+using NCD_API_SerialConverter.NcdApiProtocol;
 
 namespace NCD_API_SerialConverter
 {

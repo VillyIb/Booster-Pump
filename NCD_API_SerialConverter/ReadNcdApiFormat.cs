@@ -1,12 +1,12 @@
-﻿using NCD_API_SerialConverter.Commands;
-using System;
+﻿using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.IO.Ports;
 using System.Diagnostics.CodeAnalysis;
+using NCD_API_SerialConverter.NcdApiProtocol;
 
 namespace NCD_API_SerialConverter
-{    
+{
     public class ReadNcdApiFormat
     {
         /// <summary>

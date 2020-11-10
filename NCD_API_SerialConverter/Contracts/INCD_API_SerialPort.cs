@@ -1,4 +1,4 @@
-﻿using NCD_API_SerialConverter.Commands;
+﻿using NCD_API_SerialConverter.NcdApiProtocol;
 using System.Collections.Generic;
 
 namespace NCD_API_SerialConverter.Contracts
