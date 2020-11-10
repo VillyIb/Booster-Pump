@@ -40,27 +40,27 @@
             return Execute(ncdApiCommand.ApiEncodedData());
         }
 
-        public IDataFromDevice Execute(NCD_API_Converter_Hard_Reboot_Command command)
+        public IDataFromDevice Execute(ConverterHardReboot command)
         {
             return Execute(command.ApiEncodedData());
         }
 
-        public IDataFromDevice Execute(NCD_API_Converter_Soft_Reboot_Command command)
+        public IDataFromDevice Execute(ConverterSoftReboot command)
         {
             return Execute(command.ApiEncodedData());
         }
 
-        public IDataFromDevice Execute(NCD_API_Converter_Stop_Command command)
+        public IDataFromDevice Execute(ConverterStop command)
         {
             return Execute(command.ApiEncodedData());
         }
 
-        public IDataFromDevice Execute(NCD_API_Converter_Test2Way_Command command)
+        public IDataFromDevice Execute(ConverterTest2Way command)
         {
             return Execute(command.ApiEncodedData());
         }
 
-        public IDataFromDevice Execute(NCD_API_Converter_Scan_Command command)
+        public IDataFromDevice Execute(ConverterScan command)
         {
             return Execute(command.ApiEncodedData());
         }

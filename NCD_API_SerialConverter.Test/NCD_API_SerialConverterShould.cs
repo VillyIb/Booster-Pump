@@ -69,7 +69,7 @@ namespace SerialConverter.Test
         [Fact]
         public void WriteByteSequenceForScanCommand()
         {
-            var ncdCommand = new NCD_API_Converter_Scan_Command();
+            var ncdCommand = new ConverterScan();
             sud.Execute(ncdCommand);
 
             var expected = (new byte[] { 0xAA, 0x02, 0xC1, 0x00, 0x6D });
@@ -84,7 +84,7 @@ namespace SerialConverter.Test
         [Fact]
         public void WriteByteSequenceForSoftRebootCommand()
         {
-            var ncdCommand = new NCD_API_Converter_Soft_Reboot_Command();
+            var ncdCommand = new ConverterSoftReboot();
             sud.Execute(ncdCommand);
 
             var expected = (new byte[] { 0xAA, 0x03, 0xFE, 0x21, 0xBC, 0x88 });
@@ -99,7 +99,7 @@ namespace SerialConverter.Test
         [Fact]
         public void WriteByteSequenceForHardRebootCommand()
         {
-            var ncdCommand = new NCD_API_Converter_Hard_Reboot_Command();
+            var ncdCommand = new ConverterHardReboot();
             sud.Execute(ncdCommand);
 
             var expected = (new byte[] { 0xAA, 0x03, 0xFE, 0x21, 0xBD, 0x89 });
@@ -114,7 +114,7 @@ namespace SerialConverter.Test
         [Fact]
         public void WriteByteSequenceForStopCommand()
         {
-            var ncdCommand = new NCD_API_Converter_Stop_Command();
+            var ncdCommand = new ConverterStop();
             sud.Execute(ncdCommand);
 
             var expected = (new byte[] { 0xAA, 0x03, 0xFE, 0x21, 0xBB, 0x87 });
@@ -129,7 +129,7 @@ namespace SerialConverter.Test
         [Fact]
         public void WriteByteSequenceForTest2WayCommand()
         {
-            var ncdCommand = new NCD_API_Converter_Test2Way_Command();
+            var ncdCommand = new ConverterTest2Way();
             sud.Execute(ncdCommand);
 
             var expected = (new byte[] { 0xAA, 0x02, 0xFE, 0x21, 0xCB });
