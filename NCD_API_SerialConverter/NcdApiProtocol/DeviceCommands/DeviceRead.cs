@@ -11,7 +11,7 @@
 
         public override byte Length => 0x03;
 
-        public override byte Command => CommandCodes.Read;
+        public override byte Command => 0xBF;
 
         public byte LengthRequested => BackingValue.LengthRequested;
 

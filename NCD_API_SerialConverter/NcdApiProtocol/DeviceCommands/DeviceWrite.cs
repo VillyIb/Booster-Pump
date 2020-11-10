@@ -5,7 +5,6 @@
     using BoosterPumpLibrary.Commands;
     using NCD_API_SerialConverter.Commands;
 
-
     public class DeviceWrite : NCD_API_Command_Base<WriteCommand>
     {
         public DeviceWrite(WriteCommand backingValue) : base(backingValue)
@@ -13,7 +12,7 @@
 
         public override byte Length => (byte)(Payload.Count() + 2);
 
-        public override byte Command => CommandCodes.Write;
+        public override byte Command => 0xBE;
 
         public byte[] Payload => BackingValue.Payload.ToArray();
 

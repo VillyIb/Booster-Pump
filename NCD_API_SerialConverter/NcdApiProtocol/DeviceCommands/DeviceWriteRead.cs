@@ -12,7 +12,7 @@
 
         public override byte Length => (byte)(Payload.Count() + 4);
 
-        public override byte Command => CommandCodes.WriteRead;
+        public override byte Command => 0x0C;
 
         public byte[] Payload => BackingValue.Payload.ToArray();
 

@@ -2,13 +2,12 @@
 {
     using System.Linq;
     using System.Collections.Generic;
-    using NCD_API_SerialConverter.Commands;
 
     public class ConverterScan : ConverterCommandBase
     {
         public override byte Length => (byte)(Payload.Count() + 1);
 
-        public override byte Command => CommandCodes.Scan;
+        public override byte Command => 0xC1;
 
         public override byte[] Payload => new byte[] { 0x00 };
 
