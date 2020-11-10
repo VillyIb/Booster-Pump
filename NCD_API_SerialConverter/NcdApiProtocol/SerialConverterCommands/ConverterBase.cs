@@ -3,9 +3,9 @@
     using System.Linq;
     using System.Collections.Generic;
     using BoosterPumpLibrary.Commands;
-    using NCD_API_SerialConverter.Commands;
+    using NCD_API_SerialConverter.NcdApiProtocol;
 
-    public abstract class ConverterCommandBase : NCD_API_Command_Base<CommandBase>
+    public abstract class ConverterBase : Command_Base<CommandBase>
     {
         public override byte Length => (byte)(Payload.Count() + 1);
 

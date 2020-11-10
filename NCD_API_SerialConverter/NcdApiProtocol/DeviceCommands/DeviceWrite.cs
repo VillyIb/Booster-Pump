@@ -3,9 +3,9 @@
     using System.Collections.Generic;
     using System.Linq;
     using BoosterPumpLibrary.Commands;
-    using NCD_API_SerialConverter.Commands;
+    using NCD_API_SerialConverter.NcdApiProtocol;
 
-    public class DeviceWrite : NCD_API_Command_Base<WriteCommand>
+    public class DeviceWrite : Command_Base<WriteCommand>
     {
         public DeviceWrite(WriteCommand backingValue) : base(backingValue)
         { }

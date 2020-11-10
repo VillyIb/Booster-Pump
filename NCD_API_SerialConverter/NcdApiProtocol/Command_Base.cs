@@ -1,20 +1,20 @@
-﻿namespace NCD_API_SerialConverter.Commands
+﻿namespace NCD_API_SerialConverter.NcdApiProtocol
 {
     using System.Collections.Generic;
     using System.Text;
     using BoosterPumpLibrary.Commands;
     using NCD_API_SerialConverter.Contracts;
 
-    public abstract class NCD_API_Command_Base<T> : IX where T : CommandBase
+    public abstract class Command_Base<T> : IX where T : CommandBase
     {
         public T BackingValue { get; }
 
-        public NCD_API_Command_Base(T backingField)
+        public Command_Base(T backingField)
         {
             BackingValue = backingField;
         }
 
-        public NCD_API_Command_Base()
+        public Command_Base()
         {
             BackingValue = null;
         }
