@@ -1,4 +1,5 @@
-﻿namespace BoosterPumpLibrary.ModuleBase
+﻿// ReSharper disable UnusedMember.Global
+namespace BoosterPumpLibrary.ModuleBase
 {
     public static class BitPattern
     {

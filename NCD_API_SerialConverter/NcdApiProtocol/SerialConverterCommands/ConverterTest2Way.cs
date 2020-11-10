@@ -1,11 +1,10 @@
 ﻿namespace NCD_API_SerialConverter.NcdApiProtocol.SerialConverterCommands
 {
     using System.Collections.Generic;
-    using System.Linq;
 
     public class ConverterTest2Way : ConverterBase
     {
-        public override byte Length => (byte)(Payload.Count() + 1);
+        public override byte Length => (byte)(Payload.Length + 1);
 
         public override byte Command => 0xFE;
 

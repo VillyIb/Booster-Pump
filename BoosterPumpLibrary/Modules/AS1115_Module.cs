@@ -7,39 +7,37 @@ namespace BoosterPumpLibrary.Modules
 {
     using ModuleBase;
     using Commands;
-    
-    public class AS1115_Module
+
+    public class As1115Module
     {
         // see:https://s3.amazonaws.com/controleverything.media/controleverything/Production%20Run%2013/45_AS1115_I2CL_3CE_AMB/Datasheets/AS1115_Datasheet_EN_v2.pdf
 
-        private readonly ISerialConverter serialPort;
+        private readonly ISerialConverter _SerialPort;
 
-        private Register RegDigit0 = new Register(0x01, "Digit 0", "N0");
-        private Register RegDigit1 = new Register(0x02, "Digit 1", "N0");
-        private Register RegDigit2 = new Register(0x03, "Digit 2", "N0");
+        private readonly Register RegDigit0 = new Register(0x01, "Digit 0", "N0");
+        private readonly Register RegDigit1 = new Register(0x02, "Digit 1", "N0");
+        private readonly Register RegDigit2 = new Register(0x03, "Digit 2", "N0");
 
-        private Register RegDecodingEnabled = new Register(0x09, "DecodingEnabled", "X");
-        private Register RegGlobalIntensityRegister = new Register(0x0A, "GlobalIntensity", "N0");
-        private Register RegScanLimit = new Register(0x0B, "ScanLimit", "N0");
+        private readonly Register RegDecodingEnabled = new Register(0x09, "DecodingEnabled", "X");
+        private readonly Register RegGlobalIntensityRegister = new Register(0x0A, "GlobalIntensity", "N0");
+        private readonly Register RegScanLimit = new Register(0x0B, "ScanLimit", "N0");
 
-        private Register RegShutdownRegister = new Register(0x0C, "ShutDownRegister", "N0");
-        private Register RegFeatureRegister = new Register(0x0E, "FeatureRegister", "N0");
+        private readonly Register RegShutdownRegister = new Register(0x0C, "ShutDownRegister", "N0");
+        private readonly Register RegFeatureRegister = new Register(0x0E, "FeatureRegister", "N0");
+        // ReSharper disable once UnusedMember.Local
         private Register RegDisplayTestMode = new Register(0x0F, "DisplayTestMode", "N0");
 
-        private Register RegIntensityDigit01 = new Register(0x10, "IntensityDigit01", "N0");
-        private Register RegIntensityDigit23 = new Register(0x11, "IntensityDigit23", "N0");
+        private readonly Register RegIntensityDigit01 = new Register(0x10, "IntensityDigit01", "N0");
+        private readonly Register RegIntensityDigit23 = new Register(0x11, "IntensityDigit23", "N0");
 
         public byte Address => 0x00;
 
-        private AS1115_Module()
-        { }
-
-        public AS1115_Module(ISerialConverter serialPort)
+        public As1115Module(ISerialConverter serialPort)
         {
-            this.serialPort = serialPort;
+            _SerialPort = serialPort;
         }
 
-        Register[] registers => new[] { RegShutdownRegister, RegFeatureRegister, RegDecodingEnabled, RegGlobalIntensityRegister, RegScanLimit, RegIntensityDigit01, RegIntensityDigit23, RegDigit0, RegDigit1, RegDigit2 };
+        private IEnumerable<Register> Registers => new[] { RegShutdownRegister, RegFeatureRegister, RegDecodingEnabled, RegGlobalIntensityRegister, RegScanLimit, RegIntensityDigit01, RegIntensityDigit23, RegDigit0, RegDigit1, RegDigit2 };
 
         /// <summary>
         /// Returns next command for each call.
@@ -50,19 +48,17 @@ namespace BoosterPumpLibrary.Modules
             var result = new List<byte>();
             byte currentRegisterId = 0;
 
-            foreach (var current in registers)
+            foreach (var current in Registers)
             {
+                if (!current.IsDirty) continue;
 
-                if (current.IsDirty)
+                if (result.Count > 0 && currentRegisterId + 1 != current.RegisterId) { break; }
+                if (result.Count == 0)
                 {
-                    if (result.Count > 0 && (currentRegisterId + 1) != current.RegisterId) { break; }
-                    if (result.Count == 0)
-                    {
-                        result.Add(current.RegisterId);
-                    }
-                    result.Add(current.GetDataRegisterAndClearDirty());
-                    currentRegisterId = current.RegisterId;
+                    result.Add(current.RegisterId);
                 }
+                result.Add(current.GetDataRegisterAndClearDirty());
+                currentRegisterId = current.RegisterId;
             }
 
             return result;
@@ -70,28 +66,24 @@ namespace BoosterPumpLibrary.Modules
 
         public bool MoveNextCommand()
         {
-            var next = registers.FirstOrDefault(t => t.IsDirty);
-            return registers.Any(t => t.IsDirty);
+            return Registers.Any(t => t.IsDirty);
         }
 
         public void Send()
         {
             while (MoveNextCommand())
             {
-                var output = new List<byte>();
-                output.Add(Address);
-                var currentCommand = CurrentCommand();
+                var output = new List<byte> { Address };
+                var currentCommand = CurrentCommand().ToList();
                 output.AddRange(currentCommand);
 
                 var writeCommand = new WriteCommand { Address = Address, Payload = currentCommand };
 
-               var returnValue = serialPort.Execute(writeCommand);
+                // ReSharper disable once UnusedVariable
+                var returnValue = _SerialPort.Execute(writeCommand);
             }
         }
 
-        /// <summary>
-        ///  Sendes initialization sequence
-        /// </summary>
         public void Init()
         {
             SetPrimarySettingsDirty();
@@ -146,7 +138,7 @@ namespace BoosterPumpLibrary.Modules
         }
 
         /// <summary>
-        /// Set intensitity value, range 0x00 ... 0x0F.
+        /// Set intensity value, range 0x00 ... 0x0F.
         /// </summary>
         /// <param name="value"></param>
         public void SetGlobalIntensity(byte value)
@@ -232,14 +224,14 @@ namespace BoosterPumpLibrary.Modules
             // -0.09 ... 0.005 => 0.00
             else if (value < 0.005)
             {
-                RegDigit0.SetDataRegister((byte)(0x00 | 0b1000_0000));
+                RegDigit0.SetDataRegister(0x00 | 0b1000_0000);
                 RegDigit1.SetDataRegister(0x00);
                 RegDigit2.SetDataRegister(0x00);
             }
             // 0.01 ... 9.99
             else if (value < 10)
             {
-                RegDigit0.SetDataRegister((byte)(((byte)value) | 0b1000_0000));
+                RegDigit0.SetDataRegister((byte)((byte)value | 0b1000_0000));
                 RegDigit1.SetDataRegister((byte)(value * 10 % 10));
                 RegDigit2.SetDataRegister((byte)(value * 100 % 10));
             }
@@ -265,7 +257,7 @@ namespace BoosterPumpLibrary.Modules
         /// Set display value from Hex Source, 0x00..0x0F, set decimal dot by adding 0xb1000_000.
         /// </summary>
         /// <param name="value"></param>
-        public void SetHexVaue(byte[] value)
+        public void SetHexValue(byte[] value)
         {
             RegDigit0.SetDataRegister(value[0]);
             RegDigit1.SetDataRegister(value[1]);

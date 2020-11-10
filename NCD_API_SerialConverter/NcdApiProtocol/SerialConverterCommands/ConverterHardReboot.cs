@@ -1,6 +1,4 @@
-﻿using NCD_API_SerialConverter.NcdApiProtocol.SerialConverterCommands;
-
-namespace NCD_API_SerialConverter.Commands
+﻿namespace NCD_API_SerialConverter.NcdApiProtocol.SerialConverterCommands
 {
     public class ConverterHardReboot : ConverterBase
     {

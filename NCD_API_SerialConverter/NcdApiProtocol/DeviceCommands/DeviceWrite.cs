@@ -3,14 +3,14 @@
     using System.Collections.Generic;
     using System.Linq;
     using BoosterPumpLibrary.Commands;
-    using NCD_API_SerialConverter.NcdApiProtocol;
+    using NcdApiProtocol;
 
-    public class DeviceWrite : Command_Base<WriteCommand>
+    public class DeviceWrite : CommandBase<WriteCommand>
     {
         public DeviceWrite(WriteCommand backingValue) : base(backingValue)
         { }
 
-        public override byte Length => (byte)(Payload.Count() + 2);
+        public override byte Length => (byte)(Payload.Length + 2);
 
         public override byte Command => 0xBE;
 

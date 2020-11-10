@@ -2,24 +2,24 @@
 {
     using BoosterPumpLibrary.Commands;
     using BoosterPumpLibrary.Contracts;
-    using NCD_API_SerialConverter.Contracts;
-    using NCD_API_SerialConverter.NcdApiProtocol.DeviceCommands;
-    using NCD_API_SerialConverter.NcdApiProtocol.SerialConverterCommands;
+    using Contracts;
+    using NcdApiProtocol.DeviceCommands;
+    using NcdApiProtocol.SerialConverterCommands;
     using System.Collections.Generic;
 
     public class SerialConverter : ISerialConverter // ,  IModuleCommunication
     {
-        private readonly INCD_API_SerialPort serialPort;
+        private readonly INcdApiSerialPort _SerialPort;
 
-        public SerialConverter(INCD_API_SerialPort serialPort)
+        public SerialConverter(INcdApiSerialPort serialPort)
         {
-            this.serialPort = serialPort;
+            this._SerialPort = serialPort;
         }
 
         protected IDataFromDevice Execute(IEnumerable<byte> data)
         {
-            serialPort.Write(data);
-            var returnValue = serialPort.Read();
+            _SerialPort.Write(data);
+            var returnValue = _SerialPort.Read();
             return returnValue;
         }
 

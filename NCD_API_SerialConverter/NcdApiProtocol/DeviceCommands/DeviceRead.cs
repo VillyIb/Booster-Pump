@@ -2,9 +2,9 @@
 {
     using System.Collections.Generic;
     using BoosterPumpLibrary.Commands;
-    using NCD_API_SerialConverter.NcdApiProtocol;
+    using NcdApiProtocol;
 
-    public class DeviceRead : Command_Base<ReadCommand>
+    public class DeviceRead : CommandBase<ReadCommand>
     {
         public DeviceRead(ReadCommand backingValue) : base(backingValue)
         { }

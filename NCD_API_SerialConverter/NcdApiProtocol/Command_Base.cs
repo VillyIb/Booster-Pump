@@ -1,20 +1,23 @@
-﻿namespace NCD_API_SerialConverter.NcdApiProtocol
+﻿using System.Linq;
+
+namespace NCD_API_SerialConverter.NcdApiProtocol
 {
     using System.Collections.Generic;
     using System.Text;
     using BoosterPumpLibrary.Commands;
-    using NCD_API_SerialConverter.Contracts;
+    using Contracts;
 
-    public abstract class Command_Base<T> : IX where T : CommandBase
+    public abstract class CommandBase<T> : IX where T : CommandBase
     {
         public T BackingValue { get; }
 
-        public Command_Base(T backingField)
+        protected CommandBase(T backingField)
         {
             BackingValue = backingField;
         }
 
-        public Command_Base()
+        // ReSharper disable once UnusedMember.Global
+        protected CommandBase()
         {
             BackingValue = null;
         }
@@ -23,6 +26,7 @@
 
         public abstract byte Length { get; }
 
+        // ReSharper disable once UnusedMemberInSuper.Global
         public abstract byte Command { get; }
 
         public virtual byte? Address { get => BackingValue?.Address; }
@@ -32,10 +36,7 @@
             get
             {
                 var checksum = Header + Length;
-                foreach (var current in CommandData())
-                {
-                    checksum += current;
-                }
+                checksum = CommandData().Aggregate(checksum, (current1, current) => current1 + current);
                 return (byte)(checksum & 0xff);
             }
         }
@@ -54,6 +55,7 @@
             yield return Checksum;
         }
 
+        // ReSharper disable once UnusedMember.Global
         public string CommandDataAsHex
         {
             get

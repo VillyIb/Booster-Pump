@@ -1,6 +1,7 @@
-﻿namespace BoosterPumpLibrary.Contracts
+﻿// ReSharper disable UnusedMemberInSuper.Global
+namespace BoosterPumpLibrary.Contracts
 {
-    using BoosterPumpLibrary.Commands;
+    using Commands;
 
     public interface ISerialConverter
     {

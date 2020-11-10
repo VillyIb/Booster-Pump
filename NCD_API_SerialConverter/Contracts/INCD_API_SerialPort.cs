@@ -6,7 +6,7 @@ namespace NCD_API_SerialConverter.Contracts
     /// <summary>
     /// Low level contract for sending to- and receiving data from a NCD device.
     /// </summary>
-    public interface INCD_API_SerialPort
+    public interface INcdApiSerialPort
     {
         /// <summary>
         /// Sends the specified byteSequence to a NCD device.

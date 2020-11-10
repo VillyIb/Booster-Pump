@@ -49,6 +49,7 @@
         }
 
 
+        // ReSharper disable once UnusedMember.Global
         public bool GetDataRegisterBit(byte mask)
         {
             return (Value & mask) > 0;

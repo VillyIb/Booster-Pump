@@ -4,18 +4,18 @@ using System.Linq;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Ports;
-using System.Text;
 using System.Diagnostics.CodeAnalysis;
 using NCD_API_SerialConverter.NcdApiProtocol;
+// ReSharper disable UnusedMember.Global
 
 namespace NCD_API_SerialConverter
 {
     [ExcludeFromCodeCoverage]
-    public class SerialPortDecorator : INCD_API_SerialPort, IDisposable
+    public class SerialPortDecorator : INcdApiSerialPort, IDisposable
     {
         protected SerialPort SerialPort { get; private set; }
 
-        protected ReadNcdApiFormat ReadUtil { get; private set; }
+        protected ReadNcdApiFormat ReadUtil { get; }
 
         private readonly string PortName;
         private readonly int BaudRate;
@@ -51,7 +51,7 @@ namespace NCD_API_SerialConverter
         }
 
         /// <summary>
-        /// Discard all data in iput buffer.
+        /// Discard all data in input buffer.
         /// </summary>
         public void DiscardInBuffer()
         {
@@ -78,7 +78,7 @@ namespace NCD_API_SerialConverter
 
         protected IEnumerable<byte> ReadBlock()
         {
-            int bytesToRead = SerialPort.BytesToRead;
+            var bytesToRead = SerialPort.BytesToRead;
             var buffer = new byte[bytesToRead];
             var actualRead = SerialPort.Read(buffer, 0, bytesToRead);
             return buffer.Take(actualRead);
@@ -102,6 +102,7 @@ namespace NCD_API_SerialConverter
                 {
                     SerialPort?.Dispose();
                 }
+                // ReSharper disable once EmptyGeneralCatchClause
                 catch
                 { }
             }

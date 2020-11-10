@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
-using System.IO.Ports;
 using System.Diagnostics.CodeAnalysis;
 using NCD_API_SerialConverter.NcdApiProtocol;
 
@@ -38,12 +37,12 @@ namespace NCD_API_SerialConverter
 
         protected void ReadUntilHeaderDetected()
         {
-            const byte NCD_API_Header = 0xAA;
+            const byte XfNcdApiHeader = 0xAA;
             var retry = 10;
 
             var header = RawRead(); // has standard timeout  // not expecting timeout
 
-            while (header != NCD_API_Header)
+            while (header != XfNcdApiHeader)
             {
                 Console.Error.WriteLine($"Wrong header {header}");
                 if (retry-- <= 0) { throw new ApplicationException("Header not found"); }
@@ -61,12 +60,11 @@ namespace NCD_API_SerialConverter
 
         protected void ReadBlock()
         {
-            if (ReadResult.ByteCount > 0)
-            {
-                var buffer = FuncReadBlock();
-                Buffer.AddRange(buffer);
-                RawBuffer.AddRange(buffer.Select(t => (int)t));
-            }
+            if (ReadResult.ByteCount <= 0) return;
+
+            var buffer = FuncReadBlock().ToList();
+            Buffer.AddRange(buffer);
+            RawBuffer.AddRange(buffer.Select(t => (int)t));
         }
 
         protected void ReadRest()
@@ -86,11 +84,6 @@ namespace NCD_API_SerialConverter
             Buffer = new List<byte>();
             ReadResult = new DataFromDevice();
 
-            //if (null == SerialPort || !SerialPort.IsOpen)
-            //{
-            //    throw new InvalidOperationException();
-            //}
-
             try
             {
                 ReadUntilHeaderDetected();
@@ -98,14 +91,9 @@ namespace NCD_API_SerialConverter
                 ReadBlock();
                 ReadRest();
             }
-            catch (TimeoutException ex)
+            catch (TimeoutException)
             {
-                var msg2 = ex.Message;
                 Console.Error.WriteLine("TimeoutException");
-            }
-            finally
-            {
-
             }
 
             ReadResult.Payload = Buffer.Take(Buffer.Count - 1).ToArray();

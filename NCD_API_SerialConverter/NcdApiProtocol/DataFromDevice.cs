@@ -1,11 +1,13 @@
-﻿namespace NCD_API_SerialConverter.NcdApiProtocol
+﻿using System.Linq;
+
+namespace NCD_API_SerialConverter.NcdApiProtocol
 {
     using BoosterPumpLibrary.Contracts;
     using System.Collections.Generic;
     using System.Text;
 
     /// <summary>
-    /// Data retured from device.
+    /// Data returned from device.
     /// </summary>
     public class DataFromDevice : IDataFromDevice
     {
@@ -24,10 +26,7 @@
                 if(ByteCount != Payload.Length) { return false; }
 
                 var checksum = Header + ByteCount;
-                foreach (var current in Payload)
-                {
-                    checksum += current;
-                }
+                checksum = Payload.Aggregate(checksum, (current1, current) => current1 + current);
                 return Checksum == (byte)(checksum & 0xff);
             }
         }

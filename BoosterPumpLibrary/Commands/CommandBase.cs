@@ -11,7 +11,7 @@ namespace BoosterPumpLibrary.Commands
 
         public abstract IEnumerable<byte> I2C_Data();
 
-        public string I2C_DataAsHex
+        public string I2CDataAsHex
         {
             get
             {
