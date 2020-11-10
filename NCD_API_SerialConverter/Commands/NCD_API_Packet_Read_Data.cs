@@ -1,12 +1,13 @@
 ﻿namespace NCD_API_SerialConverter.Commands
 {
+    using BoosterPumpLibrary.Contracts;
     using System.Collections.Generic;
     using System.Text;
 
     /// <summary>
     /// Data retured from device.
     /// </summary>
-    public class NCD_API_Packet_Read_Data
+    public class NCD_API_Packet_Read_Data : IDataFromDevice
     {
         public byte Header { get; set; }
 

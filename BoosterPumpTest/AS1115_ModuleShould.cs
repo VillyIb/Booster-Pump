@@ -12,11 +12,11 @@ namespace BoosterPumpTest
     public class AS1115_ModuleShould
     {
         private readonly AS1115_Module sut;
-        private readonly IModuleCommunication fakeSerialPort;
+        private readonly ISerialConverter fakeSerialPort;
 
         public AS1115_ModuleShould()
         {
-            fakeSerialPort = Substitute.For<IModuleCommunication>();
+            fakeSerialPort = Substitute.For<ISerialConverter>();
             sut = new AS1115_Module(fakeSerialPort);
         }
 

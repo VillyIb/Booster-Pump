@@ -63,11 +63,6 @@ namespace NCD_API_SerialConverter
             get => SerialPort.ReadTimeout;
         }
 
-        public void Dispose()
-        {
-            throw new NotImplementedException();
-        }
-
         public void Write(IEnumerable<byte> byteSequence)
         {
             var dataArray = byteSequence.ToArray();
@@ -87,6 +82,33 @@ namespace NCD_API_SerialConverter
         public NCD_API_Packet_Read_Data Read()
         {
             return ReadUtil.Read();
-        }       
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                // Dispose managed state (managed objects).
+                try
+                {
+                    SerialPort?.Dispose();
+                }
+                catch
+                { }
+            }
+            // release unmanaged resources
+            SerialPort = null;
+        }
+
+        ~SerialPortDecorator()
+        {
+            Dispose(false);
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
     }
 }

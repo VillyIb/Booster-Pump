@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using BoosterPumpLibrary.Commands;
 
-    public class NCD_API_Scan_Command : NCD_API_Command_Base<CommandBase>
+    public class NCD_API_Converter_Scan_Command : NCD_API_Command_Base<CommandBase>
     {
         public override byte Length => (byte)(Payload.Count() + 1);
 

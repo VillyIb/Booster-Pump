@@ -30,8 +30,7 @@ namespace SerialConverter.Test
         public void WriteByteSequenceForEcecuteReadCommand()
         {
             var command = new ReadCommand { Address = Address, LengthRequested = 1 };
-            var ncdCommand = new NCD_API_Packet_Read_Command(command);
-            sud.Execute(ncdCommand);
+            sud.Execute(command);
 
             var expected = new byte[] { 0xAA, 0x03, 0xBF, 0x41, 0x01, 0xAE };
 
@@ -44,12 +43,9 @@ namespace SerialConverter.Test
         public void WriteByteSequenceForEcecuteWriteCommand()
         {
             var command = new WriteCommand { Address = Address, Payload = new byte[] { 0x03, 0x00 } };
-            var ncdCommand = new NCD_API_Packet_Write_Command(command);
-            sud.Execute(ncdCommand);
+            sud.Execute(command);
 
             var expected = (new byte[] { 0xAA, 0x04, 0xBE, 0x41, 0x03, 0x00, 0xB0 });
-
-            expected.SequenceEqual(ncdCommand.ApiEncodedData());
 
             fakeSerialPort.Received().Write(Arg.Any<IEnumerable<byte>>());
             fakeSerialPort.Received().Write(Arg.Is<IEnumerable<byte>>(seq => expected.Count() == seq.Count()));
@@ -61,12 +57,9 @@ namespace SerialConverter.Test
         {
             Address = 0x68;
             var command = new WriteReadCommand { Address = Address, Payload = new byte[] { 0x10 }, Delay = 0x16, LengthRequested = 0x02 };
-            var ncdCommand = new NCD_API_Packet_Write_Read_Command(command);
-            sud.Execute(ncdCommand);
+            sud.Execute(command);
 
             var expected = (new byte[] { 0xAA, 0x05, 0xC0, 0x68, 0x02, 0x16, 0x10, 0xFF });
-
-            expected.SequenceEqual(ncdCommand.ApiEncodedData());
 
             fakeSerialPort.Received().Write(Arg.Any<IEnumerable<byte>>());
             fakeSerialPort.Received().Write(Arg.Is<IEnumerable<byte>>(seq => expected.Count() == seq.Count()));
@@ -76,7 +69,7 @@ namespace SerialConverter.Test
         [Fact]
         public void WriteByteSequenceForScanCommand()
         {
-            var ncdCommand = new NCD_API_Scan_Command();
+            var ncdCommand = new NCD_API_Converter_Scan_Command();
             sud.Execute(ncdCommand);
 
             var expected = (new byte[] { 0xAA, 0x02, 0xC1, 0x00, 0x6D });

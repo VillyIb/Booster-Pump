@@ -5,8 +5,7 @@ using System.Collections.Generic;
 using System.IO.Ports;
 
 namespace NCD_API_SerialConverter
-{
-    
+{    
     public class ReadNcdApiFormat
     {
         /// <summary>
@@ -114,7 +113,7 @@ namespace NCD_API_SerialConverter
 
             if(!ReadResult.VerifyChecksum)
             {
-                throw new ApplicationException("");// TODO
+                throw new ApplicationException("Checksum verification failed");
             }
 
             return ReadResult;

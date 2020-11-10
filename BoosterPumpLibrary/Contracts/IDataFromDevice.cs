@@ -2,6 +2,6 @@
 {
     public interface IDataFromDevice
     {
-        byte[] payload { get; }
+        byte[] Payload { get; }
     }
 }

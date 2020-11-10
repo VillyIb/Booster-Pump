@@ -12,7 +12,7 @@ namespace BoosterPumpLibrary.Modules
     {
         // see:https://s3.amazonaws.com/controleverything.media/controleverything/Production%20Run%2013/45_AS1115_I2CL_3CE_AMB/Datasheets/AS1115_Datasheet_EN_v2.pdf
 
-        private readonly IModuleCommunication serialPort;
+        private readonly ISerialConverter serialPort;
 
         private Register RegDigit0 = new Register(0x01, "Digit 0", "N0");
         private Register RegDigit1 = new Register(0x02, "Digit 1", "N0");
@@ -34,7 +34,7 @@ namespace BoosterPumpLibrary.Modules
         private AS1115_Module()
         { }
 
-        public AS1115_Module(IModuleCommunication serialPort)
+        public AS1115_Module(ISerialConverter serialPort)
         {
             this.serialPort = serialPort;
         }
@@ -85,7 +85,7 @@ namespace BoosterPumpLibrary.Modules
 
                 var writeCommand = new WriteCommand { Address = Address, Payload = currentCommand };
 
-                serialPort.Execute(writeCommand);
+               var returnValue = serialPort.Execute(writeCommand);
             }
         }
 
