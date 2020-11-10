@@ -1,8 +1,7 @@
-﻿namespace NCD_API_SerialConverter.Commands
+﻿namespace NCD_API_SerialConverter.NcdApiProtocol.SerialConverterCommands
 {
     using System.Collections.Generic;
     using System.Linq;
-    using NCD_API_SerialConverter.NcdApiProtocol.SerialConverterCommands;
 
     public class ConverterTest2Way : ConverterCommandBase
     {
@@ -10,7 +9,7 @@
 
         public override byte Command => 0xFE;
 
-        public override  byte[] Payload => new byte[] { 0x21 };
+        public override byte[] Payload => new byte[] { 0x21 };
 
         public override IEnumerable<byte> CommandData()
         {

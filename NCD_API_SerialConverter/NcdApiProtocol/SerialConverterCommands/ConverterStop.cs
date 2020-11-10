@@ -1,7 +1,5 @@
-﻿namespace NCD_API_SerialConverter.Commands
+﻿namespace NCD_API_SerialConverter.NcdApiProtocol.SerialConverterCommands
 {
-    using NCD_API_SerialConverter.NcdApiProtocol.SerialConverterCommands;
-
     public class ConverterStop : ConverterCommandBase
     {
         public override byte[] Payload => new byte[] { 0x21, 0xBB };

@@ -10,6 +10,7 @@ namespace SerialConverter.Test
     using BoosterPumpLibrary.Commands;
     using NCD_API_SerialConverter.Commands;
     using NCD_API_SerialConverter;
+    using NCD_API_SerialConverter.NcdApiProtocol.SerialConverterCommands;
 
     public class NCD_API_SerialConverterShould
     {
