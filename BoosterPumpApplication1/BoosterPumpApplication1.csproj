@@ -1,15 +1,13 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.IO.Ports" Version="4.7.0" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\BoosterPumpLibrary\BoosterPumpLibrary.csproj" />
+    <ProjectReference Include="..\NCD_API_SerialConverter\NCD_API_SerialConverter.csproj" />
   </ItemGroup>
 
 </Project>

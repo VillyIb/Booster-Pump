@@ -16,6 +16,19 @@
 
         public byte Checksum { get; set; }
 
+        public bool VerifyChecksum
+        {
+            get
+            {
+                var checksum = Header + ByteCount;
+                foreach (var current in Payload)
+                {
+                    checksum += current;
+                }
+                return Checksum == (byte)(checksum & 0xff);
+            }
+        }
+
         public IEnumerable<byte> ApiEncodedData()
         {
             yield return Header;

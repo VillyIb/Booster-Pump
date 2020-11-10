@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using NCD_API_SerialConverter.Commands;
+using System.Collections.Generic;
 
 namespace NCD_API_SerialConverter.Contracts
 {
@@ -13,6 +14,6 @@ namespace NCD_API_SerialConverter.Contracts
         /// <param name="byteSequence"></param>
         void Write(IEnumerable<byte> byteSequence);
 
-        IEnumerable<byte> Read();
+        NCD_API_Packet_Read_Data Read();
     }
 }
