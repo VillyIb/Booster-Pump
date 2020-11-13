@@ -1,23 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using BoosterPumpLibrary.Commands;
 using BoosterPumpLibrary.Contracts;
+using BoosterPumpLibrary.ModuleBase;
 
 namespace BoosterPumpLibrary.Modules
 {
     // ReSharper disable once UnusedMember.Global
-    public class AMS5812_0150_D_B_Module
+    public class AMS5812_0150_D_B_Module : BaseModule
     {
-        private readonly ISerialConverter SerialPort;
+        public override byte Address => 0x78;
 
-        public byte Address => 0x78;
-
-
-        public AMS5812_0150_D_B_Module(ISerialConverter serialPort)
-        {
-            SerialPort = serialPort;
-        }
+        public AMS5812_0150_D_B_Module(ISerialConverter serialPort) : base(serialPort)
+        { }
 
         public float Pressure { get; protected set; }
 
@@ -25,14 +20,47 @@ namespace BoosterPumpLibrary.Modules
 
         public float Temperature { get; protected set; }
 
+        protected override IEnumerable<Register> Registers => new List<Register>(0);
 
+        public int DevicePressureMin = 3277;
+        public int DevicePressureMax = 29491;
+
+        public float OutputPressureMin = -1034f;
+        public float OutputPressureMax = 1034;
+
+        public int DeviceTempMin = 3277;
+        public int DeviceTempMax = 29491;
+
+        public float OutputTempMin = -25f;
+        public float OutputTempMax = 85f;
 
         public void ReadFromDevice()
         {
-            var command = new ReadCommand{Address =  Address, LengthRequested =  4};
-            var response =  SerialPort.Execute(command);
+            var command = new ReadCommand { Address = Address, LengthRequested = 4 };
+            var response = SerialPort.Execute(command);
 
-            // calculate Pressure and Temperature.
+            var measuredPressure = response.Payload[0] * 256 + response.Payload[1];
+
+            Pressure = (float)Math.Round(
+                (measuredPressure - DevicePressureMin) *
+                (OutputPressureMax - OutputPressureMin) /
+                (DevicePressureMax - DevicePressureMin) +
+                OutputPressureMin,
+                2);
+
+            var measuredTemp = response.Payload[2] * 256 + response.Payload[3];
+            
+            Temperature = (float) Math.Round(
+                (measuredTemp - DeviceTempMin) *
+                (OutputTempMax - OutputTempMin) /
+                (DeviceTempMax - DeviceTempMin) +
+                OutputTempMin,
+                2);
+        }
+
+        public override void Init()
+        { 
+            // No initialization required.
         }
     }
 }

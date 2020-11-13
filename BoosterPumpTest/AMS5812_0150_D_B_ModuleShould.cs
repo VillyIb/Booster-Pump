@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using BoosterPumpLibrary.Commands;
+﻿using BoosterPumpLibrary.Commands;
 using BoosterPumpLibrary.Contracts;
 using BoosterPumpLibrary.Modules;
 using NSubstitute;
-using NSubstitute.Routing.Handlers;
 using Xunit;
+using NCD_API_SerialConverter.NcdApiProtocol;
 
 namespace BoosterPumpTest
 {
@@ -24,15 +21,15 @@ namespace BoosterPumpTest
         [Fact]
         public void SendReadSequenceCallingReadFromDevice()
         {
+            IDataFromDevice returnValue = new DataFromDevice{Header = 0xAA, ByteCount = 0x04, Payload = new byte[] { 0x3F, 0xEB, 0x36, 0xE2 }, Checksum = 0xD8};
+            _FakeSerialPort.Execute(Arg.Any<ReadCommand>()).Returns(returnValue);
+
             _Sut.ReadFromDevice();
 
-            //_FakeSerialPort.When()...ReturnAutoValue(0xAA, 0x06, 0x00, 0x00, 0x00, 0x00, 0x00); // simulate measurement...
+            _FakeSerialPort.Received().Execute(Arg.Is<ReadCommand>(c => c.I2CDataAsHex == "78 04 "));
 
-            _FakeSerialPort.Received().Execute(Arg.Is<WriteCommand>(c => c.I2CDataAsHex == "78 00"));
-
-            Assert.Equal(55.5f, _Sut.Pressure); 
-            Assert.Equal(24.5f, _Sut.Temperature);
+            Assert.Equal(-1.7f, _Sut.Pressure);
+            Assert.Equal(20.2f, _Sut.Temperature);
         }
-
     }
 }

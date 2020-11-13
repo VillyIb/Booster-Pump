@@ -1,4 +1,8 @@
-﻿using BoosterPumpLibrary.Modules;
+﻿using System;
+using System.Diagnostics;
+using System.Threading;
+using BoosterPumpLibrary.ModuleBase;
+using BoosterPumpLibrary.Modules;
 using NCD_API_SerialConverter;
 
 namespace BoosterPumpApplication1
@@ -13,17 +17,72 @@ namespace BoosterPumpApplication1
 
             var displayModule = new As1115Module(serialConverter);
 
+            var pressureModule1 = new AMS5812_0150_D_B_Module(serialConverter);
+            var pressureModule2 = new AMS5812_0150_D_B_Module(serialConverter);
+            var pressureModule3 = new AMS5812_0150_D_B_Module(serialConverter);
+            var pressureModule4 = new AMS5812_0300_A_PressureModule(serialConverter);
+
+            var baromeerModule = new LPS25HB_BarometerModule(serialConverter);
+
+            var multiplexer = new TCA9546MultiplexerModule(serialConverter);
+
             try
             {
                 serialPort.Open();
 
                 displayModule.Init();
 
-                for (var count = 0.1f; count < 1000f; count += 0.1f)
+                displayModule.SetBcdValue(1000);
+
+                Thread.Sleep(1000);
+
+                baromeerModule.Init();
+
+                for(var index = 0; index < 100; index++)
                 {
-                    displayModule.SetBcdValue(count);
-                    displayModule.Send();
+                    baromeerModule.ReadDevice();
+
+                    var ps = baromeerModule.AirPressure;
+                    var tmp = baromeerModule.Temperature;
                 }
+
+
+
+
+                var stopwatch = new Stopwatch();
+                stopwatch.Start();
+                for (int i = 0; i < 100; i++)
+                {
+                    displayModule.SetBcdValue(111);
+                    Thread.Sleep(1000);
+                    multiplexer.SelectOpenChannels(BitPattern.D0);
+                    pressureModule1.ReadFromDevice();
+                    displayModule.SetBcdValue(pressureModule1.Pressure);
+                    Thread.Sleep(2000);
+
+                    displayModule.SetBcdValue(222);
+                    Thread.Sleep(1000);
+                    multiplexer.SelectOpenChannels(BitPattern.D1);
+                    pressureModule2.ReadFromDevice();
+                    displayModule.SetBcdValue(pressureModule2.Pressure);
+                    Thread.Sleep(2000);
+
+                    displayModule.SetBcdValue(333);
+                    Thread.Sleep(1000);
+                    multiplexer.SelectOpenChannels(BitPattern.D2);
+                    pressureModule3.ReadFromDevice();
+                    displayModule.SetBcdValue(pressureModule3.Pressure);
+                    Thread.Sleep(2000);
+
+                    displayModule.SetBcdValue(444);
+                    Thread.Sleep(1000);
+                    multiplexer.SelectOpenChannels(BitPattern.D3);
+                    pressureModule4.ReadFromDevice();
+                    displayModule.SetBcdValue(pressureModule4.Pressure - 1011.91f);
+                    Thread.Sleep(2000);
+                }
+                stopwatch.Stop();
+                Console.WriteLine(String.Format($"{stopwatch.ElapsedMilliseconds} ms"));
             }
             finally
             {

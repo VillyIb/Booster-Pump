@@ -8,11 +8,9 @@ namespace BoosterPumpLibrary.Modules
     using ModuleBase;
     using Commands;
 
-    public class As1115Module
+    public class As1115Module : BaseModule
     {
         // see:https://s3.amazonaws.com/controleverything.media/controleverything/Production%20Run%2013/45_AS1115_I2CL_3CE_AMB/Datasheets/AS1115_Datasheet_EN_v2.pdf
-
-        private readonly ISerialConverter _SerialPort;
 
         private readonly Register RegDigit0 = new Register(0x01, "Digit 0", "N0");
         private readonly Register RegDigit1 = new Register(0x02, "Digit 1", "N0");
@@ -30,61 +28,14 @@ namespace BoosterPumpLibrary.Modules
         private readonly Register RegIntensityDigit01 = new Register(0x10, "IntensityDigit01", "N0");
         private readonly Register RegIntensityDigit23 = new Register(0x11, "IntensityDigit23", "N0");
 
-        public byte Address => 0x00;
+        public override byte Address => 0x00;
 
-        public As1115Module(ISerialConverter serialPort)
-        {
-            _SerialPort = serialPort;
-        }
+        public As1115Module(ISerialConverter serialPort) : base(serialPort)
+        { }
 
-        private IEnumerable<Register> Registers => new[] { RegShutdownRegister, RegFeatureRegister, RegDecodingEnabled, RegGlobalIntensityRegister, RegScanLimit, RegIntensityDigit01, RegIntensityDigit23, RegDigit0, RegDigit1, RegDigit2 };
+        protected override IEnumerable<Register> Registers => new[] { RegShutdownRegister, RegFeatureRegister, RegDecodingEnabled, RegGlobalIntensityRegister, RegScanLimit, RegIntensityDigit01, RegIntensityDigit23, RegDigit0, RegDigit1, RegDigit2 };
 
-        /// <summary>
-        /// Returns next command for each call.
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerable<byte> CurrentCommand()
-        {
-            var result = new List<byte>();
-            byte currentRegisterId = 0;
-
-            foreach (var current in Registers)
-            {
-                if (!current.IsDirty) continue;
-
-                if (result.Count > 0 && currentRegisterId + 1 != current.RegisterId) { break; }
-                if (result.Count == 0)
-                {
-                    result.Add(current.RegisterId);
-                }
-                result.Add(current.GetDataRegisterAndClearDirty());
-                currentRegisterId = current.RegisterId;
-            }
-
-            return result;
-        }
-
-        public bool MoveNextCommand()
-        {
-            return Registers.Any(t => t.IsDirty);
-        }
-
-        public void Send()
-        {
-            while (MoveNextCommand())
-            {
-                var output = new List<byte> { Address };
-                var currentCommand = CurrentCommand().ToList();
-                output.AddRange(currentCommand);
-
-                var writeCommand = new WriteCommand { Address = Address, Payload = currentCommand };
-
-                // ReSharper disable once UnusedVariable
-                var returnValue = _SerialPort.Execute(writeCommand);
-            }
-        }
-
-        public void Init()
+        public override void Init()
         {
             SetPrimarySettingsDirty();
             SetShutdownModeNormalResetFeature();
@@ -263,6 +214,5 @@ namespace BoosterPumpLibrary.Modules
             RegDigit1.SetDataRegister(value[1]);
             RegDigit2.SetDataRegister(value[2]);
         }
-
     }
 }

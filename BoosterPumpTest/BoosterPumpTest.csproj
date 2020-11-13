@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BoosterPumpLibrary\BoosterPumpLibrary.csproj" />
+    <ProjectReference Include="..\NCD_API_SerialConverter\NCD_API_SerialConverter.csproj" />
   </ItemGroup>
 
 </Project>
