@@ -64,9 +64,15 @@ namespace BoosterPumpLibrary.ModuleBase
             }
         }
 
-        public void SetRegisterForReading(Register register)
+        public void SelectRegisterForReading(Register register)
         {
             var writeCommand = new WriteCommand { Address = Address, Payload = new[] { register.RegisterId } };
+            var returnValue = SerialPort.Execute(writeCommand);
+        }
+
+        public void SelectRegisterForReadingWithAutoIncrement(Register register)
+        {
+            var writeCommand = new WriteCommand { Address = Address, Payload = new[] { (byte)(register.RegisterId | 0x80) } };
             var returnValue = SerialPort.Execute(writeCommand);
         }
 

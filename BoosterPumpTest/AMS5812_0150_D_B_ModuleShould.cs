@@ -21,15 +21,15 @@ namespace BoosterPumpTest
         [Fact]
         public void SendReadSequenceCallingReadFromDevice()
         {
-            IDataFromDevice returnValue = new DataFromDevice{Header = 0xAA, ByteCount = 0x04, Payload = new byte[] { 0x3F, 0xEB, 0x36, 0xE2 }, Checksum = 0xD8};
-            _FakeSerialPort.Execute(Arg.Any<ReadCommand>()).Returns(returnValue);
+            IDataFromDevice fakeReturnValue = new DataFromDevice{Header = 0xAA, ByteCount = 0x04, Payload = new byte[] { 0x3F, 0xEB, 0x36, 0xE2 }, Checksum = 0xD8};
+            _FakeSerialPort.Execute(Arg.Any<ReadCommand>()).Returns(fakeReturnValue);
 
             _Sut.ReadFromDevice();
 
             _FakeSerialPort.Received().Execute(Arg.Is<ReadCommand>(c => c.I2CDataAsHex == "78 04 "));
 
-            Assert.Equal(-1.7f, _Sut.Pressure);
-            Assert.Equal(20.2f, _Sut.Temperature);
+            Assert.Equal(-1.66f, _Sut.Pressure);
+            Assert.Equal(20.21f, _Sut.Temperature);
         }
     }
 }
