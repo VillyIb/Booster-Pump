@@ -26,6 +26,8 @@ namespace BoosterPumpApplication1
 
             var multiplexer = new TCA9546MultiplexerModule(serialConverter);
 
+            var speedController = new MCP4725_4_20mA_CurrentTransmitter(serialConverter);
+
             try
             {
                 serialPort.Open();
@@ -40,18 +42,26 @@ namespace BoosterPumpApplication1
 
                 double initial = 1000.0;
 
-                for (var index = 0; index < 1000000; index++)
+                if(true)
                 {
-                    baromeerModule.ReadDevice();
-
-                    displayModule.SetBcdValue((float)(baromeerModule.AirPressure - initial));
-                    Thread.Sleep(3000);
-
-                    displayModule.SetBcdValue((float)baromeerModule.Temperature);
-                    Thread.Sleep(3 * 1000);
+                    speedController.SetSpeed(0.50f);
                 }
 
-                if (true)
+                if (false)
+                {
+                    for (var index = 0; index < 1000000; index++)
+                    {
+                        baromeerModule.ReadDevice();
+
+                        displayModule.SetBcdValue((float)(baromeerModule.AirPressure - initial));
+                        Thread.Sleep(3000);
+
+                        displayModule.SetBcdValue((float)baromeerModule.Temperature);
+                        Thread.Sleep(3 * 1000);
+                    }
+                }
+
+                if (false)
                 {
                     var stopwatch = new Stopwatch();
                     stopwatch.Start();
