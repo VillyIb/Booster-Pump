@@ -12,7 +12,7 @@ namespace BoosterPumpLibrary.Modules
         // Technical note regarding calculating values.
         // see: https://www.st.com/resource/en/technical_note/dm00242307-how-to-interpret-pressure-and-temperature-readings-in-the-lps25hb-pressure-sensor-stmicroelectronics.pdf
 
-        public override byte Address => 0x5C;
+        public override byte DefaultAddress => 0x5C;
 
         Register RES_CONF = new Register(0x10, "Pressure and temperature resolution", "X2");
 
@@ -34,7 +34,7 @@ namespace BoosterPumpLibrary.Modules
 
         protected override IEnumerable<Register> Registers => new[] { RES_CONF, CTRL_REG1 };
 
-        public LPS25HB_BarometerModule(ISerialConverter serialPort) : base(serialPort)
+        public LPS25HB_BarometerModule(ISerialConverter serialPort, int? addressIncrement = 0) : base(serialPort, addressIncrement)
         { }
 
         public override void Init()
@@ -48,7 +48,7 @@ namespace BoosterPumpLibrary.Modules
 
             SelectRegisterForReadingWithAutoIncrement(PRESS_OUT_XL);
             var readCommand = new ReadCommand { Address = Address, LengthRequested = 5 };
-            SerialPort.Execute(readCommand);
+            var result = SerialPort.Execute(readCommand);
         }
 
         public void ReadDevice()
@@ -58,8 +58,15 @@ namespace BoosterPumpLibrary.Modules
             var readings = SerialPort.Execute(readCommand);
 
             var payload = readings.Payload;
-            AirPressure = Math.Round((payload[0] | payload[1] << 8 | payload[2] << 16) / 4096.0, 1);
-            Temperature = Math.Round(42.5 + ((short)(payload[3] | payload[4] << 8)) / 480.0, 1);
+            try
+            {
+                AirPressure = Math.Round((payload[0] | payload[1] << 8 | payload[2] << 16) / 4096.0, 1);
+                Temperature = Math.Round(42.5 + ((short)(payload[3] | payload[4] << 8)) / 480.0, 1);
+            }
+            catch(Exception ex)
+            {
+
+            }
         }
     }
 }

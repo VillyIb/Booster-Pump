@@ -5,16 +5,54 @@ using System.Linq;
 
 namespace BoosterPumpLibrary.ModuleBase
 {
+    public class ByteWrapper
+    {
+        private byte payload;
+
+        public ByteWrapper(int value)
+        {
+            payload = (byte)value;
+        }
+
+        public static ByteWrapper operator +(ByteWrapper first, ByteWrapper second)
+        {
+            return new ByteWrapper(first.payload + second.payload);
+        }
+
+        public static ByteWrapper operator +(ByteWrapper first, byte second)
+        {
+            return new ByteWrapper(first.payload + second);
+        }
+
+        public static implicit operator byte(ByteWrapper value)
+        {
+            return value.payload;
+        }
+
+        public static implicit operator ByteWrapper(int value)
+        {
+            return new ByteWrapper(value);
+        }
+    }
+
+
     public abstract class BaseModule
     {
-        public abstract byte Address { get; }
+
+        public abstract byte DefaultAddress { get; }
+
+        public ByteWrapper AddressIncrement { get; set; }
+
+        public byte Address => DefaultAddress + AddressIncrement;
+
         protected ISerialConverter SerialPort { get; }
 
         public abstract void Init();
 
-        public BaseModule(ISerialConverter serialPort)
+        public BaseModule(ISerialConverter serialPort, int? addressIncrement = 0)
         {
-            SerialPort = serialPort;
+            SerialPort = serialPort;            
+            AddressIncrement = null != addressIncrement ? addressIncrement.Value : 0;
         }
 
         protected abstract IEnumerable<Register> Registers { get; }
@@ -53,7 +91,7 @@ namespace BoosterPumpLibrary.ModuleBase
         {
             while (MoveNextCommand())
             {
-                var output = new List<byte> { Address };
+                var output = new List<byte> { DefaultAddress };
                 var currentCommand = CurrentCommand().ToList();
                 output.AddRange(currentCommand);
 

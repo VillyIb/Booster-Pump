@@ -1,4 +1,6 @@
-﻿namespace BoosterPumpLibrary.ModuleBase
+﻿using System;
+
+namespace BoosterPumpLibrary.ModuleBase
 {
     public class Register
     {
@@ -20,10 +22,11 @@
             Value = defaultValue;
         }
 
-        public void SetDataRegister(byte value)
+        public void SetDataRegister(int value)
         {
+            if(value < 0 || 0xff < value) { throw new ArgumentOutOfRangeException(nameof(value), value, "Valid: {0..255}"); }
             //if (value == Data) { return; }
-            Value = value;
+            Value = (byte)value;
             IsDirty = true;
         }
 

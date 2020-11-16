@@ -2,7 +2,6 @@
 using BoosterPumpLibrary.ModuleBase;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace BoosterPumpLibrary.Modules
 {
@@ -10,9 +9,8 @@ namespace BoosterPumpLibrary.Modules
     {
         // Product, see: https://store.ncd.io/product/1-channel-4-20ma-current-loop-transmitter-i2c-mini-module/
         // Datasheet see: https://media.ncd.io/sites/2/20170721135048/MCP4725.pdf
-
         
-        public override byte Address => 0x60; // optional 0x61
+        public override byte DefaultAddress => 0x60; // optional 0x61
 
         private readonly Register Byte2 = new Register(0x00, "Byte2", "X2");
         private readonly Register Byte3 = new Register(0x01, "Byte3", "X2");
@@ -22,7 +20,8 @@ namespace BoosterPumpLibrary.Modules
 
         public override void Init()
         {
-            SetSpeed(0.50f);
+            SetNormalPower();
+            SetSpeedPersistent(0.50f);
         }
 
         public MCP4725_4_20mA_CurrentTransmitter(ISerialConverter serialPort) : base(serialPort)

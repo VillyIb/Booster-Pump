@@ -21,7 +21,7 @@ namespace BoosterPumpTest
         public void SendSequenceWhenCallingInit()
         {
             Sut.Init();
-            _FakeSerialPort.Received().Execute(Arg.Is<WriteCommand>(c => c.I2CDataAsHex == "60 00 40 80 00 "));
+            _FakeSerialPort.Received().Execute(Arg.Is<WriteCommand>(c => c.I2CDataAsHex == "60 00 60 80 00 "));
         }
 
         [Fact]

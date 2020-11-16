@@ -1,7 +1,8 @@
 ﻿using System;
-using System.Diagnostics;
+using System.Globalization;
+using System.Text;
 using System.Threading;
-using BoosterPumpLibrary.ModuleBase;
+using BoosterPumpLibrary.Logger;
 using BoosterPumpLibrary.Modules;
 using NCD_API_SerialConverter;
 
@@ -9,6 +10,32 @@ namespace BoosterPumpApplication1
 {
     public class Program
     {
+        private static CultureInfo CultureInfo => CultureInfo.GetCultureInfo("da-DK"); //  da-DK
+
+        private static BufferedLogWriter LogWriter { get; set; }
+
+        private static void Log(params object[] args)
+        {
+            var now = DateTime.Now;
+            now = new DateTime(
+                now.Ticks - (now.Ticks % (TimeSpan.TicksPerSecond/10)),
+                now.Kind
+            );
+
+            var timestamp = now.ToString("O");
+            var secondOfDay = now.TimeOfDay.TotalSeconds.ToString("00000", CultureInfo);
+
+            var payload = new StringBuilder();
+
+            foreach(var current in args)
+            {
+                payload.AppendFormat("{0:R}\t", current);
+            }
+
+            var row = $"{timestamp}\t{secondOfDay}\t{payload}";
+            LogWriter.Add(row, now);
+        }
+
         // ReSharper disable once UnusedParameter.Local
         public static void Main(string[] args)
         {
@@ -22,11 +49,14 @@ namespace BoosterPumpApplication1
             var pressureModule3 = new AMS5812_0150_D_B_Module(serialConverter);
             var pressureModule4 = new AMS5812_0300_A_PressureModule(serialConverter);
 
-            var baromeerModule = new LPS25HB_BarometerModule(serialConverter);
+            var baromeerModule1 = new LPS25HB_BarometerModule(serialConverter);
+            var baromeerModule2 = new LPS25HB_BarometerModule(serialConverter, 1);
 
             var multiplexer = new TCA9546MultiplexerModule(serialConverter);
 
-            var speedController = new MCP4725_4_20mA_CurrentTransmitter(serialConverter);
+            //var speedController = new MCP4725_4_20mA_CurrentTransmitter(serialConverter);
+
+            LogWriter = new BufferedLogWriter();
 
             try
             {
@@ -38,70 +68,42 @@ namespace BoosterPumpApplication1
 
                 Thread.Sleep(1000);
 
-                baromeerModule.Init();
+                baromeerModule1.Init();
+                baromeerModule2.Init();
 
-                double initial = 1000.0;
-
-                if(true)
-                {
-                    speedController.SetSpeed(0.50f);
-                }
 
                 if (false)
                 {
-                    for (var index = 0; index < 1000000; index++)
-                    {
-                        baromeerModule.ReadDevice();
-
-                        displayModule.SetBcdValue((float)(baromeerModule.AirPressure - initial));
-                        Thread.Sleep(3000);
-
-                        displayModule.SetBcdValue((float)baromeerModule.Temperature);
-                        Thread.Sleep(3 * 1000);
-                    }
+                    //speedController.SetSpeed(0.50f);
                 }
 
-                if (false)
+                while (true)
                 {
-                    var stopwatch = new Stopwatch();
-                    stopwatch.Start();
-                    for (int i = 0; i < 100; i++)
-                    {
-                        displayModule.SetBcdValue(111);
-                        Thread.Sleep(1000);
-                        multiplexer.SelectOpenChannels(TCA9546MultiplexerModule.Channel0);
-                        pressureModule1.ReadFromDevice();
-                        displayModule.SetBcdValue(pressureModule1.Pressure);
-                        Thread.Sleep(2000);
+                    baromeerModule1.ReadDevice();
+                    baromeerModule2.ReadDevice();
 
-                        displayModule.SetBcdValue(222);
-                        Thread.Sleep(1000);
-                        multiplexer.SelectOpenChannels(BitPattern.D1);
-                        pressureModule2.ReadFromDevice();
-                        displayModule.SetBcdValue(pressureModule2.Pressure);
-                        Thread.Sleep(2000);
+                    multiplexer.SelectOpenChannels(TCA9546MultiplexerModule.Channel0);
+                    pressureModule1.ReadFromDevice();
 
-                        displayModule.SetBcdValue(333);
-                        Thread.Sleep(1000);
-                        multiplexer.SelectOpenChannels(BitPattern.D2);
-                        pressureModule3.ReadFromDevice();
-                        displayModule.SetBcdValue(pressureModule3.Pressure);
-                        Thread.Sleep(2000);
+                    multiplexer.SelectOpenChannels(TCA9546MultiplexerModule.Channel1);
+                    pressureModule2.ReadFromDevice();
 
-                        displayModule.SetBcdValue(444);
-                        Thread.Sleep(1000);
-                        multiplexer.SelectOpenChannels(BitPattern.D3);
-                        pressureModule4.ReadFromDevice();
-                        displayModule.SetBcdValue(pressureModule4.Pressure - 1011.91f);
-                        Thread.Sleep(2000);
-                    }
-                    stopwatch.Stop();
-                    Console.WriteLine(String.Format($"{stopwatch.ElapsedMilliseconds} ms"));
+                    multiplexer.SelectOpenChannels(TCA9546MultiplexerModule.Channel2);
+                    pressureModule3.ReadFromDevice();
+
+                    multiplexer.SelectOpenChannels(TCA9546MultiplexerModule.Channel3);
+                    pressureModule4.ReadFromDevice();
+
+                    Log(pressureModule1.Pressure, pressureModule2.Pressure, pressureModule3.Pressure, pressureModule4.Pressure, baromeerModule1.AirPressure, baromeerModule2.AirPressure, baromeerModule1.Temperature);
+
+                    Thread.Sleep(300); // limit to 1 each second in order for logger to work.
                 }
             }
+
             finally
             {
                 serialPort.Dispose();
+                LogWriter.Dispose();
             }
         }
     }

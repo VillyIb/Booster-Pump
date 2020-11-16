@@ -9,8 +9,9 @@ namespace BoosterPumpLibrary.Modules
 {
     public class TCA9546MultiplexerModule : BaseModule
     {
-        public override byte Address => 0x70;
+        public override byte DefaultAddress => 0x70;
 
+        // TODO make strongly typed. using enum with flags.
         public const int Channel0 = BitPattern.D0;
         public const int Channel1 = BitPattern.D1;
         public const int Channel2 = BitPattern.D2;
@@ -27,7 +28,7 @@ namespace BoosterPumpLibrary.Modules
         /// Specify one or more channels {0...3} separated by , (comma).
         /// </summary>
         /// <param name="bitPattern"></param>
-        public void SelectOpenChannels(params byte[] bitPattern)
+        public void SelectOpenChannels(params byte[] bitPattern) // TODO make strongly typed 
         {
             byte aggregateBitPattern = 0x00;
             foreach(var current in bitPattern)

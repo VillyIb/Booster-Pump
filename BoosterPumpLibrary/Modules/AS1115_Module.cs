@@ -28,7 +28,7 @@ namespace BoosterPumpLibrary.Modules
         private readonly Register RegIntensityDigit01 = new Register(0x10, "IntensityDigit01", "N0");
         private readonly Register RegIntensityDigit23 = new Register(0x11, "IntensityDigit23", "N0");
 
-        public override byte Address => 0x00;
+        public override byte DefaultAddress => 0x00;
 
         public As1115Module(ISerialConverter serialPort) : base(serialPort)
         { }
@@ -94,22 +94,22 @@ namespace BoosterPumpLibrary.Modules
         /// <param name="value"></param>
         public void SetGlobalIntensity(byte value)
         {
-            this.RegGlobalIntensityRegister.SetDataRegister((byte)(value & 0x0f));
+            this.RegGlobalIntensityRegister.SetDataRegister(value & 0x0f);
         }
 
         public void Digit0Intensity(byte value)
         {
-            RegIntensityDigit01.SetDataRegister((byte)(RegIntensityDigit01.Value & 0xf0 | value & 0x0f));
+            RegIntensityDigit01.SetDataRegister(RegIntensityDigit01.Value & 0xf0 | value & 0x0f);
         }
 
         public void Digit1Intensity(byte value)
         {
-            RegIntensityDigit01.SetDataRegister((byte)(RegIntensityDigit01.Value & 0x0f | value << 4 & 0xf0));
+            RegIntensityDigit01.SetDataRegister(RegIntensityDigit01.Value & 0x0f | value << 4 & 0xf0);
         }
 
         public void Digit2Intensity(byte value)
         {
-            RegIntensityDigit23.SetDataRegister((byte)(RegIntensityDigit23.Value & 0xf0 | value & 0x0f));
+            RegIntensityDigit23.SetDataRegister(RegIntensityDigit23.Value & 0xf0 | value & 0x0f);
         }
 
         /// <summary>
@@ -118,7 +118,7 @@ namespace BoosterPumpLibrary.Modules
         /// <param name="value"></param>
         public void SetDigitsVisible(byte value)
         {
-            RegScanLimit.SetDataRegister((byte)(value - 1 & 0b0000_0011));
+            RegScanLimit.SetDataRegister(value - 1 & 0b0000_0011);
         }
 
         public void SetShutdownModeNormalResetFeature()
@@ -169,7 +169,7 @@ namespace BoosterPumpLibrary.Modules
                 RegDigit0.SetDataRegister(0x0A); // '-'
                 var digit1 = (byte)Math.Abs(value);
                 var digit2 = (byte)Math.Abs(value * 10 % 10);
-                RegDigit1.SetDataRegister((byte)(digit1 | 0b1000_0000));
+                RegDigit1.SetDataRegister(digit1 | 0b1000_0000);
                 RegDigit2.SetDataRegister(digit2);
             }
             // -0.09 ... 0.005 => 0.00
