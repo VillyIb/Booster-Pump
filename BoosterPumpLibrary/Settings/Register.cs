@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
-using System.Text;
 
 namespace BoosterPumpLibrary.Settings
 {
+
     public class Register
     {
-        public byte Value { get; protected set; }
+        public ulong Value { get; protected set; }
 
-        public byte RegisterIndex { get; protected set;}
+        public byte RegisterIndex { get; protected set; }
 
         public bool IsDirty { get; protected set; }
 
@@ -17,27 +17,59 @@ namespace BoosterPumpLibrary.Settings
 
         public string Description { get; protected set; }
 
-        private  Register()
+        /// <summary>
+        /// Number of bytes in this setting, range: 1..8.
+        /// </summary>
+        public int ByteCount { get; protected set; }
+
+        private Register()
         { }
 
-        public Register(byte registerIndex, string description, params BitSetting[] bitSettings)
+        protected void CheckRange(ulong value, ulong minValue, ulong maxValue, string name)
         {
+            if (value < minValue || maxValue < value)
+            {
+                throw new ArgumentOutOfRangeException(name, value, $"Range: {minValue}..{maxValue}");
+            }
+        }
+
+        public Register(byte registerIndex, string description, int byteCount, params BitSetting[] bitSettings)
+        {
+            CheckRange(registerIndex, 0, 127, nameof(registerIndex));
+            CheckRange((ulong)byteCount, 1, 8, nameof(byteCount));
+
             RegisterIndex = registerIndex;
             Description = description;
             BitSettings = bitSettings.ToList();
+            ByteCount = byteCount;
+            Value = 0;
 
-            foreach(var bs in BitSettings)
+            foreach (var bs in BitSettings)
             {
                 bs.ParentRegister = this;
             }
         }
 
-        public void SetDataRegister(int value)
+        public void SetDataRegister(ulong value)
         {
-            if (value < 0 || 0xff < value) { throw new ArgumentOutOfRangeException(nameof(value), value, "Valid: {0..255}"); }
-            //if (value == Data) { return; }
-            Value = (byte)value;
+            var shift = 8 * ByteCount;
+            CheckRange(value, 0UL, (1UL << shift) - 1, nameof(value));
+            var max = ulong.MaxValue;
+            if (max < value) { throw new ArgumentOutOfRangeException(nameof(value), value, "Valid: {0..2**32}"); }
+            Value = value;
             IsDirty = true;
         }
+
+        public void SetDirty()
+        {
+            IsDirty = true;
+        }
+
+        public ulong GetDataRegisterAndClearDirty()
+        {
+            IsDirty = false;
+            return Value;
+        }
+
     }
 }

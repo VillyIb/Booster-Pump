@@ -11,47 +11,156 @@ namespace BoosterPumpTest
     {
         public Register sut;
 
-        public BitSetting BsA;
-        public BitSetting BsB;
-        public BitSetting BsC;
-        public BitSetting BsD;
+        public BitSetting AlfaSetting;
+        public BitSetting BravoSetting;
+        public BitSetting CharlieSetting;
+        public BitSetting DeltaSetting;
+        public BitSetting EchoSetting;
+        public BitSetting FoxtrotSetting;
+        public BitSetting GolfSetting;
+        public BitSetting HotelSetting;
+        public BitSetting IndiaSetting;
+        public BitSetting JulietSetting;
 
         public RegisterShould()
         {
-            BsA = new BitSetting { Size = 1, StartPositon = 0 }; // 0
-            BsB = new BitSetting { Size = 2, StartPositon = 1 }; // 1..2
-            BsC = new BitSetting { Size = 3, StartPositon = 3 }; // 3..6
-            BsD = new BitSetting { Size = 1, StartPositon = 7 }; // 7
+            AlfaSetting = new BitSetting(1,0); // 0
+            BravoSetting = new BitSetting (2,1); // 1..2
+            CharlieSetting = new BitSetting (3,3); // 3..6
 
-            sut = new Register(0x00, "test register", new[] { BsA, BsB, BsC, BsD });
+            DeltaSetting = new BitSetting (4,4); // 4..7
+            EchoSetting = new BitSetting (5,3); // 3..7
+            FoxtrotSetting = new BitSetting (6,2); // 2..7
+            GolfSetting = new BitSetting (7,1); // 1..7
+            HotelSetting = new BitSetting (8,0); // 0..7
+
+            IndiaSetting = new BitSetting (24,4);
+            JulietSetting = new BitSetting(12, 3);
+
+            sut = new Register(0x00, "test register", 4, 
+                new[] { 
+                    AlfaSetting, 
+                    BravoSetting, 
+                    CharlieSetting, 
+                    DeltaSetting, 
+                    EchoSetting, 
+                    FoxtrotSetting, 
+                    GolfSetting, 
+                    HotelSetting, 
+                    IndiaSetting, 
+                    JulietSetting 
+                }
+            );
         }
 
         [Fact]
-        public void HaveSpecificValueSettingBsA ()
+        public void HaveSpecificValueSettingBsA()
         {
-            BsA.Value = 1;
-            Assert.Equal(0b000_0001, sut.Value);
+            AlfaSetting.Value = 1;
+            Assert.Equal((ulong)0b0000_0001, sut.Value);
         }
 
         [Fact]
         public void HaveSpecificValueSettingBsB()
         {
-            BsB.Value = 3;
-            Assert.Equal(0b000_0110, sut.Value);
+            BravoSetting.Value = 3;
+            Assert.Equal((ulong)0b000_0110, sut.Value);
         }
 
         [Fact]
         public void HaveSpecificValueSettingBsC()
         {
-            BsC.Value = 7;
-            Assert.Equal(0b011_1000, sut.Value);
+            CharlieSetting.Value = 7;
+            Assert.Equal((ulong)0b011_1000, sut.Value);
         }
 
         [Fact]
         public void HaveSpecificValueSettingBsD()
         {
-            BsD.Value = 1;
-            Assert.Equal(0b100_0000, sut.Value);
+            DeltaSetting.Value = 15;
+            Assert.Equal((ulong)0b1111_0000, sut.Value);
+        }
+
+        [Fact]
+        public void HaveSpecificValueSettingE()
+        {
+            EchoSetting.Value = 31;
+            Assert.Equal((ulong)0b1111_1000, sut.Value);
+        }
+
+        [Fact]
+        public void HaveSpecificValueSettingF()
+        {
+            FoxtrotSetting.Value = 63;
+            Assert.Equal((ulong)0b1111_1100, sut.Value);
+        }
+
+        [Fact]
+        public void HaveSpecificValueSettingG()
+        {
+            GolfSetting.Value = 127;
+            Assert.Equal((ulong)0b1111_1110, sut.Value);
+        }
+
+        [Fact]
+        public void HaveSpecificValueSettingH()
+        {
+            HotelSetting.Value = 255;
+            Assert.Equal((ulong)0b1111_1111, sut.Value);
+        }
+
+        [Fact]
+        public void HaveSpecificValueSettingI()
+        {
+            IndiaSetting.Value = (1 << 24) - 1;
+            Assert.Equal((ulong)0b1111_1111_1111_1111_1111_1111_0000, sut.Value);
+        }
+
+        [Fact]
+        public void HaveSpecificValueSettingJ()
+        {
+            JulietSetting.Value = (1 << 12) - 1;
+            Assert.Equal((ulong)0b0111_1111_1111_1000, sut.Value);
+        }
+
+        [Theory]
+        [InlineData(2)]
+        //[InlineData(-1)]
+        public void ThrowsExceptionWhenOutOfRangeAlfa(ulong value)
+        {
+            Exception ex = Assert.Throws<ArgumentOutOfRangeException>(() => AlfaSetting.Value = value);
+        }
+
+        [Theory]
+        [InlineData(4)]
+        //[InlineData(-1)]
+        public void ThrowsExceptionWhenOutOfRangeBravo(ulong value)
+        {
+            Exception ex = Assert.Throws<ArgumentOutOfRangeException>(() => BravoSetting.Value = value);
+        }
+
+        [Theory]
+        [InlineData(8)]
+        //[InlineData(-1)]
+        public void ThrowsExceptionWhenOutOfRangeCharlie(ulong value)
+        {
+            Exception ex = Assert.Throws<ArgumentOutOfRangeException>(() => CharlieSetting.Value = value);
+        }
+
+        [Theory]
+        [InlineData(256)]
+        //[InlineData(-1)]
+        public void ThrowsExceptionWhenOutOfRangeHotel(ulong value)
+        {
+            Exception ex = Assert.Throws<ArgumentOutOfRangeException>(() => HotelSetting.Value = value);
+        }
+
+        [Theory]
+        [InlineData(16777216)]
+        //[InlineData(-1)]
+        public void ThrowsExceptionWhenOutOfRangeIndia(ulong value)
+        {
+            Exception ex = Assert.Throws<ArgumentOutOfRangeException>(() => IndiaSetting.Value = value);
         }
     }
 }
