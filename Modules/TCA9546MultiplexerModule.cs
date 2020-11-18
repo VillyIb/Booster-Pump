@@ -5,7 +5,7 @@ using BoosterPumpLibrary.Commands;
 using BoosterPumpLibrary.Contracts;
 using BoosterPumpLibrary.ModuleBase;
 
-namespace BoosterPumpLibrary.Modules
+namespace Modules
 {
     public class TCA9546MultiplexerModule : BaseModule
     {
@@ -16,7 +16,7 @@ namespace BoosterPumpLibrary.Modules
         public const int Channel1 = BitPattern.D1;
         public const int Channel2 = BitPattern.D2;
         public const int Channel3 = BitPattern.D3;
-    
+
         protected override IEnumerable<Register> Registers => new List<Register>(0);
 
         private readonly Register OpenChannels = new Register(0x00, "Open channels", "X");
@@ -31,7 +31,7 @@ namespace BoosterPumpLibrary.Modules
         public void SelectOpenChannels(params byte[] bitPattern) // TODO make strongly typed 
         {
             byte aggregateBitPattern = 0x00;
-            foreach(var current in bitPattern)
+            foreach (var current in bitPattern)
             {
                 aggregateBitPattern |= current;
             }

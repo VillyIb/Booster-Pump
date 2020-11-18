@@ -1,6 +1,6 @@
 ﻿using BoosterPumpLibrary.Contracts;
 
-namespace BoosterPumpLibrary.Modules
+namespace Modules
 {
     public class AMS5812_0300_A_PressureModule : AMS5812_0150_D_B_Module
     {

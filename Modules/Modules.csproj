@@ -1,13 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\BoosterPumpLibrary\BoosterPumpLibrary.csproj" />
-    <ProjectReference Include="..\Modules\Modules.csproj" />
     <ProjectReference Include="..\NCD_API_SerialConverter\NCD_API_SerialConverter.csproj" />
   </ItemGroup>
 

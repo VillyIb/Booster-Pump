@@ -1,9 +1,9 @@
 ﻿using BoosterPumpLibrary.Commands;
 using BoosterPumpLibrary.Contracts;
-using BoosterPumpLibrary.Modules;
 using NSubstitute;
 using Xunit;
 using NCD_API_SerialConverter.NcdApiProtocol;
+using Modules;
 
 namespace BoosterPumpTest
 {

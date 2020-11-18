@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NCD_API_SerialConverter", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NCD_API_SerialConverter.Test", "NCD_API_SerialConverter.Test\NCD_API_SerialConverter.Test.csproj", "{41F3A653-64F1-4860-B4B9-245DC3CE28CC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoosterPumpApplication1", "BoosterPumpApplication1\BoosterPumpApplication1.csproj", "{AFD2CA6B-C26A-4F55-95EA-754370D38E39}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BoosterPumpApplication1", "BoosterPumpApplication1\BoosterPumpApplication1.csproj", "{AFD2CA6B-C26A-4F55-95EA-754370D38E39}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Modules", "Modules\Modules.csproj", "{E10933FF-6A1D-4713-81DF-0397BFB7E3AE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{AFD2CA6B-C26A-4F55-95EA-754370D38E39}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AFD2CA6B-C26A-4F55-95EA-754370D38E39}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AFD2CA6B-C26A-4F55-95EA-754370D38E39}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E10933FF-6A1D-4713-81DF-0397BFB7E3AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E10933FF-6A1D-4713-81DF-0397BFB7E3AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E10933FF-6A1D-4713-81DF-0397BFB7E3AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E10933FF-6A1D-4713-81DF-0397BFB7E3AE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

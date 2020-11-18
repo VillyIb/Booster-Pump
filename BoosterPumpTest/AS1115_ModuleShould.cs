@@ -1,8 +1,8 @@
 ﻿using BoosterPumpLibrary.Contracts;
 using NSubstitute;
 using Xunit;
-using BoosterPumpLibrary.Modules;
 using BoosterPumpLibrary.Commands;
+using Modules;
 
 namespace BoosterPumpTest
 {

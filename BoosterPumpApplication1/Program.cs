@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Text;
 using System.Threading;
 using BoosterPumpLibrary.Logger;
-using BoosterPumpLibrary.Modules;
+using Modules;
 using NCD_API_SerialConverter;
 
 namespace BoosterPumpApplication1

@@ -1,39 +1,50 @@
 ﻿using BoosterPumpLibrary.Contracts;
-
 using BoosterPumpLibrary.Settings;
 using System;
 using System.Collections.Generic;
 
-namespace BoosterPumpLibrary.Modules
+namespace Modules
 {
-    public class MCP4725_4_20mA_CurrentTransmitterV2 : BoosterPumpLibrary.ModuleBase.BaseModule
+    public class MCP4725_4_20mA_CurrentTransmitterV2 : BoosterPumpLibrary.ModuleBase.BaseModuleV2
     {
         // Product, see: https://store.ncd.io/product/1-channel-4-20ma-current-loop-transmitter-i2c-mini-module/
         // Datasheet see: https://media.ncd.io/sites/2/20170721135048/MCP4725.pdf
-        
+
         public override byte DefaultAddress => 0x60; // optional 0x61
 
-        private  BitSetting PowerDown = new BitSetting(1, 1 + 16);
+        /// <summary>
+        /// 0: normal mode, 1: 1 kOhm-, 2 100 kOmh-, 3: 500 kOhm resitor to ground.
+        /// See table 5-2
+        /// </summary>
+        private BitSetting PowerDown;
 
-        private  BitSetting WriteToDacOrEeprom = new BitSetting(2, 4 +16);
+        /// <summary>
+        /// C0 and C1, 0: or 1: FastMode (not supported), 2: Write to DAC register. 3: Write to DAC register and EEPROM.
+        /// See table 6-2
+        /// </summary>
+        private BitSetting WriteToDacOrEeprom;
 
-        private  BitSetting Speed = new BitSetting(12, 4);
+        /// <summary>
+        /// 12 bit floating point value. (0..4095).
+        /// </summary>
+        private BitSetting Speed;
 
+        private RegisterHolding8Bytes Setting;
 
-
-        private Register Setting;
-
-        protected new IEnumerable<Register> Registers => new[] { Setting };
+        protected override IEnumerable<RegisterBase> Registers => new[] { Setting };
 
         public override void Init()
         {
             SetNormalPower();
             SetSpeedPersistent(0.50f);
-                    }
+        }
 
         public MCP4725_4_20mA_CurrentTransmitterV2(ISerialConverter serialPort) : base(serialPort)
         {
-            Setting = new Register(0, "Settings", 3, new[] { PowerDown, WriteToDacOrEeprom, Speed });
+            Setting = new RegisterHolding8Bytes(0, "Settings", 3);
+            PowerDown = Setting.CreateSubRegister(1, 1 + 16, "Power Down");
+            WriteToDacOrEeprom = Setting.CreateSubRegister(2, 4 + 16, "Write to DAC or EEPROM");
+            Speed = Setting.CreateSubRegister(12, 4, "Speed");
         }
 
         public void SetNormalPower()
@@ -52,17 +63,17 @@ namespace BoosterPumpLibrary.Modules
 
         protected void WriteToDacOnly()
         {
-            PowerDown.Value = 2;
+            WriteToDacOrEeprom.Value = 2;
         }
 
         protected void WriteToDacAndEeprom()
         {
-            PowerDown.Value = 3;
+            WriteToDacOrEeprom.Value = 3;
         }
 
         protected void SetSpeed(ulong speed)
         {
-            Speed.Value = speed;            
+            Speed.Value = speed;
             Send();
         }
 
@@ -77,7 +88,7 @@ namespace BoosterPumpLibrary.Modules
         }
 
         /// <summary>
-        /// Speed is in the ragne 0..100 with 12 bit resolution.
+        /// Speed is in the range [0..1[ with 12 bit resolution ~ approx 4 digits.
         /// </summary>
         /// <param name="speed"></param>
         public void SetSpeedPersistent(float speed)
@@ -88,7 +99,7 @@ namespace BoosterPumpLibrary.Modules
 
         public float GetPctValute(int value)
         {
-            if(value < 0 || 4096 < value) { throw new ArgumentOutOfRangeException(nameof(value), value, "Valid: 0...4096 (int)" ); }
+            if (value < 0 || 4096 <= value) { throw new ArgumentOutOfRangeException(nameof(value), value, "Valid: [0...4096[ (int)"); }
 
             var dec = value / 4096.0f; //  4096 = 2**12)
             return dec;
@@ -96,7 +107,7 @@ namespace BoosterPumpLibrary.Modules
 
         public int GetIntValue(float value)
         {
-            if (value < 0.0f || 1.0f < value) { throw new ArgumentOutOfRangeException(nameof(value), value, "Valid: 0...1 (float)"); }
+            if (value < 0.0f || 1.0f <= value) { throw new ArgumentOutOfRangeException(nameof(value), value, "Valid: [0...1[ (float)"); }
 
             return (int)Math.Round(value * 4096f, 0);
         }

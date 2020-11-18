@@ -6,12 +6,12 @@ using Modules;
 
 namespace BoosterPumpTest
 {
-    public class MCP4725_4_20mA_CurrentTransmitterShould
+    public class MCP4725_4_20mA_CurrentTransmitterV2Should
     {
         private readonly MCP4725_4_20mA_CurrentTransmitter Sut;
         private readonly ISerialConverter _FakeSerialPort;
 
-        public MCP4725_4_20mA_CurrentTransmitterShould()
+        public MCP4725_4_20mA_CurrentTransmitterV2Should()
         {
             _FakeSerialPort = Substitute.For<ISerialConverter>();
             Sut = new MCP4725_4_20mA_CurrentTransmitter(_FakeSerialPort);

@@ -4,7 +4,7 @@ using BoosterPumpLibrary.Commands;
 using BoosterPumpLibrary.Contracts;
 using BoosterPumpLibrary.ModuleBase;
 
-namespace BoosterPumpLibrary.Modules
+namespace Modules
 {
     // ReSharper disable once UnusedMember.Global
     public class AMS5812_0150_D_B_Module : BaseModule
@@ -49,8 +49,8 @@ namespace BoosterPumpLibrary.Modules
                 2);
 
             var measuredTemp = response.Payload[2] * 256 + response.Payload[3];
-            
-            Temperature = (float) Math.Round(
+
+            Temperature = (float)Math.Round(
                 (measuredTemp - DeviceTempMin) *
                 (OutputTempMax - OutputTempMin) /
                 (DeviceTempMax - DeviceTempMin) +
@@ -59,7 +59,7 @@ namespace BoosterPumpLibrary.Modules
         }
 
         public override void Init()
-        { 
+        {
             // No initialization required.
         }
     }

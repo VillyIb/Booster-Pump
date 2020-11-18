@@ -4,7 +4,7 @@ using System.Text;
 using BoosterPumpLibrary.Commands;
 using BoosterPumpLibrary.Contracts;
 using BoosterPumpLibrary.ModuleBase;
-using BoosterPumpLibrary.Modules;
+using Modules;
 using NCD_API_SerialConverter.NcdApiProtocol;
 using NSubstitute;
 using NSubstitute.Core.Arguments;

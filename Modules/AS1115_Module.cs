@@ -3,10 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace BoosterPumpLibrary.Modules
+namespace Modules
 {
-    using ModuleBase;
-    using Commands;
+    using BoosterPumpLibrary.ModuleBase;
 
     public class As1115Module : BaseModule
     {
@@ -94,7 +93,7 @@ namespace BoosterPumpLibrary.Modules
         /// <param name="value"></param>
         public void SetGlobalIntensity(byte value)
         {
-            this.RegGlobalIntensityRegister.SetDataRegister(value & 0x0f);
+            RegGlobalIntensityRegister.SetDataRegister(value & 0x0f);
         }
 
         public void Digit0Intensity(byte value)

@@ -4,7 +4,7 @@ using BoosterPumpLibrary.ModuleBase;
 using System;
 using System.Collections.Generic;
 
-namespace BoosterPumpLibrary.Modules
+namespace Modules
 {
     public class LPS25HB_BarometerModule : BaseModule
     {
@@ -61,9 +61,9 @@ namespace BoosterPumpLibrary.Modules
             try
             {
                 AirPressure = Math.Round((payload[0] | payload[1] << 8 | payload[2] << 16) / 4096.0, 1);
-                Temperature = Math.Round(42.5 + ((short)(payload[3] | payload[4] << 8)) / 480.0, 1);
+                Temperature = Math.Round(42.5 + (short)(payload[3] | payload[4] << 8) / 480.0, 1);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
 
             }

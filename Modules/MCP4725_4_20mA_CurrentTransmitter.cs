@@ -3,13 +3,13 @@ using BoosterPumpLibrary.ModuleBase;
 using System;
 using System.Collections.Generic;
 
-namespace BoosterPumpLibrary.Modules
+namespace Modules
 {
     public class MCP4725_4_20mA_CurrentTransmitter : BaseModule
     {
         // Product, see: https://store.ncd.io/product/1-channel-4-20ma-current-loop-transmitter-i2c-mini-module/
         // Datasheet see: https://media.ncd.io/sites/2/20170721135048/MCP4725.pdf
-        
+
         public override byte DefaultAddress => 0x60; // optional 0x61
 
         private readonly Register Byte2 = new Register(0x00, "Byte2", "X2");
@@ -64,7 +64,7 @@ namespace BoosterPumpLibrary.Modules
             Byte4.SetDataRegister(lsb);
             var msb = (byte)((speed & 0x0ff0) >> 4);
             Byte3.SetDataRegister(msb);
-            
+
             Send();
         }
 
@@ -90,7 +90,7 @@ namespace BoosterPumpLibrary.Modules
 
         public float GetPctValute(int value)
         {
-            if(value < 0 || 4096 < value) { throw new ArgumentOutOfRangeException(nameof(value), value, "Valid: 0...4096 (int)" ); }
+            if (value < 0 || 4096 < value) { throw new ArgumentOutOfRangeException(nameof(value), value, "Valid: 0...4096 (int)"); }
 
             var dec = value / 4096.0f; //  4096 = 2**12)
             return dec;

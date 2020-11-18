@@ -1,41 +1,13 @@
 ﻿using BoosterPumpLibrary.Commands;
 using BoosterPumpLibrary.Contracts;
+using BoosterPumpLibrary.Settings;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace BoosterPumpLibrary.ModuleBase
 {
-    public class ByteWrapper
-    {
-        private byte payload;
-
-        public ByteWrapper(int value)
-        {
-            payload = (byte)value;
-        }
-
-        public static ByteWrapper operator +(ByteWrapper first, ByteWrapper second)
-        {
-            return new ByteWrapper(first.payload + second.payload);
-        }
-
-        public static ByteWrapper operator +(ByteWrapper first, byte second)
-        {
-            return new ByteWrapper(first.payload + second);
-        }
-
-        public static implicit operator byte(ByteWrapper value)
-        {
-            return value.payload;
-        }
-
-        public static implicit operator ByteWrapper(int value)
-        {
-            return new ByteWrapper(value);
-        }
-    }
-
-    public abstract class BaseModule
+ 
+    public abstract class BaseModuleV2
     {
 
         public abstract byte DefaultAddress { get; }
@@ -48,13 +20,13 @@ namespace BoosterPumpLibrary.ModuleBase
 
         public abstract void Init();
 
-        public BaseModule(ISerialConverter serialPort, int? addressIncrement = 0)
+        public BaseModuleV2(ISerialConverter serialPort, int? addressIncrement = 0)
         {
             SerialPort = serialPort;            
             AddressIncrement = null != addressIncrement ? addressIncrement.Value : 0;
         }
 
-        protected abstract IEnumerable<Register> Registers { get; }
+        protected abstract IEnumerable<RegisterBase> Registers { get; }
 
         /// <summary>
         /// Returns next command for each call.
@@ -69,13 +41,13 @@ namespace BoosterPumpLibrary.ModuleBase
             {
                 if (!current.IsDirty) continue;
 
-                if (result.Count > 0 && currentRegisterId + 1 != current.RegisterId) { break; }
+                if (result.Count > 0 && currentRegisterId + 1 != current.RegisterIndex) { break; }
                 if (result.Count == 0)
                 {
-                    result.Add(current.RegisterId);
+                    result.Add(current.RegisterIndex);
                 }
-                result.Add(current.GetDataRegisterAndClearDirty());
-                currentRegisterId = current.RegisterId;
+                //result.Add(current.GetDataRegisterAndClearDirty()); // TODO fix.
+                currentRegisterId = current.RegisterIndex;
             }
 
             return result;
