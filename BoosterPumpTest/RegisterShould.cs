@@ -25,19 +25,19 @@ namespace BoosterPumpTest
         {
             Sut = new Register(0x00, "64 bit register", 8);
 
-            AlfaSetting = Sut.CreateSubRegister(1, 7, "Alfa"); // 0
-            BravoSetting = Sut.CreateSubRegister(2, 6, "Bravo"); // 1..2
-            CharlieSetting = Sut.CreateSubRegister(3, 5, "Charlie"); // 3..5
-            DeltaSetting = Sut.CreateSubRegister(4, 4, "Delta"); // 4..7
-            EchoSetting = Sut.CreateSubRegister(5, 3);
-            FoxtrotSetting = Sut.CreateSubRegister(6, 2);
-            GolfSetting = Sut.CreateSubRegister(7, 1);
-            HotelSetting = Sut.CreateSubRegister(8, 0);
+            AlfaSetting = Sut.GetOrCreateSubRegister(1, 7, "Alfa"); // 0
+            BravoSetting = Sut.GetOrCreateSubRegister(2, 6, "Bravo"); // 1..2
+            CharlieSetting = Sut.GetOrCreateSubRegister(3, 5, "Charlie"); // 3..5
+            DeltaSetting = Sut.GetOrCreateSubRegister(4, 4, "Delta"); // 4..7
+            EchoSetting = Sut.GetOrCreateSubRegister(5, 3);
+            FoxtrotSetting = Sut.GetOrCreateSubRegister(6, 2);
+            GolfSetting = Sut.GetOrCreateSubRegister(7, 1);
+            HotelSetting = Sut.GetOrCreateSubRegister(8, 0);
 
-            IndiaSetting = Sut.CreateSubRegister(16, 4, "India");
-            JulietSetting = Sut.CreateSubRegister(24, 2, "Juliet");
-            KiloSetting = Sut.CreateSubRegister(32, 0, "Kilo");
-            LimaSetting = Sut.CreateSubRegister(64, 0, "Lima");
+            IndiaSetting = Sut.GetOrCreateSubRegister(16, 4, "India");
+            JulietSetting = Sut.GetOrCreateSubRegister(24, 2, "Juliet");
+            KiloSetting = Sut.GetOrCreateSubRegister(32, 0, "Kilo");
+            LimaSetting = Sut.GetOrCreateSubRegister(64, 0, "Lima");
         }
 
         [Fact]

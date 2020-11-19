@@ -112,7 +112,7 @@ namespace ModulesTest
         [Fact]
         public void SettingDigit0Intensity()
         {
-            _Sut.Digit0Intensity(0x0B);
+            _Sut.SetDigit0Intensity(0x0B);
             _Sut.Send();
             _FakeSerialPort.Received(1).Execute(Arg.Any<WriteCommand>());
             _FakeSerialPort.Received().Execute(Arg.Is<WriteCommand>(c => c.I2CDataAsHex == "00 10 0B "));
@@ -121,7 +121,7 @@ namespace ModulesTest
         [Fact]
         public void SettingDigit1Intensity()
         {
-            _Sut.Digit1Intensity(0x0C);
+            _Sut.SetDigit1Intensity(0x0C);
             _Sut.Send();
             _FakeSerialPort.Received(1).Execute(Arg.Any<WriteCommand>());
             _FakeSerialPort.Received().Execute(Arg.Is<WriteCommand>(c => c.I2CDataAsHex == "00 10 C0 "));
@@ -130,7 +130,7 @@ namespace ModulesTest
         [Fact]
         public void SettingDigit2Intensity()
         {
-            _Sut.Digit2Intensity(0x0D);
+            _Sut.SetDigit2Intensity(0x0D);
             _Sut.Send();
             _FakeSerialPort.Received(1).Execute(Arg.Any<WriteCommand>());
             _FakeSerialPort.Received().Execute(Arg.Is<WriteCommand>(c => c.I2CDataAsHex == "00 11 0D "));

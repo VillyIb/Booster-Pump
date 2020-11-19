@@ -17,9 +17,9 @@ namespace Modules
         public const int Channel2 = BitPattern.D2;
         public const int Channel3 = BitPattern.D3;
 
-        protected override IEnumerable<Register> Registers => new List<Register>(0);
+        protected override IEnumerable<RegisteBase> Registers => new List<RegisteBase>(0);
 
-        private readonly Register OpenChannels = new Register(0x00, "Open channels", "X");
+        private readonly RegisteBase OpenChannels = new RegisteBase(0x00, "Open channels", "X");
 
         public TCA9546MultiplexerModule(ISerialConverter serialPort) : base(serialPort)
         { }

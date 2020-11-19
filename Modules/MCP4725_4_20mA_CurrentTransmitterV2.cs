@@ -13,24 +13,24 @@ namespace Modules
 
         public override byte DefaultAddress => 0x60; // optional 0x61
 
+        private readonly Register Setting = new Register(0, "Settings", 3);
+
         /// <summary>
         /// 0: normal mode, 1: 1 kOhm-, 2 100 kOmh-, 3: 500 kOhm resitor to ground.
         /// See table 5-2
         /// </summary>
-        private readonly BitSetting PowerDown;
+        private BitSetting PowerDown => Setting.GetOrCreateSubRegister(1, 1 + 16, "Power Down");
 
         /// <summary>
         /// C0 and C1, 0: or 1: FastMode (not supported), 2: Write to DAC register. 3: Write to DAC register and EEPROM.
         /// See table 6-2
         /// </summary>
-        private readonly BitSetting WriteToDacOrEeprom;
+        private  BitSetting WriteToDacOrEeprom => Setting.GetOrCreateSubRegister(2, 4 + 16, "Write to DAC or EEPROM");
 
         /// <summary>
         /// 12 bit floating point value. (0..4095).
         /// </summary>
-        private readonly BitSetting Speed;
-
-        private readonly Register Setting;
+        private  BitSetting Speed => Setting.GetOrCreateSubRegister(12, 4, "Speed");        
 
         protected override IEnumerable<RegisterBase> Registers => new[] { Setting };
 
@@ -41,12 +41,7 @@ namespace Modules
         }
 
         public MCP4725_4_20mA_CurrentTransmitterV2(ISerialConverter serialPort) : base(serialPort)
-        {
-            Setting = new Register(0, "Settings", 3);
-            PowerDown = Setting.CreateSubRegister(1, 1 + 16, "Power Down");
-            WriteToDacOrEeprom = Setting.CreateSubRegister(2, 4 + 16, "Write to DAC or EEPROM");
-            Speed = Setting.CreateSubRegister(12, 4, "Speed");
-        }
+        { }
 
         public void SetNormalPower()
         {

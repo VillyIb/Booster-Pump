@@ -3,7 +3,7 @@
 namespace BoosterPumpLibrary.ModuleBase
 {
     [Obsolete]
-    public class Register
+    public class RegisteBase
     {
         public byte Value { get; protected set; }
 
@@ -15,7 +15,7 @@ namespace BoosterPumpLibrary.ModuleBase
 
         public string DisplayFormat { get; set; }
 
-        public Register(byte address, string description, string displayFormat, byte defaultValue = 0)
+        public RegisteBase(byte address, string description, string displayFormat, byte defaultValue = 0)
         {
             RegisterId = address;
             Description = description;

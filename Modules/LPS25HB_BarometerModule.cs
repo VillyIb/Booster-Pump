@@ -1,12 +1,14 @@
 ﻿using BoosterPumpLibrary.Commands;
 using BoosterPumpLibrary.Contracts;
 using BoosterPumpLibrary.ModuleBase;
+using BoosterPumpLibrary.Settings;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 
 namespace Modules
 {
-    public class LPS25HB_BarometerModule : BaseModule
+    public class LPS25HB_BarometerModule : BaseModuleV2
     {
         // Description see: https://media.ncd.io/sites/2/20170721134650/LPS25hb.pdf
         // Technical note regarding calculating values.
@@ -14,49 +16,60 @@ namespace Modules
 
         public override byte DefaultAddress => 0x5C;
 
-        readonly Register RES_CONF = new Register(0x10, "Pressure and temperature resolution", "X2");
+        readonly BoosterPumpLibrary.Settings.Register RES_CONF_V2 = new BoosterPumpLibrary.Settings.Register(0X10, "Register1", 1);
 
-        readonly Register CTRL_REG1 = new Register(0x20, "Control register 1", "X2");
+        /// <summary>
+        /// 0: 8-, 1: 16, 2: 32, 3: 64 internal average.
+        /// </summary>
+        BitSetting PressureResolution => RES_CONF_V2.GetOrCreateSubRegister(2, 0, "Pressure Resolution");
 
-        readonly Register PRESS_OUT_XL = new Register(0x28, "Pressure out value (LSB)", "X2");
-        Register PRESS_OUT_L = new Register(0x29, "Pressure out value (mid part)", "X2");
-        Register PRES_OUT_H = new Register(0x2A, "Pressure out value (MSB)", "X2");
+        /// <summary>
+        /// 0: 8, 1: 16, 2: 32, 3: 64 internal average.
+        /// </summary>
+         BitSetting TemperaturResolution => RES_CONF_V2.GetOrCreateSubRegister(2, 2, "Temperature Resolution");
 
-        Register TEMP_OUT_L = new Register(0x2B, "Temperature (LSB)", "X2");
-        Register TEMP_OUT_H = new Register(0x2C, "Temperature (MSB)", "X2");
+        readonly BoosterPumpLibrary.Settings.Register ControlRegister = new BoosterPumpLibrary.Settings.Register(0x20, "ControlRegister", 1);
 
-        Register WHO_AM_I = new Register(0x0F, "Who am I", "X2");
+        /// <summary>
+        /// 0: Power Down, 1: Active Mode.
+        /// </summary>
+         BitSetting PowerDown => ControlRegister.GetOrCreateSubRegister(1, 7, "Power down control");
 
+        /// <summary>
+        /// 0: One Shot, 1: 1 Hz, 2: 7 Hz, 3: 12,5 Hz, 4: 25Hz, 5..7 Reserved.
+        /// </summary>
+        BitSetting OutputDataRate => ControlRegister.GetOrCreateSubRegister(3, 4, "Output data rate.");
+
+        readonly BoosterPumpLibrary.Settings.Register Reading = new BoosterPumpLibrary.Settings.Register(0x28, "Air Pressure & Temperatur", 5);
 
         public double AirPressure { get; protected set; }
 
         public double Temperature { get; protected set; }
 
-        protected override IEnumerable<Register> Registers => new[] { RES_CONF, CTRL_REG1 };
+        protected override IEnumerable<RegisterBase> Registers => new List<RegisterBase>();
 
         public LPS25HB_BarometerModule(ISerialConverter serialPort, int? addressIncrement = 0) : base(serialPort, addressIncrement)
-        { }
+        {
+                                
+        }
 
         public override void Init()
         {
-            CTRL_REG1.SetDataRegisterBit(BitPattern.D7, true); // Power: active mode
-            CTRL_REG1.SetDataRegisterBit(BitPattern.D4, true); // Output data rate 1Hz
-
-            RES_CONF.SetDataRegisterBit(BitPattern.D0 | BitPattern.D1, true); // Pressure resolution configuration nr. internal avarage: 512 
-
+            PowerDown.Value = 1;
+            OutputDataRate.Value = 1;
+            PressureResolution.Value = 3;
             Send();
 
-            SelectRegisterForReadingWithAutoIncrement(PRESS_OUT_XL);
+            SelectRegisterForReadingWithAutoIncrement(Reading);
             var readCommand = new ReadCommand { Address = Address, LengthRequested = 5 };
             var result = SerialPort.Execute(readCommand);
         }
 
         public void ReadDevice()
         {
-            SelectRegisterForReadingWithAutoIncrement(PRESS_OUT_XL);
-            var readCommand = new ReadCommand { Address = Address, LengthRequested = 5 };
+            SelectRegisterForReadingWithAutoIncrement(Reading);
+            var readCommand = new ReadCommand { Address = Address, LengthRequested = (byte)Reading.Size };
             var readings = SerialPort.Execute(readCommand);
-
             var payload = readings.Payload;
             try
             {

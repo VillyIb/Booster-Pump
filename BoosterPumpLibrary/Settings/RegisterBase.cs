@@ -35,11 +35,11 @@ namespace BoosterPumpLibrary.Settings
 
         public bool IsDirty { get; protected set; }       
 
-        protected List<BitSetting> BitSettings { get; }
+        protected Dictionary<string, BitSetting> BitSettings { get; }
 
         protected RegisterBase()
         {
-            BitSettings = new List<BitSetting>();
+            BitSettings = new Dictionary<string, BitSetting>();
         }
 
         public void SetDirty()
@@ -47,8 +47,15 @@ namespace BoosterPumpLibrary.Settings
             IsDirty = true;
         }
 
-        public BitSetting CreateSubRegister(int size, int offsett, string description = "")
+        public BitSetting GetOrCreateSubRegister(int size, int offsett, string description = "")
         {
+            var key = $"{offsett}_{size}_{description}";
+
+            if (BitSettings.ContainsKey(key))
+            {
+                return BitSettings[key];
+            }
+
             var max = Size * 8;
 
             if (size < 0 || offsett < 0 || size + offsett > max) { throw new ArgumentOutOfRangeException($"Size + offeset must be less or equal to {max}."); }
@@ -57,7 +64,7 @@ namespace BoosterPumpLibrary.Settings
             {
                 ParentRegister = this
             };
-            BitSettings.Add(result);
+            BitSettings.Add(key, result);
             return result;
         }
 
@@ -76,7 +83,7 @@ namespace BoosterPumpLibrary.Settings
         {
             var result = new StringBuilder();
 
-            foreach(var current in BitSettings)
+            foreach(var current in BitSettings.Values)
             {
                 result.AppendFormat($"{current.Description}: {current.MaskAsBinary()}, ");
             }
@@ -91,7 +98,7 @@ namespace BoosterPumpLibrary.Settings
 
         public T Value { 
             get => ValueField; 
-            protected set { 
+            set { 
                 ValueField = value;
                 IsDirty = true;
             } 

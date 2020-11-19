@@ -1,10 +1,12 @@
-﻿using BoosterPumpLibrary.Commands;
+﻿using System;
+using BoosterPumpLibrary.Commands;
 using BoosterPumpLibrary.Contracts;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace BoosterPumpLibrary.ModuleBase
 {
+    [Obsolete]
     public class ByteWrapper
     {
         private readonly byte Payload;
@@ -35,6 +37,7 @@ namespace BoosterPumpLibrary.ModuleBase
         }
     }
 
+    [Obsolete]
     public abstract class BaseModule
     {
         public abstract byte DefaultAddress { get; }
@@ -53,7 +56,7 @@ namespace BoosterPumpLibrary.ModuleBase
             AddressIncrement = addressIncrement ?? 0;
         }
 
-        protected abstract IEnumerable<Register> Registers { get; }
+        protected abstract IEnumerable<RegisteBase> Registers { get; }
 
         /// <summary>
         /// Returns next command for each call.
@@ -100,14 +103,14 @@ namespace BoosterPumpLibrary.ModuleBase
             }
         }
 
-        public void SelectRegisterForReading(Register register)
+        public void SelectRegisterForReading(RegisteBase register)
         {
             var writeCommand = new WriteCommand { Address = Address, Payload = new[] { register.RegisterId } };
             // ReSharper disable once UnusedVariable
             var returnValue = SerialPort.Execute(writeCommand);
         }
 
-        public void SelectRegisterForReadingWithAutoIncrement(Register register)
+        public void SelectRegisterForReadingWithAutoIncrement(RegisteBase register)
         {
             var writeCommand = new WriteCommand { Address = Address, Payload = new[] { (byte)(register.RegisterId | 0x80) } };
             // ReSharper disable once UnusedVariable

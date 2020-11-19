@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using BoosterPumpLibrary.Commands;
 using BoosterPumpLibrary.Contracts;
 using BoosterPumpLibrary.ModuleBase;
+using BoosterPumpLibrary.Settings;
 
 namespace Modules
 {
     // ReSharper disable once UnusedMember.Global
-    public class AMS5812_0150_D_B_Module : BaseModule
+    public class AMS5812_0150_D_B_Module : BaseModuleV2
     {
         public override byte DefaultAddress => 0x78;
 
@@ -20,7 +21,7 @@ namespace Modules
 
         public float Temperature { get; protected set; }
 
-        protected override IEnumerable<Register> Registers => new List<Register>(0);
+        protected override IEnumerable<RegisterBase> Registers => new List<RegisterBase>(0);
 
         public int DevicePressureMin = 3277;
         public int DevicePressureMax = 29491;
