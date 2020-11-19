@@ -78,7 +78,7 @@ namespace BoosterPumpLibrary.Settings
 
             foreach(var current in BitSettings)
             {
-                result.AppendFormat($"{current.Description}: {BitSetting.ToBinary( current.Mask)}, ");
+                result.AppendFormat($"{current.Description}: {current.MaskAsBinay()}, ");
             }
 
             return result.ToString();

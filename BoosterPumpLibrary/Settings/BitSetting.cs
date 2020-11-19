@@ -69,15 +69,17 @@ namespace BoosterPumpLibrary.Settings
             }
         }
 
-        public static string ToBinary(ulong value)
+        public string MaskAsBinay()
         {
+            var value = Mask << Offsett;
             var result = new StringBuilder();
-            var mask = 1UL << 63;
-            for (int index = 0; index < 64; index++)
+            var mask = 1UL << Size + Offsett - 1;
+
+            for (int index = 0; index < 64 && mask > 0; index++)
             {
                 result.Append((value & mask) > 0 ? "1" : "0");
                 mask = mask >> 1;
-                if (index % 4 == 3 && index < 63) { result.Append("_"); }
+                if (index % 4 == 3 && mask > 0) { result.Append("_"); }
             }
             return result.ToString();
         }
@@ -85,8 +87,8 @@ namespace BoosterPumpLibrary.Settings
         public override string ToString()
         {
             ulong m2 = Mask << Offsett;
-            var binary = ToBinary(m2);
-            return $"{Description}, Size: {Size}, Offsett: {Offsett}, Mask: {binary}";
+            
+            return $"{Description}, Size: {Size}, Offsett: {Offsett}, Mask: {MaskAsBinay()}";
         }
     }
 }
