@@ -2,6 +2,7 @@
 
 namespace BoosterPumpLibrary.ModuleBase
 {
+    [Obsolete]
     public class Register
     {
         public byte Value { get; protected set; }

@@ -78,13 +78,12 @@ namespace BoosterPumpLibrary.Settings
 
             foreach(var current in BitSettings)
             {
-                result.AppendFormat($"{current.Description}: {current.MaskAsBinay()}, ");
+                result.AppendFormat($"{current.Description}: {current.MaskAsBinary()}, ");
             }
 
             return result.ToString();
         }
     }
-
 
     public abstract class RegisterBase<T> : RegisterBase where T : struct
     {
@@ -98,7 +97,6 @@ namespace BoosterPumpLibrary.Settings
             } 
         }
 
-    
         protected RegisterBase(byte registerIndex, string description, int byteCount)
         {
             CheckRange((ushort)registerIndex, 0, 127, nameof(registerIndex));

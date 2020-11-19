@@ -6,7 +6,7 @@ namespace BoosterPumpTest
 {
     public class RegisterShould
     {
-        public RegisterHolding8Bytes Sut;
+        public Register Sut;
 
         public BitSetting AlfaSetting;
         public BitSetting BravoSetting;
@@ -23,7 +23,7 @@ namespace BoosterPumpTest
 
         public RegisterShould()
         {
-            Sut = new RegisterHolding8Bytes(0x00, "64 bit register", 8);
+            Sut = new Register(0x00, "64 bit register", 8);
 
             AlfaSetting = Sut.CreateSubRegister(1, 7, "Alfa"); // 0
             BravoSetting = Sut.CreateSubRegister(2, 6, "Bravo"); // 1..2

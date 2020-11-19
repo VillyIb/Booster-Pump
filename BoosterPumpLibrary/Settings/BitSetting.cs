@@ -69,7 +69,7 @@ namespace BoosterPumpLibrary.Settings
             }
         }
 
-        public string MaskAsBinay()
+        public string MaskAsBinary()
         {
             var value = Mask << Offsett;
             var result = new StringBuilder();
@@ -88,7 +88,7 @@ namespace BoosterPumpLibrary.Settings
         {
             ulong m2 = Mask << Offsett;
             
-            return $"{Description}, Size: {Size}, Offsett: {Offsett}, Mask: {MaskAsBinay()}";
+            return $"{Description}, Size: {Size}, Offsett: {Offsett}, Mask: {MaskAsBinary()}";
         }
     }
 }
