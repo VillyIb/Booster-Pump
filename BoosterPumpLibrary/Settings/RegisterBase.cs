@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
+using System.Text;
 
 namespace BoosterPumpLibrary.Settings
 {
@@ -7,31 +9,12 @@ namespace BoosterPumpLibrary.Settings
     {
         internal abstract void SetValue(ulong value);
 
-        internal abstract ulong GetValue();
+        internal abstract ulong GetValue(); // TODO Could be public
 
         /// <summary>
-        /// Number of bytes in this setting, range: 1..8.
+        /// Number of bytes matching T.
         /// </summary>
-        public int ByteCount { get; protected set; }
-
-        public string Description { get; protected set; }
-
-        public byte RegisterIndex { get; protected set; }
-
-        public bool IsDirty { get; protected set; }
-    }
-
-
-    public abstract class RegisterBase<T> : RegisterBase where T : struct
-    {
-        private T ValueField;
-        public T Value { 
-            get => ValueField; 
-            protected set { 
-                ValueField = value;
-                IsDirty = true;
-            } 
-        }
+        protected abstract int MaxSize { get; }
 
         protected void CheckRange(dynamic value, dynamic minValue, dynamic maxValue, string name)
         {
@@ -42,15 +25,31 @@ namespace BoosterPumpLibrary.Settings
         }
 
         /// <summary>
-        /// Number of bytes matching T.
+        /// Number of bytes this Register is managing {1..8}
         /// </summary>
-        protected abstract int MaxByteSize { get; }
+        public int Size { get; protected set; }
+
+        public string Description { get; protected set; }
+
+        public byte RegisterIndex { get; protected set; }
+
+        public bool IsDirty { get; protected set; }       
 
         protected List<BitSetting> BitSettings { get; }
 
+        protected RegisterBase()
+        {
+            BitSettings = new List<BitSetting>();
+        }
+
+        public void SetDirty()
+        {
+            IsDirty = true;
+        }
+
         public BitSetting CreateSubRegister(int size, int offsett, string description = "")
         {
-            var max = ByteCount * 8;
+            var max = Size * 8;
 
             if (size < 0 || offsett < 0 || (size + offsett) > max) { throw new ArgumentOutOfRangeException($"Size + offeset must be less or equal to {max}."); }
 
@@ -62,21 +61,53 @@ namespace BoosterPumpLibrary.Settings
             return result;
         }
 
+        /// <summary>
+        /// Returns Value as byte list of length ByteCount.
+        /// Clears IsDirty
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<byte> GetByteValue()
+        {
+            IsDirty = false;
+            return BitConverter.GetBytes(GetValue()).Skip(MaxSize - Size).Take(Size);
+        }
+
+        public override string ToString()
+        {
+            var result = new StringBuilder();
+
+            foreach(var current in BitSettings)
+            {
+                result.AppendFormat($"{current.Description}: {BitSetting.ToBinary( current.Mask)}, ");
+            }
+
+            return result.ToString();
+        }
+    }
+
+
+    public abstract class RegisterBase<T> : RegisterBase where T : struct
+    {
+        private T ValueField;
+
+        public T Value { 
+            get => ValueField; 
+            protected set { 
+                ValueField = value;
+                IsDirty = true;
+            } 
+        }
+
+    
         public RegisterBase(byte registerIndex, string description, int byteCount)
         {
             CheckRange((ushort)registerIndex, 0, 127, nameof(registerIndex));
-            CheckRange((ushort)byteCount, 1, MaxByteSize, nameof(byteCount));
+            CheckRange((ushort)byteCount, 1, MaxSize, nameof(byteCount));
 
             RegisterIndex = registerIndex;
             Description = description;
-            BitSettings = new List<BitSetting>();
-            ByteCount = byteCount;
+            Size = byteCount;
             Value = default;
-        }
-
-        public void SetDirty()
-        {
-            IsDirty = true;
-        }
+        }      
     }
 }

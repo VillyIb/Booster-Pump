@@ -25,10 +25,10 @@ namespace BoosterPumpTest
         {
             sut = new RegisterHolding8Bytes(0x00, "64 bit register", 8);
 
-            AlfaSetting = sut.CreateSubRegister(1, 7); // 0
-            BravoSetting = sut.CreateSubRegister(2, 6); // 1..2
-            CharlieSetting = sut.CreateSubRegister(3, 5); // 3..5
-            DeltaSetting = sut.CreateSubRegister(4, 4); // 4..7
+            AlfaSetting = sut.CreateSubRegister(1, 7, "Alfa"); // 0
+            BravoSetting = sut.CreateSubRegister(2, 6, "Bravo"); // 1..2
+            CharlieSetting = sut.CreateSubRegister(3, 5, "Charlie"); // 3..5
+            DeltaSetting = sut.CreateSubRegister(4, 4, "Delta"); // 4..7
             EchoSetting = sut.CreateSubRegister(5, 3);
             FoxtrotSetting = sut.CreateSubRegister(6, 2);
             GolfSetting = sut.CreateSubRegister(7, 1);

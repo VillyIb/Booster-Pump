@@ -1,18 +1,17 @@
 ﻿using BoosterPumpLibrary.Commands;
 using BoosterPumpLibrary.Contracts;
 using BoosterPumpLibrary.Settings;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace BoosterPumpLibrary.ModuleBase
-{
- 
+{ 
     public abstract class BaseModuleV2
     {
-
         public abstract byte DefaultAddress { get; }
 
-        public ByteWrapper AddressIncrement { get; set; }
+        public ByteWrapper AddressIncrement { get; protected set; }
 
         public byte Address => DefaultAddress + AddressIncrement;
 
@@ -46,7 +45,7 @@ namespace BoosterPumpLibrary.ModuleBase
                 {
                     result.Add(current.RegisterIndex);
                 }
-                //result.Add(current.GetDataRegisterAndClearDirty()); // TODO fix.
+                result.AddRange(current.GetByteValue()); 
                 currentRegisterId = current.RegisterIndex;
             }
 

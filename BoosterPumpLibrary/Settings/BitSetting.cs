@@ -8,7 +8,7 @@ namespace BoosterPumpLibrary.Settings
         /// <summary>
         /// 
         /// </summary>
-        protected ulong Mask => Size < 64 ? (1UL << Size) - 1 : ulong.MaxValue;
+        protected internal ulong Mask => Size < 64 ? (1UL << Size) - 1 : ulong.MaxValue;
 
         /// <summary>
         /// BitSetting start position value: 0..N where N = 
