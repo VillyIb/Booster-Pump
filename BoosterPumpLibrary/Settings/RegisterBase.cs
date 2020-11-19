@@ -51,7 +51,7 @@ namespace BoosterPumpLibrary.Settings
         {
             var max = Size * 8;
 
-            if (size < 0 || offsett < 0 || (size + offsett) > max) { throw new ArgumentOutOfRangeException($"Size + offeset must be less or equal to {max}."); }
+            if (size < 0 || offsett < 0 || size + offsett > max) { throw new ArgumentOutOfRangeException($"Size + offeset must be less or equal to {max}."); }
 
             var result = new BitSetting(size, offsett, description)
             {
@@ -99,9 +99,10 @@ namespace BoosterPumpLibrary.Settings
         }
 
     
-        public RegisterBase(byte registerIndex, string description, int byteCount)
+        protected RegisterBase(byte registerIndex, string description, int byteCount)
         {
             CheckRange((ushort)registerIndex, 0, 127, nameof(registerIndex));
+            // ReSharper disable once VirtualMemberCallInConstructor
             CheckRange((ushort)byteCount, 1, MaxSize, nameof(byteCount));
 
             RegisterIndex = registerIndex;

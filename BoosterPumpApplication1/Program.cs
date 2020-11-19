@@ -18,7 +18,7 @@ namespace BoosterPumpApplication1
         {
             var now = DateTime.Now;
             now = new DateTime(
-                now.Ticks - (now.Ticks % (TimeSpan.TicksPerSecond/10)),
+                now.Ticks - now.Ticks % (TimeSpan.TicksPerSecond/10),
                 now.Kind
             );
 

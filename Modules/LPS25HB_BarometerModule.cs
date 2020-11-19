@@ -14,11 +14,11 @@ namespace Modules
 
         public override byte DefaultAddress => 0x5C;
 
-        Register RES_CONF = new Register(0x10, "Pressure and temperature resolution", "X2");
+        readonly Register RES_CONF = new Register(0x10, "Pressure and temperature resolution", "X2");
 
-        Register CTRL_REG1 = new Register(0x20, "Control register 1", "X2");
+        readonly Register CTRL_REG1 = new Register(0x20, "Control register 1", "X2");
 
-        Register PRESS_OUT_XL = new Register(0x28, "Pressure out value (LSB)", "X2");
+        readonly Register PRESS_OUT_XL = new Register(0x28, "Pressure out value (LSB)", "X2");
         Register PRESS_OUT_L = new Register(0x29, "Pressure out value (mid part)", "X2");
         Register PRES_OUT_H = new Register(0x2A, "Pressure out value (MSB)", "X2");
 
@@ -63,7 +63,7 @@ namespace Modules
                 AirPressure = Math.Round((payload[0] | payload[1] << 8 | payload[2] << 16) / 4096.0, 1);
                 Temperature = Math.Round(42.5 + (short)(payload[3] | payload[4] << 8) / 480.0, 1);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
 
             }

@@ -36,11 +36,9 @@ namespace BoosterPumpLibrary.Settings
 
         private void CheckRange(ulong value)
         {
-            const int min = 0;
+            var max = Size < 64 ? (1UL << Size) - 1 : ulong.MaxValue;
 
-            ulong max = (Size < 64) ? (1UL << Size) - 1 : ulong.MaxValue;
-
-            if (value < min || max < value)
+            if (max < value)
             {
                 throw new ArgumentOutOfRangeException(nameof(value), value, $"Valid range: [0..{max}[");
             }
@@ -86,7 +84,7 @@ namespace BoosterPumpLibrary.Settings
 
         public override string ToString()
         {
-            ulong m2 = (ulong)(Mask << Offsett);
+            ulong m2 = Mask << Offsett;
             var binary = ToBinary(m2);
             return $"{Description}, Size: {Size}, Offsett: {Offsett}, Mask: {binary}";
         }

@@ -30,11 +30,7 @@ namespace Modules
         /// <param name="bitPattern"></param>
         public void SelectOpenChannels(params byte[] bitPattern) // TODO make strongly typed 
         {
-            byte aggregateBitPattern = 0x00;
-            foreach (var current in bitPattern)
-            {
-                aggregateBitPattern |= current;
-            }
+            byte aggregateBitPattern = bitPattern.Aggregate<byte, byte>(0x00, (current1, current) => (byte) (current1 | current));
             OpenChannels.SetDataRegister(aggregateBitPattern);
             var writeCommand = new WriteCommand { Address = Address, Payload = new byte[] { OpenChannels.Value } };
             var status = SerialPort.Execute(writeCommand);

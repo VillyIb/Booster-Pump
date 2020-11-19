@@ -4,7 +4,7 @@ using Xunit;
 using BoosterPumpLibrary.Commands;
 using Modules;
 
-namespace BoosterPumpTest
+namespace ModulesTest
 {
     public class As1115ModuleShould
     {

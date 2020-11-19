@@ -9,7 +9,7 @@ using System.Threading;
 namespace BoosterPumpLibrary.Logger
 {
     [ExcludeFromCodeCoverage]
-    public partial class BufferedLogWriter : IDisposable, IComponent
+    public partial class BufferedLogWriter : IComponent
     {
         private static readonly TimeSpan OneMinute = new TimeSpan(0, 1, 0);
 
@@ -17,7 +17,7 @@ namespace BoosterPumpLibrary.Logger
 
         private static string Path => @"C:\Users\Buzz Lightyear\Dropbox\_FlowMeasurement\FlowController";
 
-        private IList<BufferLine> Buffer { get; set; }
+        private IList<BufferLine> Buffer { get; }
 
         private DateTime NextFlush { get; set; }
         private DateTime CurrentHourUtc { get; set; }
@@ -51,24 +51,20 @@ namespace BoosterPumpLibrary.Logger
 
                     var filename = $"_{timestamp.Day:00}_{timestamp.Hour:00}{daylightSaving}.txt";
                     var file = new FileInfo($"{Path}{filename}");
-                    using (var fs = file.Open(FileMode.OpenOrCreate))
+                    using var fs = file.Open(FileMode.OpenOrCreate);
+                    using var sw = new StreamWriter(fs);
+                    fs.Position = fs.Seek(0, SeekOrigin.End);
+                    if (fs.Position == 0L)
                     {
-                        using (var sw = new StreamWriter(fs))
-                        {
-                            fs.Position = fs.Seek(0, SeekOrigin.End);
-                            if (fs.Position == 0L)
-                            {
-                                sw.WriteLine("Timestamp\tSecond of day\tPressure West\tPressure East\tPressure Manifold\tSystem Pressure\tTBarometer 1\tBarometer 2\tTemperature");
-                            }
-
-                            foreach (var current in Buffer)
-                            {
-                                sw.WriteLine(current.LogText);
-                            }
-                            sw.Flush();
-                            Buffer.Clear();
-                        }
+                        sw.WriteLine("Timestamp\tSecond of day\tPressure West\tPressure East\tPressure Manifold\tSystem Pressure\tTBarometer 1\tBarometer 2\tTemperature");
                     }
+
+                    foreach (var current in Buffer)
+                    {
+                        sw.WriteLine(current.LogText);
+                    }
+                    sw.Flush();
+                    Buffer.Clear();
                 }
                 catch (Exception ex)
                 {

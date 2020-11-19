@@ -6,9 +6,9 @@ namespace BoosterPumpLibrary.Logger
     {
         private class BufferLine
         {
-            public DateTime Timestamp { get; set; }
+            public DateTime Timestamp { get; }
 
-            public string LogText { get; set; }
+            public string LogText { get; }
 
             public BufferLine(string logText, DateTime timestamp)
             {

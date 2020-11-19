@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using BoosterPumpLibrary.Commands;
+﻿using BoosterPumpLibrary.Commands;
 using BoosterPumpLibrary.Contracts;
 using BoosterPumpLibrary.ModuleBase;
 using Modules;
 using NCD_API_SerialConverter.NcdApiProtocol;
 using NSubstitute;
-using NSubstitute.Core.Arguments;
 using Xunit;
+// ReSharper disable InconsistentNaming
 
-namespace BoosterPumpTest
+namespace ModulesTest
 {
     public class TCA9546MultiplexerModuleShould
     {

@@ -3,8 +3,9 @@ using NSubstitute;
 using Xunit;
 using BoosterPumpLibrary.Commands;
 using Modules;
+// ReSharper disable InconsistentNaming
 
-namespace BoosterPumpTest
+namespace ModulesTest
 {
     public class MCP4725_4_20mA_CurrentTransmitterV2Should
     {
@@ -27,7 +28,7 @@ namespace BoosterPumpTest
         [Fact]
         public void SendSequenceWhenSettingsSpeed10pct()
         {
-            var speedHex = 0b0000_1010_1010_0101;
+            const int speedHex = 0b0000_1010_1010_0101;
             var speedPct = Sut.GetPctValute(speedHex);
 
             Sut.SetSpeed(speedPct);
@@ -46,7 +47,7 @@ namespace BoosterPumpTest
         [Fact]
         public void SendSequenceWhenSetSpeedPersistent()
         {
-            var speedHex = 0b0000_1010_1010_0101;
+            const int speedHex = 0b0000_1010_1010_0101;
             var speedPct = Sut.GetPctValute(speedHex);
 
             Sut.SetSpeedPersistent(speedPct);

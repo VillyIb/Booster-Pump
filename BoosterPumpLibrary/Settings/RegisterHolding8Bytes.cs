@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace BoosterPumpLibrary.Settings
+﻿namespace BoosterPumpLibrary.Settings
 {
     public class RegisterHolding1Byte : RegisterBase<byte>
     {

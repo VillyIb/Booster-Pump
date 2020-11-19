@@ -4,8 +4,9 @@ using NSubstitute;
 using Xunit;
 using NCD_API_SerialConverter.NcdApiProtocol;
 using Modules;
+// ReSharper disable InconsistentNaming
 
-namespace BoosterPumpTest
+namespace ModulesTest
 {
     public class AMS5812_0150_D_B_ModuleShould
     {
@@ -21,7 +22,7 @@ namespace BoosterPumpTest
         [Fact]
         public void SendReadSequenceCallingReadFromDevice()
         {
-            IDataFromDevice fakeReturnValue = new DataFromDevice{Header = 0xAA, ByteCount = 0x04, Payload = new byte[] { 0x3F, 0xEB, 0x36, 0xE2 }, Checksum = 0xD8};
+            IDataFromDevice fakeReturnValue = new DataFromDevice { Header = 0xAA, ByteCount = 0x04, Payload = new byte[] { 0x3F, 0xEB, 0x36, 0xE2 }, Checksum = 0xD8 };
             _FakeSerialPort.Execute(Arg.Any<ReadCommand>()).Returns(fakeReturnValue);
 
             _Sut.ReadFromDevice();

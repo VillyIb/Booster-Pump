@@ -1,7 +1,6 @@
 ﻿using BoosterPumpLibrary.Commands;
 using BoosterPumpLibrary.Contracts;
 using BoosterPumpLibrary.Settings;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -19,10 +18,10 @@ namespace BoosterPumpLibrary.ModuleBase
 
         public abstract void Init();
 
-        public BaseModuleV2(ISerialConverter serialPort, int? addressIncrement = 0)
+        protected BaseModuleV2(ISerialConverter serialPort, int? addressIncrement = 0)
         {
             SerialPort = serialPort;            
-            AddressIncrement = null != addressIncrement ? addressIncrement.Value : 0;
+            AddressIncrement = addressIncrement ?? 0;
         }
 
         protected abstract IEnumerable<RegisterBase> Registers { get; }
@@ -75,12 +74,14 @@ namespace BoosterPumpLibrary.ModuleBase
         public void SelectRegisterForReading(Register register)
         {
             var writeCommand = new WriteCommand { Address = Address, Payload = new[] { register.RegisterId } };
+            // ReSharper disable once UnusedVariable
             var returnValue = SerialPort.Execute(writeCommand);
         }
 
         public void SelectRegisterForReadingWithAutoIncrement(Register register)
         {
             var writeCommand = new WriteCommand { Address = Address, Payload = new[] { (byte)(register.RegisterId | 0x80) } };
+            // ReSharper disable once UnusedVariable
             var returnValue = SerialPort.Execute(writeCommand);
         }
 

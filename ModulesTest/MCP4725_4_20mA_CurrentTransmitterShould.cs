@@ -3,8 +3,9 @@ using NSubstitute;
 using Xunit;
 using BoosterPumpLibrary.Commands;
 using Modules;
+// ReSharper disable InconsistentNaming
 
-namespace BoosterPumpTest
+namespace ModulesTest
 {
     public class MCP4725_4_20mA_CurrentTransmitterShould
     {

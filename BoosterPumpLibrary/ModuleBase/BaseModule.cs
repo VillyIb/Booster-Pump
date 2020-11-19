@@ -7,26 +7,26 @@ namespace BoosterPumpLibrary.ModuleBase
 {
     public class ByteWrapper
     {
-        private byte payload;
+        private readonly byte Payload;
 
         public ByteWrapper(int value)
         {
-            payload = (byte)value;
+            Payload = (byte)value;
         }
 
         public static ByteWrapper operator +(ByteWrapper first, ByteWrapper second)
         {
-            return new ByteWrapper(first.payload + second.payload);
+            return new ByteWrapper(first.Payload + second.Payload);
         }
 
         public static ByteWrapper operator +(ByteWrapper first, byte second)
         {
-            return new ByteWrapper(first.payload + second);
+            return new ByteWrapper(first.Payload + second);
         }
 
         public static implicit operator byte(ByteWrapper value)
         {
-            return value.payload;
+            return value.Payload;
         }
 
         public static implicit operator ByteWrapper(int value)
@@ -37,7 +37,6 @@ namespace BoosterPumpLibrary.ModuleBase
 
     public abstract class BaseModule
     {
-
         public abstract byte DefaultAddress { get; }
 
         public ByteWrapper AddressIncrement { get; set; }
@@ -48,10 +47,10 @@ namespace BoosterPumpLibrary.ModuleBase
 
         public abstract void Init();
 
-        public BaseModule(ISerialConverter serialPort, int? addressIncrement = 0)
+        protected BaseModule(ISerialConverter serialPort, int? addressIncrement = 0)
         {
             SerialPort = serialPort;            
-            AddressIncrement = null != addressIncrement ? addressIncrement.Value : 0;
+            AddressIncrement = addressIncrement ?? 0;
         }
 
         protected abstract IEnumerable<Register> Registers { get; }
@@ -104,12 +103,14 @@ namespace BoosterPumpLibrary.ModuleBase
         public void SelectRegisterForReading(Register register)
         {
             var writeCommand = new WriteCommand { Address = Address, Payload = new[] { register.RegisterId } };
+            // ReSharper disable once UnusedVariable
             var returnValue = SerialPort.Execute(writeCommand);
         }
 
         public void SelectRegisterForReadingWithAutoIncrement(Register register)
         {
             var writeCommand = new WriteCommand { Address = Address, Payload = new[] { (byte)(register.RegisterId | 0x80) } };
+            // ReSharper disable once UnusedVariable
             var returnValue = SerialPort.Execute(writeCommand);
         }
 
