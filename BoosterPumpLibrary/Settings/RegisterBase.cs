@@ -76,7 +76,10 @@ namespace BoosterPumpLibrary.Settings
         public IEnumerable<byte> GetByteValue()
         {
             IsDirty = false;
-            return BitConverter.GetBytes(GetValue()).Skip(MaxSize - Size).Take(Size);
+            var bytes = BitConverter.GetBytes(GetValue());
+            var reverse = bytes.Reverse();
+            var result = reverse.Skip(MaxSize - Size).Take(Size);
+            return result;
         }
 
         public override string ToString()
