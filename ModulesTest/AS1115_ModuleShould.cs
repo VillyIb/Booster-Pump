@@ -88,7 +88,7 @@ namespace ModulesTest
         public void Setting12dot3ValueShowsSequence()
         {
             _Sut.SetBcdValue(12.3f); // '12.3'
-            _FakeSerialPort.Received(1).Execute(Arg.Any<WriteCommand>());
+            //_FakeSerialPort.Received(1).Execute(Arg.Any<WriteCommand>());
             _FakeSerialPort.Received().Execute(Arg.Is<WriteCommand>(c => c.I2CDataAsHex == "00 01 01 82 03 "));
         }
 

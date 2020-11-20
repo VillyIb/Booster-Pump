@@ -20,22 +20,28 @@ namespace Modules
         /// <summary>
         /// Register 0x09..0x0C
         /// </summary>
-        private readonly BoosterPumpLibrary.Settings.Register Settings1 = new BoosterPumpLibrary.Settings.Register(0x09, "Settings 0x09..0x0C", 4);
+        private readonly BoosterPumpLibrary.Settings.Register Setting0x09 = new BoosterPumpLibrary.Settings.Register(0x09, "Settings 0x09", 1);
 
         /// <summary>
         /// Nubmer: 0..7 - then numbers binary representation 0b000..0b111 switch the digits on/off.
         /// </summary>
-        private BitSetting DecodeMode => Settings1.GetOrCreateSubRegister(3, 0, "Decode Mode");
+        private BitSetting DecodeMode => Setting0x09.GetOrCreateSubRegister(3, 0, "Decode Mode");
+
+        private readonly BoosterPumpLibrary.Settings.Register Setting0x0A = new BoosterPumpLibrary.Settings.Register(0x0A, "Settings 0x0A", 1);
 
         /// <summary>
         /// 0..15
         /// </summary>
-        private BitSetting GlobalIntensity => Settings1.GetOrCreateSubRegister(4, 0 + 8, "Global Intensity");
+        private BitSetting GlobalIntensity => Setting0x0A.GetOrCreateSubRegister(4, 0, "Global Intensity");
+
+        private readonly BoosterPumpLibrary.Settings.Register Setting0x0B = new BoosterPumpLibrary.Settings.Register(0x0B, "Settings 0x0B", 1);
 
         /// <summary>
         /// 0: Digit 0, 1: Digit 0..1, 2:Digit 0..2
         /// </summary>
-        private BitSetting ScanLimit => Settings1.GetOrCreateSubRegister(3, 0 + 32, "Scan digits");
+        private BitSetting ScanLimit => Setting0x0B.GetOrCreateSubRegister(3, 0, "Scan digits");
+
+        private readonly BoosterPumpLibrary.Settings.Register Setting0x0C = new BoosterPumpLibrary.Settings.Register(0x0C, "Settings 0x0C", 1);
 
         /// <summary>
         /// 0x00: Shutdown Mode, reset feature registers.
@@ -43,60 +49,76 @@ namespace Modules
         /// 0x01: Normal Operation, reset feature registers to default settings.
         /// 0x71: Normal Operation, feature registers unchanged.
         /// </summary>
-        private BitSetting Shutdonw => Settings1.GetOrCreateSubRegister(8, 0 + 40, "Shutdown Mode");
+        private BitSetting Shutdonw => Setting0x0C.GetOrCreateSubRegister(8, 0, "Shutdown Mode");
 
         /// <summary>
         /// 0x0E..0x11
         /// </summary>
-        private readonly BoosterPumpLibrary.Settings.Register Settings2 = new BoosterPumpLibrary.Settings.Register(0x0E, "Settings 0x0e..0x11", 4);
+        private readonly BoosterPumpLibrary.Settings.Register Setting0x0E = new BoosterPumpLibrary.Settings.Register(0x0E, "Settings 0x0E", 1);
 
         /// <summary>
         /// 0: BCD decoding.
         /// 1: HEX decoding.
         /// </summary>
-        private BitSetting DecodeSelection => Settings2.GetOrCreateSubRegister(1, 2, "Decode Dec/Hex");
+        private BitSetting DecodeSelection => Setting0x0E.GetOrCreateSubRegister(1, 2, "Decode Dec/Hex");
 
         /// <summary>
         /// 0bX0: no blinking
         /// 0b01: blinking with 1 Hz
         /// 0b11: blinking with 0.5 Hz
         /// </summary>
-        private BitSetting Blink => Settings2.GetOrCreateSubRegister(2, 4, "Blink settings");
+        private BitSetting Blink => Setting0x0E.GetOrCreateSubRegister(2, 4, "Blink settings");
+
+        private readonly BoosterPumpLibrary.Settings.Register Setting0x10 = new BoosterPumpLibrary.Settings.Register(0x10, "Settings 0x0e..0x11", 1);
 
         /// <summary>
         /// 0..15
         /// </summary>
-        private BitSetting Digit0Intensity => Settings2.GetOrCreateSubRegister(4, 16, "Digit 0 intensity");
+        private BitSetting Digit0Intensity => Setting0x10.GetOrCreateSubRegister(4, 0, "Digit 0 intensity");
 
         /// <summary>
         /// 0..15
         /// </summary>
-        private BitSetting Digit1Intensity => Settings2.GetOrCreateSubRegister(4, 4 + 16, "Digit 1 intensity");
+        private BitSetting Digit1Intensity => Setting0x10.GetOrCreateSubRegister(4, 4, "Digit 1 intensity");
+
+        private readonly BoosterPumpLibrary.Settings.Register Setting0x11 = new BoosterPumpLibrary.Settings.Register(0x11, "Settings 0x0e..0x11", 1);
 
         /// <summary>
         /// 0..15
         /// </summary>
-        private BitSetting Digit2Intensity => Settings2.GetOrCreateSubRegister(4, 0 + 24, "Digit 2 intensity");
+        private BitSetting Digit2Intensity => Setting0x11.GetOrCreateSubRegister(4, 0, "Digit 2 intensity");
 
         public override byte DefaultAddress => 0x00;
 
         public As1115Module(ISerialConverter serialPort) : base(serialPort)
         { }
 
-        protected override IEnumerable<RegisterBase> Registers => new[] { Settings1, Settings2 };
+        protected override IEnumerable<RegisterBase> Registers => new[] {
+            // Notice the order is important!
+            Setting0x0C,
+            Setting0x0E,
+
+            Setting0x09, 
+            Setting0x0A, 
+            Setting0x0B, 
+
+            Setting0x10, 
+            Setting0x11,
+            Digits
+        };
 
         public override void Init()
         {
             SetPrimarySettingsDirty();
             SetShutdownModeNormalResetFeature();
             SetBcdDecoding();
-            SetGlobalIntensity(0x0F);
-            SetDigitsVisible(0x03);
+            SetGlobalIntensity(15);
+            SetDigitsVisible(3);
         }
 
         protected void SetAllDecodeOn()
         {
-            DecodeMode.Value = 0xb111;
+            DecodeMode.Value = 0b111;
         }
 
         public void SetNoDecoding()
@@ -156,12 +178,12 @@ namespace Modules
         }
 
         /// <summary>
-        /// Number of visible digits 0..2 => 1..3
+        /// Number of visible digits 1..3
         /// </summary>
         /// <param name="value"></param>
         public void SetDigitsVisible(byte value)
         {
-            ScanLimit.Value = value;
+            ScanLimit.Value = (ulong)(value-1);
         }
 
         public void SetShutdownModeNormalResetFeature()
@@ -176,7 +198,13 @@ namespace Modules
 
         public void SetPrimarySettingsDirty()
         {
-            var registers = new[] { Settings1, Settings2 };
+            var registers = new[] {
+            Setting0x0C,
+            Setting0x0E,
+            Setting0x09,
+            Setting0x0A,
+            Setting0x0B,
+        };
 
             foreach (var register in registers)
             {
