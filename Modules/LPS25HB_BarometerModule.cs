@@ -26,7 +26,7 @@ namespace Modules
         /// <summary>
         /// 0: 8, 1: 16, 2: 32, 3: 64 internal average.
         /// </summary>
-         BitSetting TemperaturResolution => RES_CONF_V2.GetOrCreateSubRegister(2, 2, "Temperature Resolution");
+         BitSetting TemperatureResolution => RES_CONF_V2.GetOrCreateSubRegister(2, 2, "Temperature Resolution");
 
         readonly Register ControlRegister = new Register(0x20, "ControlRegister", 1);
 
@@ -40,7 +40,7 @@ namespace Modules
         /// </summary>
         BitSetting OutputDataRate => ControlRegister.GetOrCreateSubRegister(3, 4, "Output data rate.");
 
-        readonly Register Reading = new Register(0x28, "Air Pressure & Temperatur", 5);
+        readonly Register Reading = new Register(0x28, "Air Pressure & Temperature", 5);
 
         public double AirPressure { get; protected set; }
 
@@ -49,9 +49,7 @@ namespace Modules
         protected override IEnumerable<RegisterBase> Registers => new List<RegisterBase>();
 
         public LPS25HB_BarometerModule(ISerialConverter serialPort, int? addressIncrement = 0) : base(serialPort, addressIncrement)
-        {
-                                
-        }
+        { }
 
         public override void Init()
         {
@@ -62,7 +60,7 @@ namespace Modules
 
             SelectRegisterForReadingWithAutoIncrement(Reading);
             var readCommand = new ReadCommand { Address = Address, LengthRequested = 5 };
-            var result = SerialPort.Execute(readCommand);
+            SerialPort.Execute(readCommand);
         }
 
         public void ReadDevice()
@@ -78,9 +76,7 @@ namespace Modules
             }
             // ReSharper disable once EmptyGeneralCatchClause
             catch (Exception)
-            {
-
-            }
+            { }
         }
     }
 }

@@ -4,6 +4,7 @@ using Xunit;
 using BoosterPumpLibrary.Commands;
 using Modules;
 // ReSharper disable InconsistentNaming
+// ReSharper disable CommentTypo
 
 namespace ModulesTest
 {

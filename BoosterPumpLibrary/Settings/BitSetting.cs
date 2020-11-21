@@ -14,12 +14,12 @@ namespace BoosterPumpLibrary.Settings
         /// BitSetting start position value: 0..N where N = 
         /// value is shifted this number of bits.
         /// </summary>
-        public int Offsett { get; protected set; }
+        public int Offset { get; protected set; }
 
-        internal BitSetting(int size, int offsett, string description = "")
+        internal BitSetting(int size, int offset, string description = "")
         {
             Size = size;
-            Offsett = offsett;
+            Offset = offset;
             Description = description;
         }
 
@@ -49,9 +49,9 @@ namespace BoosterPumpLibrary.Settings
             get
             {
                 var current = ParentRegister.GetValue();
-                var m2 = Mask << Offsett;
+                var m2 = Mask << Offset;
                 var v2 = current & m2;
-                var v1 = v2 >> Offsett;
+                var v1 = v2 >> Offset;
                 return v1;
             }
 
@@ -59,8 +59,8 @@ namespace BoosterPumpLibrary.Settings
             {
                 CheckRange(value);
                 var v1 = value & Mask;
-                var v2 = v1 << Offsett;
-                var m2 = Mask << Offsett;
+                var v2 = v1 << Offset;
+                var m2 = Mask << Offset;
 
                 //ParentRegister.SetDataRegister( ParentRegister.Value & ~m2 | v2);
                 var current = ParentRegister.GetValue();
@@ -71,9 +71,9 @@ namespace BoosterPumpLibrary.Settings
 
         public string MaskAsBinary()
         {
-            var value = Mask << Offsett;
+            var value = Mask << Offset;
             var result = new StringBuilder();
-            var mask = 1UL << Size + Offsett - 1;
+            var mask = 1UL << Size + Offset - 1;
 
             for (int index = 0; index < 64 && mask > 0; index++)
             {
@@ -86,9 +86,7 @@ namespace BoosterPumpLibrary.Settings
 
         public override string ToString()
         {
-            ulong m2 = Mask << Offsett;
-            
-            return $"{Description}, Size: {Size}, Offsett: {Offsett}, Mask: {MaskAsBinary()}";
+            return $"{Description}, Size: {Size}, Offset: {Offset}, Mask: {MaskAsBinary()}";
         }
     }
 }

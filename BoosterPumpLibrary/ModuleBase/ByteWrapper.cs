@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace BoosterPumpLibrary.ModuleBase
+﻿namespace BoosterPumpLibrary.ModuleBase
 {
    public class ByteWrapper
     {

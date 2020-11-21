@@ -47,9 +47,9 @@ namespace BoosterPumpLibrary.Settings
             IsDirty = true;
         }
 
-        public BitSetting GetOrCreateSubRegister(int size, int offsett, string description = "")
+        public BitSetting GetOrCreateSubRegister(int size, int offset, string description = "")
         {
-            var key = $"{offsett}_{size}_{description}";
+            var key = $"{offset}_{size}_{description}";
 
             if (BitSettings.ContainsKey(key))
             {
@@ -58,9 +58,9 @@ namespace BoosterPumpLibrary.Settings
 
             var max = Size * 8;
 
-            if (size < 0 || offsett < 0 || size + offsett > max) { throw new ArgumentOutOfRangeException($"Size + offeset must be less or equal to {max}."); }
+            if (size < 0 || offset < 0 || size + offset > max) { throw new ArgumentOutOfRangeException($"Size + offeset must be less or equal to {max}."); }
 
-            var result = new BitSetting(size, offsett, description)
+            var result = new BitSetting(size, offset, description)
             {
                 ParentRegister = this
             };

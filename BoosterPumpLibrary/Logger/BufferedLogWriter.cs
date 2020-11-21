@@ -100,9 +100,9 @@ namespace BoosterPumpLibrary.Logger
             {
                 if (disposing)
                 {
-                    // release managed ressources
+                    // release managed resources
                 }
-                // release unmanaged ressoruces
+                // release unmanaged resources
                 FlushBuffer();
             }
             catch (Exception)

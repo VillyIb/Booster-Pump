@@ -23,7 +23,7 @@ namespace Modules
         private readonly Register Setting0X09 = new Register(0x09, "Settings 0x09", 1);
 
         /// <summary>
-        /// Nubmer: 0..7 - then numbers binary representation 0b000..0b111 switch the digits on/off.
+        /// Number: 0..7 - then numbers binary representation 0b000..0b111 switch the digits on/off.
         /// </summary>
         private BitSetting DecodeMode => Setting0X09.GetOrCreateSubRegister(3, 0, "Decode Mode");
 
@@ -49,7 +49,7 @@ namespace Modules
         /// 0x01: Normal Operation, reset feature registers to default settings.
         /// 0x71: Normal Operation, feature registers unchanged.
         /// </summary>
-        private BitSetting Shutdonw => Setting0X0C.GetOrCreateSubRegister(8, 0, "Shutdown Mode");
+        private BitSetting Shutdown => Setting0X0C.GetOrCreateSubRegister(8, 0, "Shutdown Mode");
 
         /// <summary>
         /// 0x0E..0x11
@@ -188,12 +188,12 @@ namespace Modules
 
         public void SetShutdownModeNormalResetFeature()
         {
-            Shutdonw.Value = 0x01;
+            Shutdown.Value = 0x01;
         }
 
         public void SetShutdownModeDown()
         {
-            Shutdonw.Value = 0x00;
+            Shutdown.Value = 0x00;
         }
 
         public void SetPrimarySettingsDirty()

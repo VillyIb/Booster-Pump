@@ -68,6 +68,12 @@ namespace BoosterPumpLibrary.ModuleBase
 
                 // ReSharper disable once UnusedVariable
                 var returnValue = SerialPort.Execute(writeCommand);
+
+                // TODO implement return value in tests.
+                //if (returnValue.Payload.Length != 1 && returnValue.Payload[0] != 85)
+                //{
+                //    throw new ApplicationException("Unexpected answer");
+                //}
             }
         }
 

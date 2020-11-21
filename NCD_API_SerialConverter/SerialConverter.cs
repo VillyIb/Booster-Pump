@@ -9,17 +9,17 @@
 
     public class SerialConverter : ISerialConverter // ,  IModuleCommunication
     {
-        private readonly INcdApiSerialPort _SerialPort;
+        private readonly INcdApiSerialPort SerialPort;
 
         public SerialConverter(INcdApiSerialPort serialPort)
         {
-            this._SerialPort = serialPort;
+            this.SerialPort = serialPort;
         }
 
         protected IDataFromDevice Execute(IEnumerable<byte> data)
         {
-            _SerialPort.Write(data);
-            var returnValue = _SerialPort.Read();
+            SerialPort.Write(data);
+            var returnValue = SerialPort.Read();
             return returnValue;
         }
 

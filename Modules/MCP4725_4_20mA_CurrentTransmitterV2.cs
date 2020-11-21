@@ -9,14 +9,14 @@ namespace Modules
     public class MCP4725_4_20mA_CurrentTransmitterV2 : BoosterPumpLibrary.ModuleBase.BaseModuleV2
     {
         // Product, see: https://store.ncd.io/product/1-channel-4-20ma-current-loop-transmitter-i2c-mini-module/
-        // Datashet see: https://media.ncd.io/sites/2/20170721135048/MCP4725.pdf
+        // Datasheet see: https://media.ncd.io/sites/2/20170721135048/MCP4725.pdf
 
         public override byte DefaultAddress => 0x60; // optional 0x61
 
         private readonly Register Setting = new Register(0, "Settings", 3);
 
         /// <summary>
-        /// 0: normal mode, 1: 1 kOhm-, 2 100 kOmh-, 3: 500 kOhm resitor to ground.
+        /// 0: normal mode, 1: 1 kOhm-, 2 100 kOmh-, 3: 500 kOhm resistor to ground.
         /// See table 5-2
         /// </summary>
         private BitSetting PowerDown => Setting.GetOrCreateSubRegister(1, 1 + 16, "Power Down");

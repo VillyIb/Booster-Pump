@@ -1,6 +1,8 @@
 ﻿using System;
 using BoosterPumpLibrary.Settings;
 using Xunit;
+// ReSharper disable UnusedVariable
+// ReSharper disable IdentifierTypo
 
 namespace BoosterPumpTest
 {

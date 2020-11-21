@@ -1,6 +1,5 @@
 ﻿using BoosterPumpLibrary.Commands;
 using BoosterPumpLibrary.Contracts;
-using BoosterPumpLibrary.ModuleBase;
 using Modules;
 using NCD_API_SerialConverter.NcdApiProtocol;
 using NSubstitute;
@@ -26,7 +25,7 @@ namespace ModulesTest
             IDataFromDevice returnValue = new DataFromDevice { Header = 0xAA, ByteCount = 0x01, Payload = new byte[] { 0x55 }, Checksum = 0x00 };
             _FakeSerialPort.Execute(Arg.Any<WriteCommand>()).Returns(returnValue);
 
-            _Sut.SelectOpenChannels(BitPattern.D1 | BitPattern.D3);
+            _Sut.SelectOpenChannels(MultiplexerChannels.Channel1 | MultiplexerChannels.Channel3);
             _FakeSerialPort.Received().Execute(Arg.Is<WriteCommand>(cmd => cmd.I2CDataAsHex == "70 00 0A "));
         }
     }
