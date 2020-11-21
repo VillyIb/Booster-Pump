@@ -11,19 +11,19 @@ namespace ModulesTest
     public class MCP4725_4_20mA_CurrentTransmitterV2Should
     {
         private readonly MCP4725_4_20mA_CurrentTransmitterV2 Sut;
-        private readonly ISerialConverter _FakeSerialPort;
+        private readonly ISerialConverter FakeSerialPort;
 
         public MCP4725_4_20mA_CurrentTransmitterV2Should()
         {
-            _FakeSerialPort = Substitute.For<ISerialConverter>();
-            Sut = new MCP4725_4_20mA_CurrentTransmitterV2(_FakeSerialPort);
+            FakeSerialPort = Substitute.For<ISerialConverter>();
+            Sut = new MCP4725_4_20mA_CurrentTransmitterV2(FakeSerialPort);
         }
 
         [Fact]
         public void SendSequenceWhenCallingInit()
         {
             Sut.Init();
-            _FakeSerialPort.Received().Execute(Arg.Is<WriteCommand>(c => c.I2CDataAsHex == "60 00 60 80 00 "));
+            FakeSerialPort.Received().Execute(Arg.Is<WriteCommand>(c => c.I2CDataAsHex == "60 00 60 80 00 "));
         }
 
         [Fact]
@@ -34,14 +34,14 @@ namespace ModulesTest
 
             Sut.SetSpeed(speedPct);
             // expected 010x_x00x, 1010_1010, 0101_xxxx => 40 AA 50
-            _FakeSerialPort.Received().Execute(Arg.Is<WriteCommand>(c => c.I2CDataAsHex == "60 00 40 AA 50 "));
+            FakeSerialPort.Received().Execute(Arg.Is<WriteCommand>(c => c.I2CDataAsHex == "60 00 40 AA 50 "));
         }
 
         [Fact]
         public void SendSequenceWhenPowerDown()
         {
             Sut.SetPowerDown();
-            _FakeSerialPort.Received().Execute(Arg.Is<WriteCommand>(c => c.I2CDataAsHex == "60 00 02 00 00 "));
+            FakeSerialPort.Received().Execute(Arg.Is<WriteCommand>(c => c.I2CDataAsHex == "60 00 02 00 00 "));
         }
 
         [Fact]
@@ -52,7 +52,7 @@ namespace ModulesTest
 
             Sut.SetSpeedPersistent(speedPct);
             // expected 011x_x00x, 1010_1010, 0101_xxxx => 60 AA 50
-            _FakeSerialPort.Received().Execute(Arg.Is<WriteCommand>(c => c.I2CDataAsHex == "60 00 60 AA 50 "));
+            FakeSerialPort.Received().Execute(Arg.Is<WriteCommand>(c => c.I2CDataAsHex == "60 00 60 AA 50 "));
         }
 
         [Fact]

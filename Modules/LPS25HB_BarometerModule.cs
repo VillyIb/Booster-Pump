@@ -16,37 +16,45 @@ namespace Modules
 
         public override byte DefaultAddress => 0x5C;
 
-        readonly Register RES_CONF_V2 = new Register(0X10, "Register1", 1);
+
+        private readonly Register Settings0X10 = new Register(0X10, "RES_CONF", 1);
 
         /// <summary>
         /// 0: 8-, 1: 16, 2: 32, 3: 64 internal average.
         /// </summary>
-        BitSetting PressureResolution => RES_CONF_V2.GetOrCreateSubRegister(2, 0, "Pressure Resolution");
+        private BitSetting PressureResolution => Settings0X10.GetOrCreateSubRegister(2, 0, "Pressure Resolution");
 
         /// <summary>
         /// 0: 8, 1: 16, 2: 32, 3: 64 internal average.
         /// </summary>
-         BitSetting TemperatureResolution => RES_CONF_V2.GetOrCreateSubRegister(2, 2, "Temperature Resolution");
+        private BitSetting TemperatureResolution => Settings0X10.GetOrCreateSubRegister(2, 2, "Temperature Resolution");
 
-        readonly Register ControlRegister = new Register(0x20, "ControlRegister", 1);
+
+        private readonly Register Settings0X20 = new Register(0x20, "Control Register", 1);
 
         /// <summary>
         /// 0: Power Down, 1: Active Mode.
         /// </summary>
-         BitSetting PowerDown => ControlRegister.GetOrCreateSubRegister(1, 7, "Power down control");
+        private BitSetting PowerDown => Settings0X20.GetOrCreateSubRegister(1, 7, "Power down control");
 
         /// <summary>
         /// 0: One Shot, 1: 1 Hz, 2: 7 Hz, 3: 12,5 Hz, 4: 25Hz, 5..7 Reserved.
         /// </summary>
-        BitSetting OutputDataRate => ControlRegister.GetOrCreateSubRegister(3, 4, "Output data rate.");
+        private BitSetting OutputDataRate => Settings0X20.GetOrCreateSubRegister(3, 4, "Output data rate.");
 
-        readonly Register Reading = new Register(0x28, "Air Pressure & Temperature", 5);
 
-        public double AirPressure { get; protected set; }
+        private readonly Register Reading0X28 = new Register(0x28, "Air Pressure & Temperature", 5);
 
-        public double Temperature { get; protected set; }
+        private BitSetting PressureHex => Reading0X28.GetOrCreateSubRegister(24, 0, "Barometric Pressure");
 
-        protected override IEnumerable<RegisterBase> Registers => new List<RegisterBase>();
+        private BitSetting TemperatureHex => Reading0X28.GetOrCreateSubRegister(16, 24, "Air Temperature");
+
+
+        public double AirPressure => Math.Round(PressureHex.Value / 4096.0, 1);
+
+        public double Temperature => Math.Round(42.5 + (short)TemperatureHex.Value / 480.0, 1);
+
+        protected override IEnumerable<RegisterBase> Registers => new List<RegisterBase> { Settings0X20, Settings0X10 };
 
         public LPS25HB_BarometerModule(ISerialConverter serialPort, int? addressIncrement = 0) : base(serialPort, addressIncrement)
         { }
@@ -55,28 +63,24 @@ namespace Modules
         {
             PowerDown.Value = 1;
             OutputDataRate.Value = 1;
-            PressureResolution.Value = 3;
+            PressureResolution.Value = 2;
+            TemperatureResolution.Value = 2;
             Send();
 
-            SelectRegisterForReadingWithAutoIncrement(Reading);
+            SelectRegisterForReadingWithAutoIncrement(Reading0X28);
             var readCommand = new ReadCommand { Address = Address, LengthRequested = 5 };
             SerialPort.Execute(readCommand);
         }
 
         public void ReadDevice()
         {
-            SelectRegisterForReadingWithAutoIncrement(Reading);
-            var readCommand = new ReadCommand { Address = Address, LengthRequested = (byte)Reading.Size };
+            SelectRegisterForReadingWithAutoIncrement(Reading0X28);
+            var readCommand = new ReadCommand { Address = Address, LengthRequested = (byte)Reading0X28.Size };
             var readings = SerialPort.Execute(readCommand);
-            var payload = readings.Payload;
-            try
-            {
-                AirPressure = Math.Round((payload[0] | payload[1] << 8 | payload[2] << 16) / 4096.0, 1);
-                Temperature = Math.Round(42.5 + (short)(payload[3] | payload[4] << 8) / 480.0, 1);
-            }
-            // ReSharper disable once EmptyGeneralCatchClause
-            catch (Exception)
-            { }
+
+            var mapped = new byte[8];
+            Array.Copy(readings.Payload, 0, mapped, 0, readings.Payload.Length);
+            Reading0X28.Value = BitConverter.ToUInt64(mapped, 0);
         }
     }
 }

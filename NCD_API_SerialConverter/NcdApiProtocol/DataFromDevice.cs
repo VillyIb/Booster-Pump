@@ -26,8 +26,8 @@ namespace NCD_API_SerialConverter.NcdApiProtocol
                 if(ByteCount != Payload.Length) { return false; }
 
                 var checksum = Header + ByteCount;
-                checksum = Payload.Aggregate(checksum, (current1, current) => current1 + current);
-                return Checksum == (byte)(checksum & 0xff);
+                checksum = Payload.Aggregate(checksum, (current1, current) => current1 + current) & 0xff;
+                return Checksum == (byte)checksum;
             }
         }
 
