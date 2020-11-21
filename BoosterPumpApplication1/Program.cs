@@ -49,8 +49,9 @@ namespace BoosterPumpApplication1
             var pressureModule3 = new AMS5812_0150_D_B_Module(serialConverter);
             var pressureModule4 = new AMS5812_0300_A_PressureModule(serialConverter);
 
-            var baromeerModule1 = new LPS25HB_BarometerModule(serialConverter);
-            var baromeerModule2 = new LPS25HB_BarometerModule(serialConverter, 1);
+            var barometerModule1 = new LPS25HB_BarometerModule(serialConverter);
+            var baromet
+                erModule2 = new LPS25HB_BarometerModule(serialConverter, 1);
 
             var multiplexer = new TCA9546MultiplexerModule(serialConverter);
 
@@ -68,7 +69,7 @@ namespace BoosterPumpApplication1
 
                 Thread.Sleep(1000);
 
-                baromeerModule1.Init();
+                barometerModule1.Init();
                 baromeerModule2.Init();
 
 
@@ -79,22 +80,22 @@ namespace BoosterPumpApplication1
 
                 while (true)
                 {
-                    baromeerModule1.ReadDevice();
+                    barometerModule1.ReadDevice();
                     baromeerModule2.ReadDevice();
 
-                    multiplexer.SelectOpenChannels(TCA9546MultiplexerModule.Channel0);
+                    multiplexer.SelectOpenChannels( MultiplexerChannels.Channel0);
                     pressureModule1.ReadFromDevice();
 
-                    multiplexer.SelectOpenChannels(TCA9546MultiplexerModule.Channel1);
+                    multiplexer.SelectOpenChannels(MultiplexerChannels.Channel1);
                     pressureModule2.ReadFromDevice();
 
-                    multiplexer.SelectOpenChannels(TCA9546MultiplexerModule.Channel2);
+                    multiplexer.SelectOpenChannels(MultiplexerChannels.Channel2);
                     pressureModule3.ReadFromDevice();
 
-                    multiplexer.SelectOpenChannels(TCA9546MultiplexerModule.Channel3);
+                    multiplexer.SelectOpenChannels(MultiplexerChannels.Channel3);
                     pressureModule4.ReadFromDevice();
 
-                    Log(pressureModule1.Pressure, pressureModule2.Pressure, pressureModule3.Pressure, pressureModule4.Pressure, baromeerModule1.AirPressure, baromeerModule2.AirPressure, baromeerModule1.Temperature);
+                    Log(pressureModule1.Pressure, pressureModule2.Pressure, pressureModule3.Pressure, pressureModule4.Pressure, barometerModule1.AirPressure, baromeerModule2.AirPressure, barometerModule1.Temperature);
 
                     Thread.Sleep(300); // limit to 1 each second in order for logger to work.
                 }

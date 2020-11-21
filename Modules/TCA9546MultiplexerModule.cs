@@ -1,27 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using BoosterPumpLibrary.Commands;
 using BoosterPumpLibrary.Contracts;
 using BoosterPumpLibrary.ModuleBase;
 using BoosterPumpLibrary.Settings;
 
-
 namespace Modules
 {
+    [Flags]
+    public enum MultiplexerChannels
+    {
+        Channel0 = 1,
+        Channel1 = 2,
+        Channel2 = 4,
+        Channel3 = 8
+    }
+
+    // ReSharper disable once InconsistentNaming
     public class TCA9546MultiplexerModule : BaseModuleV2
     {
         // See: https://media.ncd.io/sites/2/20170721134413/tca9546a.pdf
 
         public override byte DefaultAddress => 0x70;
 
-        // TODO make strongly typed. using enum with flags.
-        public const int Channel0 = BitPattern.D0;
-        public const int Channel1 = BitPattern.D1;
-        public const int Channel2 = BitPattern.D2;
-        public const int Channel3 = BitPattern.D3;
-
-        private readonly Register Setting0X00 = new BoosterPumpLibrary.Settings.Register(0x00, "Open channels", 1);
+        private readonly Register Setting0X00 = new Register(0x00, "Open channels", 1);
 
         private BitSetting ChannelSelection => Setting0X00.GetOrCreateSubRegister(4, 0, "Open Channels");
 
@@ -33,11 +35,10 @@ namespace Modules
         /// <summary>
         /// Specify one or more channels {0...3} separated by , (comma).
         /// </summary>
-        /// <param name="bitPattern"></param>
-        public void SelectOpenChannels(params byte[] bitPattern) // TODO make strongly typed 
+        /// <param name="channels"></param>
+        public void SelectOpenChannels(params MultiplexerChannels[] channels) 
         {
-            byte aggregateBitPattern = bitPattern.Aggregate<byte, byte>(0x00, (current1, current) => (byte)(current1 | current));
-
+            byte aggregateBitPattern = channels.Aggregate<MultiplexerChannels, byte>(0, (current, channel) => (byte) (current | (byte) channel));
             ChannelSelection.Value = aggregateBitPattern;
             Send();
         }
