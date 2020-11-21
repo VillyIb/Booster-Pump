@@ -114,16 +114,16 @@ namespace BoosterPumpTest
         public void StoreMaxValuefor32Bits()
         {
             // ReSharper disable once InconsistentNaming
-            const uint value = uint.MaxValue;
-            KiloSetting.Value = value;
+            const uint Value = uint.MaxValue;
+            KiloSetting.Value = Value;
             Assert.Equal(0b1111_1111_1111_1111_1111_1111_1111_1111, Sut.Value);
         }
 
         [Fact]
         public void StoreMaxValuefor64Bits()
         {
-            const ulong value = ulong.MaxValue;
-            LimaSetting.Value = value;
+            const ulong Value = ulong.MaxValue;
+            LimaSetting.Value = Value;
             Assert.Equal(0b1111_1111_1111_1111_1111_1111_1111_1111_1111_1111_1111_1111_1111_1111_1111_1111, Sut.Value);
         }
 

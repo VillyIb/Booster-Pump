@@ -8,6 +8,7 @@ using BoosterPumpLibrary.Settings;
 namespace Modules
 {
     // ReSharper disable once UnusedMember.Global
+    // ReSharper disable once InconsistentNaming
     public class AMS5812_0150_D_B_Module : BaseModuleV2
     {
         public override byte DefaultAddress => 0x78;

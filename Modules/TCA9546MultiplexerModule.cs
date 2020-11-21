@@ -32,7 +32,7 @@ namespace Modules
         {
             byte aggregateBitPattern = bitPattern.Aggregate<byte, byte>(0x00, (current1, current) => (byte) (current1 | current));
             OpenChannels.SetDataRegister(aggregateBitPattern);
-            var writeCommand = new WriteCommand { Address = Address, Payload = new byte[] { OpenChannels.Value } };
+            var writeCommand = new WriteCommand { Address = Address, Payload = new[] { OpenChannels.Value } };
             var status = SerialPort.Execute(writeCommand);
             if (status.Payload.First() != 0x55)
             {

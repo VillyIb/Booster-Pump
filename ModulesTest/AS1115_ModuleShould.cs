@@ -67,7 +67,6 @@ namespace ModulesTest
             _FakeSerialPort.Received().Execute(Arg.Is<WriteCommand>(c => c.I2CDataAsHex == "00 01 0A 07 05 "));
         }
 
-
         [Fact]
         public void SettingZeroValueShows000()
         {
@@ -219,7 +218,5 @@ namespace ModulesTest
             _FakeSerialPort.Received(1).Execute(Arg.Any<WriteCommand>());
             _FakeSerialPort.Received().Execute(Arg.Is<WriteCommand>(c => c.I2CDataAsHex == "00 0C 01 "));
         }
-
-
     }
 }

@@ -13,6 +13,7 @@ namespace BoosterPumpLibrary.Logger
     {
         private static readonly TimeSpan OneMinute = new TimeSpan(0, 1, 0);
 
+        // ReSharper disable once ConvertToAutoProperty
         private static TimeSpan BufferTime => OneMinute;
 
         private static string Path => @"C:\Users\Buzz Lightyear\Dropbox\_FlowMeasurement\FlowController";

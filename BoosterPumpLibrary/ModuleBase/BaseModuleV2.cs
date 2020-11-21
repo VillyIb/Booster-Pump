@@ -71,14 +71,14 @@ namespace BoosterPumpLibrary.ModuleBase
             }
         }
 
-        public void SelectRegisterForReading(Settings.Register register)
+        public void SelectRegisterForReading(Register register)
         {
             var writeCommand = new WriteCommand { Address = Address, Payload = new[] { register.RegisterIndex } };
             // ReSharper disable once UnusedVariable
             var returnValue = SerialPort.Execute(writeCommand);
         }
 
-        public void SelectRegisterForReadingWithAutoIncrement(Settings.Register register)
+        public void SelectRegisterForReadingWithAutoIncrement(Register register)
         {
             var writeCommand = new WriteCommand { Address = Address, Payload = new[] { (byte)(register.RegisterIndex | 0x80) } };
             // ReSharper disable once UnusedVariable

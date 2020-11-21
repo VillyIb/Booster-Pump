@@ -14,7 +14,6 @@ namespace ModulesTest
         private readonly TCA9546MultiplexerModule _Sut;
         private readonly ISerialConverter _FakeSerialPort;
 
-
         public TCA9546MultiplexerModuleShould()
         {
             _FakeSerialPort = Substitute.For<ISerialConverter>();

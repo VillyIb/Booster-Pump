@@ -3,8 +3,8 @@ using BoosterPumpLibrary.Contracts;
 using BoosterPumpLibrary.ModuleBase;
 using BoosterPumpLibrary.Settings;
 using System;
-using System.Linq;
 using System.Collections.Generic;
+// ReSharper disable InconsistentNaming
 
 namespace Modules
 {
@@ -16,7 +16,7 @@ namespace Modules
 
         public override byte DefaultAddress => 0x5C;
 
-        readonly BoosterPumpLibrary.Settings.Register RES_CONF_V2 = new BoosterPumpLibrary.Settings.Register(0X10, "Register1", 1);
+        readonly Register RES_CONF_V2 = new Register(0X10, "Register1", 1);
 
         /// <summary>
         /// 0: 8-, 1: 16, 2: 32, 3: 64 internal average.
@@ -28,7 +28,7 @@ namespace Modules
         /// </summary>
          BitSetting TemperaturResolution => RES_CONF_V2.GetOrCreateSubRegister(2, 2, "Temperature Resolution");
 
-        readonly BoosterPumpLibrary.Settings.Register ControlRegister = new BoosterPumpLibrary.Settings.Register(0x20, "ControlRegister", 1);
+        readonly Register ControlRegister = new Register(0x20, "ControlRegister", 1);
 
         /// <summary>
         /// 0: Power Down, 1: Active Mode.
@@ -40,7 +40,7 @@ namespace Modules
         /// </summary>
         BitSetting OutputDataRate => ControlRegister.GetOrCreateSubRegister(3, 4, "Output data rate.");
 
-        readonly BoosterPumpLibrary.Settings.Register Reading = new BoosterPumpLibrary.Settings.Register(0x28, "Air Pressure & Temperatur", 5);
+        readonly Register Reading = new Register(0x28, "Air Pressure & Temperatur", 5);
 
         public double AirPressure { get; protected set; }
 
@@ -76,6 +76,7 @@ namespace Modules
                 AirPressure = Math.Round((payload[0] | payload[1] << 8 | payload[2] << 16) / 4096.0, 1);
                 Temperature = Math.Round(42.5 + (short)(payload[3] | payload[4] << 8) / 480.0, 1);
             }
+            // ReSharper disable once EmptyGeneralCatchClause
             catch (Exception)
             {
 
