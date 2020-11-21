@@ -40,8 +40,7 @@ namespace ModulesTest
         public void SendSequenceWhenPowerDown()
         {
             Sut.SetPowerDown();
-            // expected xxxx_x01x, 
-            _FakeSerialPort.Received().Execute(Arg.Is<WriteCommand>(c => c.I2CDataAsHex == "60 00 02 "));
+            _FakeSerialPort.Received().Execute(Arg.Is<WriteCommand>(c => c.I2CDataAsHex == "60 00 02 00 00 "));
         }
 
         [Fact]
@@ -58,7 +57,7 @@ namespace ModulesTest
         [Fact]
         public void VefifyMaptToPct()
         {
-            Assert.Equal("1.0000", Sut.GetPctValue(4096).ToString("N4"));
+            Assert.Equal("0.9998", Sut.GetPctValue(4095).ToString("N4"));
             Assert.Equal("0.5000", Sut.GetPctValue(4096 / 2).ToString("N4"));
             Assert.Equal("0.3333", Sut.GetPctValue(4096 / 3).ToString("N4"));
             Assert.Equal("0.6665", Sut.GetPctValue(2 * 4096 / 3).ToString("N4"));
@@ -69,7 +68,7 @@ namespace ModulesTest
         [Fact]
         public void VerifyMapFromPct()
         {
-            Assert.Equal(4096, Sut.GetIntValue(1.0000f));
+            Assert.Equal(4095, Sut.GetIntValue(0.9998f));
             Assert.Equal(4096 / 2, Sut.GetIntValue(0.5000f));
             Assert.Equal(4096 / 3, Sut.GetIntValue(0.3333f));
             Assert.Equal(2 * 4096 / 3, Sut.GetIntValue(0.6665f));

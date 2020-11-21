@@ -25,7 +25,7 @@ namespace Modules
         /// C0 and C1, 0: or 1: FastMode (not supported), 2: Write to DAC register. 3: Write to DAC register and EEPROM.
         /// See table 6-2
         /// </summary>
-        private  BitSetting WriteToDacOrEeprom => Setting.GetOrCreateSubRegister(2, 4 + 16, "Write to DAC or EEPROM");
+        private  BitSetting WriteToDacOrEeprom => Setting.GetOrCreateSubRegister(2, 5 + 16, "Write to DAC or EEPROM");
 
         /// <summary>
         /// 12 bit floating point value. (0..4095).
