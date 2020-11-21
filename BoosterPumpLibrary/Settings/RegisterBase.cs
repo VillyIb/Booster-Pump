@@ -76,9 +76,10 @@ namespace BoosterPumpLibrary.Settings
         public IEnumerable<byte> GetByteValue()
         {
             IsDirty = false;
-            var bytes = BitConverter.GetBytes(GetValue());
-            var reverse = bytes.Reverse();
-            var result = reverse.Skip(MaxSize - Size).Take(Size);
+            var value = GetValue();
+            var bytes = BitConverter.GetBytes(value);
+            var reverse = bytes.Reverse().ToArray();
+            var result = reverse.Skip(MaxSize - Size).Take(Size).ToArray();
             return result;
         }
 
@@ -116,7 +117,6 @@ namespace BoosterPumpLibrary.Settings
             RegisterIndex = registerIndex;
             Description = description;
             Size = byteCount;
-            Value = default;
         }      
     }
 }
