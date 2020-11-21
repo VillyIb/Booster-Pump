@@ -4,11 +4,15 @@ using System.Linq;
 using BoosterPumpLibrary.Commands;
 using BoosterPumpLibrary.Contracts;
 using BoosterPumpLibrary.ModuleBase;
+using BoosterPumpLibrary.Settings;
+
 
 namespace Modules
 {
-    public class TCA9546MultiplexerModule : BaseModule
+    public class TCA9546MultiplexerModule : BaseModuleV2
     {
+        // See: https://media.ncd.io/sites/2/20170721134413/tca9546a.pdf
+
         public override byte DefaultAddress => 0x70;
 
         // TODO make strongly typed. using enum with flags.
@@ -17,9 +21,11 @@ namespace Modules
         public const int Channel2 = BitPattern.D2;
         public const int Channel3 = BitPattern.D3;
 
-        protected override IEnumerable<RegisteBase> Registers => new List<RegisteBase>(0);
+        private readonly Register Setting0X00 = new BoosterPumpLibrary.Settings.Register(0x00, "Open channels", 1);
 
-        private readonly RegisteBase OpenChannels = new RegisteBase(0x00, "Open channels", "X");
+        private BitSetting ChannelSelection => Setting0X00.GetOrCreateSubRegister(4, 0, "Open Channels");
+
+        protected override IEnumerable<RegisterBase> Registers => new List<RegisterBase> { Setting0X00 };
 
         public TCA9546MultiplexerModule(ISerialConverter serialPort) : base(serialPort)
         { }
@@ -30,19 +36,14 @@ namespace Modules
         /// <param name="bitPattern"></param>
         public void SelectOpenChannels(params byte[] bitPattern) // TODO make strongly typed 
         {
-            byte aggregateBitPattern = bitPattern.Aggregate<byte, byte>(0x00, (current1, current) => (byte) (current1 | current));
-            OpenChannels.SetDataRegister(aggregateBitPattern);
-            var writeCommand = new WriteCommand { Address = Address, Payload = new[] { OpenChannels.Value } };
-            var status = SerialPort.Execute(writeCommand);
-            if (status.Payload.First() != 0x55)
-            {
-                throw new ApplicationException("Unable to select open ports.");
-            }
+            byte aggregateBitPattern = bitPattern.Aggregate<byte, byte>(0x00, (current1, current) => (byte)(current1 | current));
+
+            ChannelSelection.Value = aggregateBitPattern;
+            Send();
         }
 
         public override void Init()
-        {
-            throw new NotImplementedException();
-        }
+        { }
+
     }
 }

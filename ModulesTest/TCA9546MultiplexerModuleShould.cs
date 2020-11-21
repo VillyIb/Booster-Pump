@@ -27,7 +27,7 @@ namespace ModulesTest
             _FakeSerialPort.Execute(Arg.Any<WriteCommand>()).Returns(returnValue);
 
             _Sut.SelectOpenChannels(BitPattern.D1 | BitPattern.D3);
-            _FakeSerialPort.Received().Execute(Arg.Is<WriteCommand>(cmd => cmd.I2CDataAsHex == "70 0A "));
+            _FakeSerialPort.Received().Execute(Arg.Is<WriteCommand>(cmd => cmd.I2CDataAsHex == "70 00 0A "));
         }
     }
 }
