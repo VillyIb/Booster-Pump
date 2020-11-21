@@ -4,4 +4,9 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="ModuleBase\BaseModule.cs" />
+    <Compile Remove="ModuleBase\Register.cs" />
+  </ItemGroup>
+
 </Project>
