@@ -41,7 +41,7 @@ namespace Modules
             var command = new ReadCommand { DeviceAddress = DeviceAddress, LengthRequested = 4 };
             var response = SerialPort.Execute(command);
 
-            var measuredPressure = response.Payload[0] * 256 + response.Payload[1];
+            var measuredPressure = response.Payload[0] <<8 | response.Payload[1];
 
             Pressure = (float)Math.Round(
                 (measuredPressure - DevicePressureMin) *
@@ -50,7 +50,7 @@ namespace Modules
                 OutputPressureMin,
                 2);
 
-            var measuredTemp = response.Payload[2] * 256 + response.Payload[3];
+            var measuredTemp = response.Payload[2] << 8 | response.Payload[3];
 
             Temperature = (float)Math.Round(
                 (measuredTemp - DeviceTempMin) *
