@@ -11,12 +11,14 @@ namespace BoosterPumpLibrary.Logger
     [ExcludeFromCodeCoverage]
     public partial class BufferedLogWriter : IComponent
     {
+        private readonly string LogDirectory;
+
         private static readonly TimeSpan OneMinute = new TimeSpan(0, 1, 0);
 
         // ReSharper disable once ConvertToAutoProperty
         private static TimeSpan BufferTime => OneMinute;
 
-        private static string Path => @"C:\Users\Buzz Lightyear\Dropbox\_FlowMeasurement\FlowController";
+        private string Path => LogDirectory;
 
         private IList<BufferLine> Buffer { get; }
 
@@ -29,8 +31,9 @@ namespace BoosterPumpLibrary.Logger
             set { }
         }
 
-        public BufferedLogWriter()
+        public BufferedLogWriter(string logDirectory)
         {
+            LogDirectory = logDirectory;
             Buffer = new List<BufferLine>();
             NextFlush = DateTime.UtcNow.Add(BufferTime);
             CurrentHourUtc = DateTime.UtcNow;
@@ -57,7 +60,10 @@ namespace BoosterPumpLibrary.Logger
                     fs.Position = fs.Seek(0, SeekOrigin.End);
                     if (fs.Position == 0L)
                     {
-                        sw.WriteLine("Timestamp\tSecond of day\tPressure West\tPressure East\tPressure Manifold\tSystem Pressure\tTBarometer 1\tBarometer 2\tTemperature");
+                        sw.WriteLine("Timestamp\tSecond of day" +
+                                     "\tPressure Manifold\tFlow NorthWest\tFlow SouthEast\tSystem Pressure" +
+                                     "\tTBarometer 1\tBarometer 2\tTemperature1\tTemperature2"
+                        );
                     }
 
                     foreach (var current in Buffer)
