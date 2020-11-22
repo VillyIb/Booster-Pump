@@ -7,7 +7,7 @@ namespace BoosterPumpLibrary.Commands
 
     public abstract class CommandBase
     {
-        public virtual byte Address { get; set; }
+        public virtual byte DeviceAddress { get; set; }
 
         public abstract IEnumerable<byte> I2C_Data();
 

@@ -50,8 +50,7 @@ namespace BoosterPumpApplication1
             var pressureModule4 = new AMS5812_0300_A_PressureModule(serialConverter);
 
             var barometerModule1 = new LPS25HB_BarometerModule(serialConverter);
-            var baromet
-                erModule2 = new LPS25HB_BarometerModule(serialConverter, 1);
+            var barometerModule2 = new LPS25HB_BarometerModule(serialConverter, 1);
 
             var multiplexer = new TCA9546MultiplexerModule(serialConverter);
 
@@ -70,7 +69,7 @@ namespace BoosterPumpApplication1
                 Thread.Sleep(1000);
 
                 barometerModule1.Init();
-                baromeerModule2.Init();
+                barometerModule2.Init();
 
 
                 if (false)
@@ -81,7 +80,7 @@ namespace BoosterPumpApplication1
                 while (true)
                 {
                     barometerModule1.ReadDevice();
-                    baromeerModule2.ReadDevice();
+                    barometerModule2.ReadDevice();
 
                     multiplexer.SelectOpenChannels( MultiplexerChannels.Channel0);
                     pressureModule1.ReadFromDevice();
@@ -95,7 +94,7 @@ namespace BoosterPumpApplication1
                     multiplexer.SelectOpenChannels(MultiplexerChannels.Channel3);
                     pressureModule4.ReadFromDevice();
 
-                    Log(pressureModule1.Pressure, pressureModule2.Pressure, pressureModule3.Pressure, pressureModule4.Pressure, barometerModule1.AirPressure, baromeerModule2.AirPressure, barometerModule1.Temperature);
+                    Log(pressureModule1.Pressure, pressureModule2.Pressure, pressureModule3.Pressure, pressureModule4.Pressure, barometerModule1.AirPressure, barometerModule2.AirPressure, barometerModule1.Temperature);
 
                     Thread.Sleep(300); // limit to 1 each second in order for logger to work.
                 }

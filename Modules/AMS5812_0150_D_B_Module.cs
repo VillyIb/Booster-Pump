@@ -38,7 +38,7 @@ namespace Modules
 
         public void ReadFromDevice()
         {
-            var command = new ReadCommand { Address = Address, LengthRequested = 4 };
+            var command = new ReadCommand { DeviceAddress = DeviceAddress, LengthRequested = 4 };
             var response = SerialPort.Execute(command);
 
             var measuredPressure = response.Payload[0] * 256 + response.Payload[1];

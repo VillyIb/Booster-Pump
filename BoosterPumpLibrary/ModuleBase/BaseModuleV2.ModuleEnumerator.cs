@@ -1,0 +1,82 @@
+﻿#nullable enable
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using BoosterPumpLibrary.Commands;
+using BoosterPumpLibrary.Settings;
+
+namespace BoosterPumpLibrary.ModuleBase
+{
+    public abstract partial class BaseModuleV2
+    {
+        public class ModuleEnumerator : IEnumerator<WriteCommand?>
+        {
+            private readonly byte DeviceAddress;
+
+            private List<RegisterBase> SelectedRegisters { get; }
+
+            public WriteCommand? Current { get; set; }
+
+            object? IEnumerator.Current => Current;
+
+            public ModuleEnumerator(IEnumerable<RegisterBase> selectedRegisters, byte deviceAddress)
+            {
+                DeviceAddress = deviceAddress;
+                SelectedRegisters = selectedRegisters.ToList();
+                Current = null;
+            }
+
+            public void Reset()
+            {
+                foreach (var current in SelectedRegisters)
+                {
+                    current.SetDirty();
+                }
+            }
+
+            public bool MoveNext()
+            {
+                Current = null;
+                if (!SelectedRegisters.Any(t => t.IsDirty)) { return false; }
+
+                var currentCommand = new List<byte>();
+                byte currentRegisterAddress = 0;
+
+                foreach (var current in SelectedRegisters)
+                {
+                    if (!current.IsDirty) continue;
+
+                    if (currentCommand.Count > 0 && currentRegisterAddress + 1 != current.RegisterAddress) { break; }
+                    if (currentCommand.Count == 0)
+                    {
+                        currentCommand.Add(current.RegisterAddress);
+                    }
+                    currentCommand.AddRange(current.GetByteValue());
+                    currentRegisterAddress = current.RegisterAddress;
+                }
+
+                var writeCommand = new WriteCommand { DeviceAddress = DeviceAddress, Payload = currentCommand };
+
+                Current = writeCommand;
+
+                return true;
+            }
+
+            protected void Dispose(bool disposing)
+            {
+                if (disposing)
+                {
+                    SelectedRegisters.Clear();
+                    Current = null;
+                }
+            }
+
+            public void Dispose()
+            {
+                Dispose(true);
+                GC.SuppressFinalize(this);
+            }
+        }
+    }
+}

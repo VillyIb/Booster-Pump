@@ -29,7 +29,7 @@ namespace NCD_API_SerialConverter.NcdApiProtocol
         // ReSharper disable once UnusedMemberInSuper.Global
         public abstract byte Command { get; }
 
-        public virtual byte? Address { get => BackingValue?.Address; }
+        public virtual byte? Address { get => BackingValue?.DeviceAddress; }
 
         public byte Checksum
         {

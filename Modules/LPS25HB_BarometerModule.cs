@@ -68,14 +68,14 @@ namespace Modules
             Send();
 
             SelectRegisterForReadingWithAutoIncrement(Reading0X28);
-            var readCommand = new ReadCommand { Address = Address, LengthRequested = 5 };
+            var readCommand = new ReadCommand { DeviceAddress = DeviceAddress, LengthRequested = 5 };
             SerialPort.Execute(readCommand);
         }
 
         public void ReadDevice()
         {
             SelectRegisterForReadingWithAutoIncrement(Reading0X28);
-            var readCommand = new ReadCommand { Address = Address, LengthRequested = (byte)Reading0X28.Size };
+            var readCommand = new ReadCommand { DeviceAddress = DeviceAddress, LengthRequested = (byte)Reading0X28.Size };
             var readings = SerialPort.Execute(readCommand);
 
             var mapped = new byte[8];

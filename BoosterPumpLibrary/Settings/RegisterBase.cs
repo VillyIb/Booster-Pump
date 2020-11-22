@@ -31,7 +31,7 @@ namespace BoosterPumpLibrary.Settings
 
         public string Description { get; protected set; }
 
-        public byte RegisterIndex { get; protected set; }
+        public byte RegisterAddress { get; protected set; }
 
         public bool IsDirty { get; protected set; }       
 
@@ -108,13 +108,13 @@ namespace BoosterPumpLibrary.Settings
             } 
         }
 
-        protected RegisterBase(byte registerIndex, string description, int byteCount)
+        protected RegisterBase(byte registerAddress, string description, int byteCount)
         {
-            CheckRange((ushort)registerIndex, 0, 127, nameof(registerIndex));
+            CheckRange((ushort)registerAddress, 0, 127, nameof(registerAddress));
             // ReSharper disable once VirtualMemberCallInConstructor
             CheckRange((ushort)byteCount, 1, MaxSize, nameof(byteCount));
 
-            RegisterIndex = registerIndex;
+            RegisterAddress = registerAddress;
             Description = description;
             Size = byteCount;
         }      

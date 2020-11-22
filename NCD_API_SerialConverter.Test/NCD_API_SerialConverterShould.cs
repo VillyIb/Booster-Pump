@@ -26,7 +26,7 @@ namespace NCD_API_SerialConverter.Test
         [Fact]
         public void WriteByteSequenceForExecuteReadCommand()
         {
-            var command = new ReadCommand { Address = Address, LengthRequested = 1 };
+            var command = new ReadCommand { DeviceAddress = Address, LengthRequested = 1 };
             Sut.Execute(command);
 
             var expected = new byte[] { 0xAA, 0x03, 0xBF, 0x41, 0x01, 0xAE };
@@ -39,7 +39,7 @@ namespace NCD_API_SerialConverter.Test
         [Fact]
         public void WriteByteSequenceForExecuteWriteCommand()
         {
-            var command = new WriteCommand { Address = Address, Payload = new byte[] { 0x03, 0x00 } };
+            var command = new WriteCommand { DeviceAddress = Address, Payload = new byte[] { 0x03, 0x00 } };
             Sut.Execute(command);
 
             var expected = new byte[] { 0xAA, 0x04, 0xBE, 0x41, 0x03, 0x00, 0xB0 };
@@ -53,7 +53,7 @@ namespace NCD_API_SerialConverter.Test
         public void WriteByteSequenceForExecuteWriteReadCommand()
         {
             Address = 0x68;
-            var command = new WriteReadCommand { Address = Address, Payload = new byte[] { 0x10 }, Delay = 0x16, LengthRequested = 0x02 };
+            var command = new WriteReadCommand { DeviceAddress = Address, Payload = new byte[] { 0x10 }, Delay = 0x16, LengthRequested = 0x02 };
             Sut.Execute(command);
 
             var expected = new byte[] { 0xAA, 0x05, 0xC0, 0x68, 0x02, 0x16, 0x10, 0xFF };

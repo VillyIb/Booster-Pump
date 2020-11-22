@@ -8,7 +8,7 @@ namespace BoosterPumpLibrary.Commands
 
         public override IEnumerable<byte> I2C_Data()
         {
-            yield return Address;
+            yield return DeviceAddress;
             yield return LengthRequested;
         }
     }
