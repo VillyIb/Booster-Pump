@@ -13,7 +13,7 @@ namespace NCD_API_SerialConverter
     [ExcludeFromCodeCoverage]
     public class SerialPortDecorator : INcdApiSerialPort, IDisposable
     {
-        protected SerialPort SerialPort { get; private set; }
+        protected SerialPort SerialPortSelected { get; private set; }
 
         protected ReadNcdApiFormat ReadUtil { get; }
 
@@ -31,23 +31,26 @@ namespace NCD_API_SerialConverter
 
         public void Open()
         {
-            if (null != SerialPort && SerialPort.IsOpen) { SerialPort.Close(); }
-            SerialPort = new SerialPort(PortName, BaudRate);
-            SerialPort.Open();
-            SerialPort.ReadTimeout = Timeout;
+            var ports = SerialPort.GetPortNames().ToList();
+            var port = ports.Last();
+            Console.WriteLine($"Selected port: {port}");
+            if (null != SerialPortSelected && SerialPortSelected.IsOpen) { SerialPortSelected.Close(); }
+            SerialPortSelected = new SerialPort(port, BaudRate);
+            SerialPortSelected.Open();
+            SerialPortSelected.ReadTimeout = Timeout;
         }
 
         public void Close()
         {
-            if (null == SerialPort) { return; }
+            if (null == SerialPortSelected) { return; }
             try
             {
-                SerialPort.Close();
+                SerialPortSelected.Close();
             }
             catch (IOException)
             { }
 
-            SerialPort = null;
+            SerialPortSelected = null;
         }
 
         /// <summary>
@@ -55,32 +58,32 @@ namespace NCD_API_SerialConverter
         /// </summary>
         public void DiscardInBuffer()
         {
-            SerialPort.DiscardInBuffer();
+            SerialPortSelected.DiscardInBuffer();
         }
 
         public int ReadTimeout
         {
-            set => SerialPort.ReadTimeout = value;
-            get => SerialPort.ReadTimeout;
+            set => SerialPortSelected.ReadTimeout = value;
+            get => SerialPortSelected.ReadTimeout;
         }
 
         public void Write(IEnumerable<byte> byteSequence)
         {
             var dataArray = byteSequence.ToArray();
-            SerialPort.DiscardInBuffer();
-            SerialPort.Write(dataArray, 0, dataArray.Length);
+            SerialPortSelected.DiscardInBuffer();
+            SerialPortSelected.Write(dataArray, 0, dataArray.Length);
         }
 
         protected int ReadByte()
         {
-            return SerialPort.ReadByte();
+            return SerialPortSelected.ReadByte();
         }
 
         protected IEnumerable<byte> ReadBlock()
         {
-            var bytesToRead = SerialPort.BytesToRead;
+            var bytesToRead = SerialPortSelected.BytesToRead;
             var buffer = new byte[bytesToRead];
-            var actualRead = SerialPort.Read(buffer, 0, bytesToRead);
+            var actualRead = SerialPortSelected.Read(buffer, 0, bytesToRead);
             return buffer.Take(actualRead);
         }
 
@@ -100,14 +103,14 @@ namespace NCD_API_SerialConverter
                 // Dispose managed state (managed objects).
                 try
                 {
-                    SerialPort?.Dispose();
+                    SerialPortSelected?.Dispose();
                 }
                 // ReSharper disable once EmptyGeneralCatchClause
                 catch
                 { }
             }
             // release unmanaged resources
-            SerialPort = null;
+            SerialPortSelected = null;
         }
 
         ~SerialPortDecorator()

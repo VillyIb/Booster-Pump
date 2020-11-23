@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using BoosterPumpLibrary.Logger;
@@ -38,16 +39,21 @@ namespace BoosterPumpApplication1
             LogWriter.Add(row, now);
         }
 
+        //private  DirectoryInfo LocateDirectory(DirectoryInfo current, string target)
+        //{
+        //    var subdirectories = current.GetDirectories(target, SearchOption.AllDirectories);
+        //    return subdirectories.FirstOrDefault();
+        //}
+
+        //private DirectoryInfo LocateDirectory(string target)
+        //{
+
+        //}
+
         // ReSharper disable once UnusedParameter.Local
         public static void Main(string[] args)
         {
-            var LogDirectory = Environment.GetEnvironmentVariable("HOMEPATH");
-            LogDirectory += "\\Dropbox\\_FlowMeasurement\\FlowController";
-
-            if (!(new FileInfo(LogDirectory)).Exists)
-            {
-                throw new ArgumentOutOfRangeException("args", args[0], "Please provide log directory path." );
-            }
+            var logfilePrefix = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),  "Dropbox\\_FlowMeasurement\\FlowController");
 
             var serialPort = new SerialPortDecorator("COM4");
             var serialConverter = new SerialConverter(serialPort);
@@ -70,7 +76,7 @@ namespace BoosterPumpApplication1
             //var speedController = new MCP4725_4_20mA_CurrentTransmitter(serialConverter);
 
           
-            LogWriter = new BufferedLogWriter(LogDirectory);
+            LogWriter = new BufferedLogWriter(logfilePrefix);
 
             try
             {

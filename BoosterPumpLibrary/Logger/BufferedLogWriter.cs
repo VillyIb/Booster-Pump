@@ -11,14 +11,14 @@ namespace BoosterPumpLibrary.Logger
     [ExcludeFromCodeCoverage]
     public partial class BufferedLogWriter : IComponent
     {
-        private readonly string LogDirectory;
+        private readonly string LogfilePrefix;
 
         private static readonly TimeSpan OneMinute = new TimeSpan(0, 1, 0);
 
         // ReSharper disable once ConvertToAutoProperty
         private static TimeSpan BufferTime => OneMinute;
 
-        private string Path => LogDirectory;
+        private string Path => LogfilePrefix;
 
         private IList<BufferLine> Buffer { get; }
 
@@ -31,9 +31,9 @@ namespace BoosterPumpLibrary.Logger
             set { }
         }
 
-        public BufferedLogWriter(string logDirectory)
+        public BufferedLogWriter(string logfilePrefix)
         {
-            LogDirectory = logDirectory;
+            LogfilePrefix = logfilePrefix;
             Buffer = new List<BufferLine>();
             NextFlush = DateTime.UtcNow.Add(BufferTime);
             CurrentHourUtc = DateTime.UtcNow;
