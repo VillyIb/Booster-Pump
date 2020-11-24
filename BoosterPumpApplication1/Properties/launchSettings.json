@@ -2,7 +2,10 @@
   "profiles": {
     "BoosterPumpApplication1": {
       "commandName": "Project",
-      "commandLineArgs": "\"\\Users\\Buzz Lightyear\\Dropbox\\_FlowMeasurement\""
+      "commandLineArgs": "\"\\Users\\Buzz Lightyear\\Dropbox\\_FlowMeasurement\"",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
     }
   }
 }

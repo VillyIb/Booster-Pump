@@ -15,7 +15,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BoosterPumpApplication1", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Modules", "Modules\Modules.csproj", "{E10933FF-6A1D-4713-81DF-0397BFB7E3AE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModulesTest", "ModulesTest\ModulesTest.csproj", "{829D63D0-70C0-4C2D-B6B9-9FFA4B49B2ED}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ModulesTest", "ModulesTest\ModulesTest.csproj", "{829D63D0-70C0-4C2D-B6B9-9FFA4B49B2ED}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eu.iamia.Configuration", "eu.iamia.Configuration\eu.iamia.Configuration.csproj", "{6E8DA285-491E-4640-B615-26F49FD00D2E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{829D63D0-70C0-4C2D-B6B9-9FFA4B49B2ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{829D63D0-70C0-4C2D-B6B9-9FFA4B49B2ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{829D63D0-70C0-4C2D-B6B9-9FFA4B49B2ED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6E8DA285-491E-4640-B615-26F49FD00D2E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E8DA285-491E-4640-B615-26F49FD00D2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E8DA285-491E-4640-B615-26F49FD00D2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E8DA285-491E-4640-B615-26F49FD00D2E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

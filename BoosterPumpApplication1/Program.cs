@@ -2,10 +2,11 @@
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Threading;
 using BoosterPumpLibrary.Logger;
+using eu.iamia.Configuration;
+using Microsoft.Extensions.Configuration;
 using Modules;
 using NCD_API_SerialConverter;
 
@@ -16,6 +17,8 @@ namespace BoosterPumpApplication1
         private static CultureInfo CultureInfo => CultureInfo.GetCultureInfo("da-DK"); //  da-DK
 
         private static BufferedLogWriter LogWriter { get; set; }
+
+        private static IConfigurationRoot Configuration;
 
         private static void Log(params object[] args)
         {
@@ -37,6 +40,8 @@ namespace BoosterPumpApplication1
 
             var row = $"{timestamp}\t{secondOfDay}\t{payload}";
             LogWriter.Add(row, now);
+
+            Console.Write($"\r{row}");
         }
 
         //private  DirectoryInfo LocateDirectory(DirectoryInfo current, string target)
@@ -53,41 +58,61 @@ namespace BoosterPumpApplication1
         // ReSharper disable once UnusedParameter.Local
         public static void Main(string[] args)
         {
-            var logfilePrefix = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),  "Dropbox\\_FlowMeasurement\\FlowController");
+            Configuration = ConfigurationSetup.Init();
 
-            var serialPort = new SerialPortDecorator("COM4");
+            var subdir = Configuration["Database:SubDirectory"];
+            var filePrefix = Configuration["Database:FilePrefix"];
+            var userProfile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            var logfilePrefix = Path.Combine(userProfile, subdir, filePrefix);
+
+            var portName = Configuration["SerialPort:Name"];
+            var serialPort = new SerialPortDecorator(portName);
             var serialConverter = new SerialConverter(serialPort);
 
-            //var displayModule = new As1115Module(serialConverter);
+            bool.TryParse(Configuration["Controller:Enabled"], out var controllerEnabled);
+
+            var displayModule = new As1115Module(serialConverter);
 
             var manifoldPressureDifference = new AMS5812_0150_D_B_Module(serialConverter);
+            var manifoldPressureCorrection = float.Parse(Configuration["Measurements:ManifoldPressureCorrection"], CultureInfo.InvariantCulture);
 
             var flowNorthWest = new AMS5812_0150_D_B_Module(serialConverter);
+            var flowNorthWestCorrection = float.Parse(Configuration["Measurements:FlowNorthWestCorrection"], CultureInfo.InvariantCulture);
 
             var flowSouthEast = new AMS5812_0150_D_B_Module(serialConverter);
+            var flowSouthEastCorrection = float.Parse(Configuration["Measurements:FlowSouthEastCorrection"], CultureInfo.InvariantCulture);
 
             var systemPressure = new AMS5812_0300_A_PressureModule(serialConverter);
+            var systemPressureCorrection = float.Parse(Configuration["Measurements:SystemPressureCorrection"], CultureInfo.InvariantCulture);
 
             var barometerModule1 = new LPS25HB_BarometerModule(serialConverter);
             var barometerModule2 = new LPS25HB_BarometerModule(serialConverter, 1);
 
             var multiplexer = new TCA9546MultiplexerModule(serialConverter);
 
-            //var speedController = new MCP4725_4_20mA_CurrentTransmitter(serialConverter);
+            var speedController = controllerEnabled ? new MCP4725_4_20mA_CurrentTransmitterV2(serialConverter) : null;
 
-          
+
             LogWriter = new BufferedLogWriter(logfilePrefix);
 
             try
             {
                 serialPort.Open();
 
-                Thread.Sleep(1000);
+                Thread.Sleep(100);
 
                 barometerModule1.Init();
                 barometerModule2.Init();
 
-                var msMinRoundtripTime = (int)(1000 / 5);
+                var msMinRoundtripTime = int.Parse(Configuration["Measurements:RoundTripTime"]);
+
+                Console.WriteLine($"logfilePrefix: {logfilePrefix}");
+                Console.WriteLine($"portName: {portName}");
+                Console.WriteLine($"manifoldPressureCorrection: {manifoldPressureCorrection}");
+                Console.WriteLine($"flowNorthWestCorrection: {flowNorthWestCorrection}");
+                Console.WriteLine($"flowSouthEastCorrection: {flowSouthEastCorrection}");
+                Console.WriteLine($"systemPressureCorrection: {systemPressureCorrection}");
+                Console.WriteLine($"controllerEnabled: {controllerEnabled}");
 
                 var stopwatch = new Stopwatch();
                 while (true)
@@ -111,15 +136,21 @@ namespace BoosterPumpApplication1
                     systemPressure.ReadFromDevice();
 
                     Log(
-                        manifoldPressureDifference.Pressure,
-                        flowNorthWest.Pressure,
-                        flowSouthEast.Pressure,
-                        systemPressure.Pressure,
-                        barometerModule1.AirPressure,
-                        barometerModule2.AirPressure,
-                        barometerModule1.Temperature,
-                        barometerModule2.Temperature
+                        Math.Round(manifoldPressureDifference.Pressure + manifoldPressureCorrection, 1),
+                        Math.Round(flowNorthWest.Pressure + flowNorthWestCorrection, 1),
+                        Math.Round(flowSouthEast.Pressure + flowSouthEastCorrection, 1),
+                        Math.Round(systemPressure.Pressure - barometerModule1.AirPressure + systemPressureCorrection, 1),
+                        Math.Round(barometerModule1.AirPressure, 1),
+                        Math.Round(barometerModule2.AirPressure, 1),
+                        Math.Round(barometerModule1.Temperature, 1),
+                        Math.Round(barometerModule2.Temperature, 1)
                     );
+
+                    if (controllerEnabled)
+                    {
+                        displayModule.SetBcdValue(50.0f);
+                        speedController.SetSpeed(50.0f);
+                    }
 
                     stopwatch.Stop();
 

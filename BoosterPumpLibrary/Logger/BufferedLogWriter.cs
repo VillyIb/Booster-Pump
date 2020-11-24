@@ -56,6 +56,7 @@ namespace BoosterPumpLibrary.Logger
                     var filename = $"_{timestamp.Day:00}_{timestamp.Hour:00}{daylightSaving}.txt";
                     var file = new FileInfo($"{Path}{filename}");
                     using var fs = file.Open(FileMode.OpenOrCreate);
+                    Console.WriteLine($"\r\nWriting to logfile {file.Name}");
                     using var sw = new StreamWriter(fs);
                     fs.Position = fs.Seek(0, SeekOrigin.End);
                     if (fs.Position == 0L)
@@ -76,6 +77,7 @@ namespace BoosterPumpLibrary.Logger
                 catch (Exception ex)
                 {
                     Buffer.Add(new BufferLine(ex.Message, DateTime.Now));
+                    Console.Error.WriteLine($"Unable to write to file, {ex.Message}");
                     Thread.Sleep(1000);
                 }
             }
