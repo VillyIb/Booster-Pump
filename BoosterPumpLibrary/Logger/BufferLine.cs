@@ -2,19 +2,18 @@
 
 namespace BoosterPumpLibrary.Logger
 {
-    public partial class BufferedLogWriter
+
+    public class BufferLine
     {
-        private class BufferLine
+        public DateTime Timestamp { get; }
+
+        public string LogText { get; }
+
+        public BufferLine(string logText, DateTime timestamp)
         {
-            public DateTime Timestamp { get; }
-
-            public string LogText { get; }
-
-            public BufferLine(string logText, DateTime timestamp)
-            {
-                Timestamp = timestamp;
-                LogText = logText;
-            }
+            Timestamp = timestamp;
+            LogText = logText;
         }
     }
+
 }

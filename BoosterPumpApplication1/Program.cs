@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Text;
@@ -12,6 +13,8 @@ using NCD_API_SerialConverter;
 
 namespace BoosterPumpApplication1
 {
+    [ExcludeFromCodeCoverage]
+
     public class Program
     {
         private static CultureInfo CultureInfo => CultureInfo.GetCultureInfo("da-DK"); //  da-DK
@@ -22,14 +25,14 @@ namespace BoosterPumpApplication1
 
         private static void Log(params object[] args)
         {
-            var now = DateTime.Now;
+            var now = DateTime.UtcNow;
             now = new DateTime(
                 now.Ticks - now.Ticks % (TimeSpan.TicksPerSecond / 10),
                 now.Kind
             );
 
-            var timestamp = now.ToString("O");
-            var secondOfDay = (now.TimeOfDay.TotalMilliseconds / 100).ToString("000000", CultureInfo);
+            var timestamp = now.ToLocalTime().ToString("O");
+            var secondOfDay = (now.ToLocalTime().TimeOfDay.TotalMilliseconds / 100).ToString("000000", CultureInfo);
 
             var payload = new StringBuilder();
 
@@ -54,7 +57,7 @@ namespace BoosterPumpApplication1
         //{
 
         //}
-
+               
         // ReSharper disable once UnusedParameter.Local
         public static void Main(string[] args)
         {

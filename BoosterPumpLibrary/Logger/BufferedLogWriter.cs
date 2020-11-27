@@ -8,8 +8,9 @@ using System.Threading;
 
 namespace BoosterPumpLibrary.Logger
 {
+
     [ExcludeFromCodeCoverage]
-    public partial class BufferedLogWriter : IComponent
+    public partial class BufferedLogWriter : IBufferedLogWriter, IComponent
     {
         private readonly string LogfilePrefix;
 
