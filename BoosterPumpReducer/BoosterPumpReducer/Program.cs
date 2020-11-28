@@ -7,22 +7,35 @@ namespace BoosterPumpReducer
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            var date = DateTime.Now.AddDays(-1).Day.ToString("00");
 
+            if (args.Length == 1)
+            {
+                int num;
+                if (int.TryParse(args[0], out num))
+                {
+                    date = num.ToString("00");
+                }
+            }
+
+            Console.WriteLine($"Compacting data for date: {date}");
+              
             var directory = new DirectoryInfo(@"C:\Users\Buzz Lightyear\Dropbox\_FlowMeasurement");
 
             // Open outputfile
-            var outputFile = Path.Combine(directory.FullName, "AggregateFlow_27.txt");
+            var outputFile = Path.Combine(directory.FullName, $"AggregateFlow_{date}.txt");
             var outputfile = new OutputFile(outputFile);
 
             var aggregate = new AggregateData(outputfile);
 
             // Select Input files
-            var filePrefix = @"FlowController_27";
-            var readfile = new ReadFiles( directory, filePrefix, aggregate);
+            var filePrefix = $"FlowController_{date}";
+            var readfile = new ReadFiles(directory, filePrefix, aggregate);
 
             // loop over input files
-            readfile.Execute();         
+            readfile.Execute();
+
+            Console.WriteLine($"Processed {readfile.Filecount} files");
 
         }
     }

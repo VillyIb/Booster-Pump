@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "BoosterPumpReducer": {
+      "commandName": "Project",
+      "commandLineArgs": "28"
+    }
+  }
+}

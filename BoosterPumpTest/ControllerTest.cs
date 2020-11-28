@@ -15,8 +15,8 @@ namespace BoosterPumpTest
                 {
                     var now = DateTime.UtcNow;
                     logger.Add($"{now}", now);
-                    await Task.Delay(2000, cancellationToken);
-                } while (true);
+                    await Task.Delay(2000);
+                } while (!cancellationToken.IsCancellationRequested);
             }
             catch (OperationCanceledException)
             { 

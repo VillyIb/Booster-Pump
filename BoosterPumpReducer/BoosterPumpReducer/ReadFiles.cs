@@ -13,6 +13,8 @@ namespace BoosterPumpReducer
 
         public DirectoryInfo Directory { get; }
 
+        public int Filecount { get; private set; }
+
         public string FilePrefix { get; }
         public AggregateData Aggregate { get; }
 
@@ -21,6 +23,7 @@ namespace BoosterPumpReducer
             Directory = directory;
             FilePrefix = filePrefix;
             Aggregate = aggregate;
+            Filecount = 0;
         }
 
         private void ParseLine(string line)
@@ -53,6 +56,7 @@ namespace BoosterPumpReducer
 
         private void HandleFile(FileInfo file)
         {
+            Filecount++;
             var fs = file.OpenRead();
             using var sr = new StreamReader(fs);
 

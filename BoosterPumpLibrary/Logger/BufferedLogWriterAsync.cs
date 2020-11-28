@@ -8,20 +8,25 @@ namespace BoosterPumpLibrary.Logger
 {
     public class BufferedLogWriterAsync : IBufferedLogWriter, IComponent
     {
-        private readonly IOutputFileHandler FileHandler;
+        private readonly IOutputFileHandler AggregateFile;
 
         private readonly ConcurrentQueue<BufferLine> Queue;
 
         private readonly int RoundTripDuration;
 
-        public BufferedLogWriterAsync(IOutputFileHandler fileHandler)
+        public BufferedLogWriterAsync(IOutputFileHandler aggregateFile)
         {
-            FileHandler = fileHandler;
+            AggregateFile = aggregateFile;
             Queue = new ConcurrentQueue<BufferLine>();
 
             RoundTripDuration = 60; // One minute
         }
 
+        /// <summary>
+        /// Returns the starttime for the current minute 'yyyy-MM-dd HH:mm:00.0000000'
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public static DateTime RoundToMinute(DateTime value)
         {
             return new DateTime(value.Ticks - value.Ticks % TimeSpan.TicksPerMinute, value.Kind);
@@ -47,7 +52,7 @@ namespace BoosterPumpLibrary.Logger
 
                 try
                 {
-                    await FileHandler.WriteLine(current.Timestamp, current.LogText);
+                    await AggregateFile.WriteLine(current.Timestamp, current.LogText);
                     Queue.TryDequeue(out current);
 
                     await Console.Error.WriteLineAsync(current.Timestamp.ToString("O"));
@@ -58,7 +63,7 @@ namespace BoosterPumpLibrary.Logger
                     await Task.Delay(1000);
                 }
             }
-            await FileHandler.Close();
+            await AggregateFile.Close();
         }
 
         /// <summary>
@@ -69,13 +74,12 @@ namespace BoosterPumpLibrary.Logger
         /// <returns></returns>
         public async Task AggregateFlush(DateTime window, bool flushAll = false)
         {
-            await Console.Error.WriteLineAsync("\r\n\n\n\n\n\n\n\n");
-
             var threshold = RoundToMinute(window);
 
-            await Console.Error.WriteLineAsync($"Probing AggregateFlush: {threshold.ToLocalTime()}, now: {DateTime.Now}");
+            await Console.Error.WriteLineAsync($"\r\nProbing AggregateFlush: {threshold.ToLocalTime()}, now: {DateTime.Now}");
 
             var aggregateValue = "";
+            var aggregateCount = 0;
 
             while (!Queue.IsEmpty && Queue.TryPeek(out BufferLine current))
             {
@@ -83,10 +87,12 @@ namespace BoosterPumpLibrary.Logger
 
                 try
                 {
-                    aggregateValue = $"{aggregateValue}, {current.LogText}";
+                    aggregateValue = $"{aggregateValue}, {current.LogText}"; // TODO modify aggregation operation
+                    // TODO optionally write to full-log file.
+                    aggregateCount++;
                     Queue.TryDequeue(out current);
 
-                    await Console.Error.WriteLineAsync(current.Timestamp.ToString("O"));
+                    await Console.Error.WriteLineAsync($"    Dequeued: {current.Timestamp.ToLocalTime().ToString("O")}");
                 }
                 catch (Exception ex)
                 {
@@ -96,9 +102,9 @@ namespace BoosterPumpLibrary.Logger
             }
             if (!String.IsNullOrEmpty(aggregateValue))
             {
-                await FileHandler.WriteLine(threshold, aggregateValue);
+                await AggregateFile.WriteLine(threshold, aggregateValue); // TODO modify aggregation operation divide by aggregateCount.
             }
-            await FileHandler.Close();
+            await AggregateFile.Close();
         }
 
         public async Task ExecuteAsync(CancellationToken cancellationToken)
@@ -122,25 +128,27 @@ namespace BoosterPumpLibrary.Logger
             while (true);
         }
 
+        /// <summary>
+        /// Waits until NextMinute + 2 seconds in order to let other tasks finish before kicking in.
+        /// </summary>
+        /// <returns></returns>
+        public async Task WaitUntilSecond02InNextMinute()
+        {
+            var now = DateTime.UtcNow;
+            var thisMinute = RoundToMinute(now);
+            var nextMinute02 = thisMinute.AddSeconds(62);
+            var delay = nextMinute02.Subtract(now);
+            await Task.Delay(delay);
+        }
+
         public async Task AggregateExecuteAsync(CancellationToken cancellationToken)
         {
             do
             {
-                var window = DateTime.UtcNow;
-                await AggregateFlush(window);
-
-                var delay = RoundToMinute(DateTime.UtcNow).AddSeconds(RoundTripDuration + 2).Subtract(DateTime.UtcNow);
-                try
-                {
-                    await Task.Delay(Math.Max((int)delay.TotalMilliseconds, 10000), cancellationToken);
-                }
-                catch (OperationCanceledException)
-                {
-                    await AggregateFlush(RoundToMinute(window), true);
-                    break;
-                }
+                await WaitUntilSecond02InNextMinute();
+                await AggregateFlush(DateTime.UtcNow);
             }
-            while (true);
+            while (!cancellationToken.IsCancellationRequested);
         }
 
         public void Add(string row, DateTime timestampUtc)
