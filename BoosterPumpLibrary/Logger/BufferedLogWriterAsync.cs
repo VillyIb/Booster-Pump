@@ -31,41 +31,7 @@ namespace BoosterPumpLibrary.Logger
         {
             return new DateTime(value.Ticks - value.Ticks % TimeSpan.TicksPerMinute, value.Kind);
         }
-
-        /// <summary>
-        /// Flushes all waiting messages with the specified (minute) window, optionally flush all.
-        /// </summary>
-        /// <param name="window"></param>
-        /// <param name="flushAll"></param>
-        /// <returns></returns>
-        public async Task Flush(DateTime window, bool flushAll = false)
-        {
-            await Console.Error.WriteLineAsync("\r\n\n\n\n\n\n\n\n");
-
-            var threshold = RoundToMinute(window);
-
-            await Console.Error.WriteLineAsync($"Probing Flush: {threshold.ToLocalTime()}, now: {DateTime.Now}");
-
-            while (!Queue.IsEmpty && Queue.TryPeek(out BufferLine current))
-            {
-                if (!flushAll && threshold <= RoundToMinute(current.Timestamp)) { break; }
-
-                try
-                {
-                    await AggregateFile.WriteLine(current.Timestamp, current.LogText);
-                    Queue.TryDequeue(out current);
-
-                    await Console.Error.WriteLineAsync(current.Timestamp.ToString("O"));
-                }
-                catch (Exception ex)
-                {
-                    Queue.Enqueue(new BufferLine(ex.Message, DateTime.UtcNow));
-                    await Task.Delay(1000);
-                }
-            }
-            await AggregateFile.Close();
-        }
-
+               
         /// <summary>
         /// Flushes all waiting messages with the specified (minute) window, optionally flush all.
         /// </summary>
@@ -106,28 +72,7 @@ namespace BoosterPumpLibrary.Logger
             }
             await AggregateFile.Close();
         }
-
-        public async Task ExecuteAsync(CancellationToken cancellationToken)
-        {
-            do
-            {
-                var window = DateTime.UtcNow;
-                await Flush(window);
-
-                var delay = RoundToMinute(DateTime.UtcNow).AddSeconds(RoundTripDuration + 2).Subtract(DateTime.UtcNow);
-                try
-                {
-                    await Task.Delay(Math.Max((int)delay.TotalMilliseconds, 10000), cancellationToken);
-                }
-                catch (OperationCanceledException)
-                {
-                    await Flush(window, true);
-                    break;
-                }
-            }
-            while (true);
-        }
-
+           
         /// <summary>
         /// Waits until NextMinute + 2 seconds in order to let other tasks finish before kicking in.
         /// </summary>

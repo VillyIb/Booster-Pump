@@ -21,7 +21,7 @@ namespace BoosterPumpApplication1
 
         private static BufferedLogWriter LogWriter { get; set; }
 
-        private static IConfigurationRoot Configuration;
+        private static IConfiguration Configuration;
 
         private static void Log(params object[] args)
         {

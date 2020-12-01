@@ -30,10 +30,10 @@ namespace BoosterPumpReducer
         {
             if(aggregatedValues.Any())
             {
-                var t1 = aggregatedValues.Select(t => t / aggregateCount).ToList();
-                var ta = (Math.Log10( Math.Max(0.1, t1[0]))+1)*10;
+                var t1 = aggregatedValues.Select(t => t / aggregateCount).ToList();                
+                var ta = (Math.Log10( Math.Max(0.1, t1[1]))+1)*10;
                 t1.Add(ta);
-                var tb = (Math.Log10(Math.Max(0.1, t1[1]))+1) * 10;
+                var tb = (Math.Log10(Math.Max(0.1, t1[2]))+1) * 10;
                 t1.Add(tb);
                 var tc = ta + tb;
                 t1.Add(tc);

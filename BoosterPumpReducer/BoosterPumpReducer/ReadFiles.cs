@@ -45,7 +45,7 @@ namespace BoosterPumpReducer
 
                 if(values[2]< 0.0D || values[3]< 0.0D) { return; }
 
-                Aggregate.Add(timestamp, values[2], values[3], values[4], values[5]);
+                Aggregate.Add(timestamp, values[1], values[2], values[3], values[4], values[5]);
 
             }
             catch(Exception ex)

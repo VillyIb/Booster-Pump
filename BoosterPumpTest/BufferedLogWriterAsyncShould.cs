@@ -1,8 +1,6 @@
 ﻿using BoosterPumpLibrary.Logger;
 using NSubstitute;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -18,6 +16,7 @@ namespace BoosterPumpTest
 
         public BufferedLogWriterAsyncShould()
         {
+            // Arrange
             fakeFileHandler = Substitute.For<IOutputFileHandler>();
             Sut = new BufferedLogWriterAsync(fakeFileHandler);
 
@@ -32,9 +31,8 @@ namespace BoosterPumpTest
             TokenSource.Cancel();
         }
 
-       
-
-        [Fact(Timeout =250000, Skip = "Too time consuming")]
+        //[Fact(Timeout = 250000, Skip = "Too time consuming")]
+        [Fact(Timeout = 250000)]
         public async Task AssertExececuteShouldReturn1RowsIn30Seconds()
         {
 
@@ -49,8 +47,6 @@ namespace BoosterPumpTest
             var probe4 = probe3.AddMinutes(1);
 
             var stopTask = RequestCancellationAfterDelay();
-
-            // Arrange
 
             // Act
             var writerTask = Sut.AggregateExecuteAsync(TokenSource.Token);

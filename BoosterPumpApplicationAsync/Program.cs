@@ -13,7 +13,7 @@ namespace BoosterPumpApplicationAsync
     [ExcludeFromCodeCoverage]
     class Program
     {
-        private static IConfigurationRoot Configuration;
+        private static IConfiguration Configuration;
 
         static async Task Main(string[] args)
         {
@@ -34,7 +34,7 @@ namespace BoosterPumpApplicationAsync
             using var tokenSource = new CancellationTokenSource();
             var token = tokenSource.Token;
 
-            var logTask = logWriter.ExecuteAsync(token);
+            var logTask = logWriter.AggregateExecuteAsync(token);
             tasks.Add(logTask);
 
             var controller = new ControlAsync();

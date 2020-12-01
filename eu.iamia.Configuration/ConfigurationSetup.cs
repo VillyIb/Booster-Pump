@@ -5,7 +5,7 @@
 
     public class ConfigurationSetup
     {
-        public static IConfigurationRoot Init()
+        public static IConfiguration Init()
         {
             var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
             var builder = new ConfigurationBuilder()
@@ -14,7 +14,7 @@
                     .AddEnvironmentVariables()
                 ;
 
-            var config = builder.Build();
+            IConfiguration config = builder.Build();
 
             return config;
         }
