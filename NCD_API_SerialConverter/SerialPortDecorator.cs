@@ -6,6 +6,8 @@ using System.IO;
 using System.IO.Ports;
 using System.Diagnostics.CodeAnalysis;
 using NCD_API_SerialConverter.NcdApiProtocol;
+using Microsoft.Extensions.Options;
+using BoosterPumpConfiguration;
 // ReSharper disable UnusedMember.Global
 
 namespace NCD_API_SerialConverter
@@ -17,15 +19,11 @@ namespace NCD_API_SerialConverter
 
         protected ReadNcdApiFormat ReadUtil { get; }
 
-        private readonly string PortName;
-        private readonly int BaudRate;
-        private readonly int Timeout;
+        private SerialPortSettings SerialPortSettings { get; }
 
-        public SerialPortDecorator(string portName)
+        public SerialPortDecorator(IOptions<SerialPortSettings> settings)
         {
-            PortName = portName;
-            BaudRate = 115200;
-            Timeout = 1000; // ms
+            SerialPortSettings = settings.Value;
             ReadUtil = new ReadNcdApiFormat(ReadByte, ReadBlock);
         }
 
@@ -35,9 +33,9 @@ namespace NCD_API_SerialConverter
             var port = ports.Last();
             Console.WriteLine($"Selected port: {port}");
             if (null != SerialPortSelected && SerialPortSelected.IsOpen) { SerialPortSelected.Close(); }
-            SerialPortSelected = new SerialPort(port, BaudRate);
+            SerialPortSelected = new SerialPort(port, SerialPortSettings.BaudRate);
             SerialPortSelected.Open();
-            SerialPortSelected.ReadTimeout = Timeout;
+            SerialPortSelected.ReadTimeout = SerialPortSettings.Timeout;
         }
 
         public void Close()

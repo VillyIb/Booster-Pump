@@ -69,7 +69,7 @@ namespace BoosterPumpApplication1
             var logfilePrefix = Path.Combine(userProfile, subdir, filePrefix);
 
             var portName = Configuration["SerialPort:Name"];
-            var serialPort = new SerialPortDecorator(portName);
+            var serialPort = new SerialPortDecorator(null); // todo creae from service.
             var serialConverter = new SerialConverter(serialPort);
 
             bool.TryParse(Configuration["Controller:Enabled"], out var controllerEnabled);
@@ -96,7 +96,7 @@ namespace BoosterPumpApplication1
             var speedController = controllerEnabled ? new MCP4725_4_20mA_CurrentTransmitterV2(serialConverter) : null;
 
 
-            LogWriter = new BufferedLogWriter(logfilePrefix);
+            LogWriter = new BufferedLogWriter(null);
 
             try
             {

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using BoosterPumpConfiguration;
+using Microsoft.Extensions.Options;
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Threading.Tasks;
@@ -18,9 +20,9 @@ namespace BoosterPumpLibrary.Logger
     {
         private readonly string LogfilePrefix;
 
-        public OutputFileHandler(string logfilePrefix)
+        public OutputFileHandler(IOptions<DatabaseSettings> settings)
         {
-            LogfilePrefix = logfilePrefix;
+            LogfilePrefix = settings.Value.FilePrefix;
         }
 
         private string CurrentFilename { get; set; }

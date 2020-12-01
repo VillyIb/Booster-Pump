@@ -1,8 +1,10 @@
 ﻿namespace eu.iamia.Configuration
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using Microsoft.Extensions.Configuration;
 
+    [ExcludeFromCodeCoverage]
     public class ConfigurationSetup
     {
         public static IConfiguration Init()

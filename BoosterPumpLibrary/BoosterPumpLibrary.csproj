@@ -5,8 +5,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Logger\BufferedLogWriter.cs" />
     <Compile Remove="ModuleBase\BaseModule.cs" />
     <Compile Remove="ModuleBase\Register.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Options" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BoosterPumpConfiguration\BoosterPumpConfiguration.csproj" />
   </ItemGroup>
 
 </Project>

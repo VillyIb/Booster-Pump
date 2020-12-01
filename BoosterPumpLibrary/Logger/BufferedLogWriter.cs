@@ -1,4 +1,6 @@
-﻿using System;
+﻿using BoosterPumpConfiguration;
+using Microsoft.Extensions.Options;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
@@ -24,6 +26,7 @@ namespace BoosterPumpLibrary.Logger
         private IList<BufferLine> Buffer { get; }
 
         private DateTime NextFlush { get; set; }
+
         private DateTime CurrentHourUtc { get; set; }
 
         public ISite Site
@@ -32,9 +35,9 @@ namespace BoosterPumpLibrary.Logger
             set { }
         }
 
-        public BufferedLogWriter(string logfilePrefix)
+        public BufferedLogWriter(IOptions<DatabaseSettings> settings) 
         {
-            LogfilePrefix = logfilePrefix;
+            LogfilePrefix = settings.Value.FilePrefix;
             Buffer = new List<BufferLine>();
             NextFlush = DateTime.UtcNow.Add(BufferTime);
             CurrentHourUtc = DateTime.UtcNow;
