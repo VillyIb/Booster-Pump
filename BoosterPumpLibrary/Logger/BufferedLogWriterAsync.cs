@@ -12,14 +12,10 @@ namespace BoosterPumpLibrary.Logger
 
         private readonly ConcurrentQueue<BufferLine> Queue;
 
-        private readonly int RoundTripDuration;
-
         public BufferedLogWriterAsync(IOutputFileHandler aggregateFile)
         {
             AggregateFile = aggregateFile;
             Queue = new ConcurrentQueue<BufferLine>();
-
-            RoundTripDuration = 60; // One minute
         }
 
         /// <summary>

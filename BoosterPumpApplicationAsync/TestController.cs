@@ -1,11 +1,12 @@
-﻿using BoosterPumpLibrary.Logger;
+﻿using BoosterPumpApplication;
+using BoosterPumpLibrary.Logger;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace BoosterPumpApplicationAsync
 {
-    public class ControlAsync
+    public class TestController : IController
     {
         public async Task ExecuteAsync(CancellationToken cancellationToken, IBufferedLogWriter logger)
         {

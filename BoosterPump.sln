@@ -11,8 +11,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NCD_API_SerialConverter", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NCD_API_SerialConverter.Test", "NCD_API_SerialConverter.Test\NCD_API_SerialConverter.Test.csproj", "{41F3A653-64F1-4860-B4B9-245DC3CE28CC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BoosterPumpApplication1", "BoosterPumpApplication1\BoosterPumpApplication1.csproj", "{AFD2CA6B-C26A-4F55-95EA-754370D38E39}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Modules", "Modules\Modules.csproj", "{E10933FF-6A1D-4713-81DF-0397BFB7E3AE}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ModulesTest", "ModulesTest\ModulesTest.csproj", "{829D63D0-70C0-4C2D-B6B9-9FFA4B49B2ED}"
@@ -23,7 +21,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BoosterPumpApplicationAsync
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoosterPumpApplicationAsyncTest", "BoosterPumpApplicationAsyncTest\BoosterPumpApplicationAsyncTest.csproj", "{D190547D-C2CF-4658-A716-3CB47126B0E2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoosterPumpConfiguration", "BoosterPumpConfiguration\BoosterPumpConfiguration.csproj", "{7828DC15-9C66-4DD4-98C4-1FA5E60D669E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BoosterPumpConfiguration", "BoosterPumpConfiguration\BoosterPumpConfiguration.csproj", "{7828DC15-9C66-4DD4-98C4-1FA5E60D669E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoosterPumpApplication", "BoosterPumpApplication\BoosterPumpApplication.csproj", "{103F3DD2-B6AA-46C5-90B2-6E9659649678}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,10 +47,6 @@ Global
 		{41F3A653-64F1-4860-B4B9-245DC3CE28CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{41F3A653-64F1-4860-B4B9-245DC3CE28CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{41F3A653-64F1-4860-B4B9-245DC3CE28CC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AFD2CA6B-C26A-4F55-95EA-754370D38E39}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AFD2CA6B-C26A-4F55-95EA-754370D38E39}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AFD2CA6B-C26A-4F55-95EA-754370D38E39}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AFD2CA6B-C26A-4F55-95EA-754370D38E39}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E10933FF-6A1D-4713-81DF-0397BFB7E3AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E10933FF-6A1D-4713-81DF-0397BFB7E3AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E10933FF-6A1D-4713-81DF-0397BFB7E3AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -75,6 +71,10 @@ Global
 		{7828DC15-9C66-4DD4-98C4-1FA5E60D669E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7828DC15-9C66-4DD4-98C4-1FA5E60D669E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7828DC15-9C66-4DD4-98C4-1FA5E60D669E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{103F3DD2-B6AA-46C5-90B2-6E9659649678}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{103F3DD2-B6AA-46C5-90B2-6E9659649678}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{103F3DD2-B6AA-46C5-90B2-6E9659649678}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{103F3DD2-B6AA-46C5-90B2-6E9659649678}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

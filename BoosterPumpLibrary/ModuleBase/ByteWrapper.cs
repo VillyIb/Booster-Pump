@@ -1,5 +1,8 @@
 ﻿namespace BoosterPumpLibrary.ModuleBase
 {
+    /// <summary>
+    /// Enables operator overloading for + and = making an int assignable to a byte.
+    /// </summary>
    public class ByteWrapper
     {
         private readonly byte Payload;

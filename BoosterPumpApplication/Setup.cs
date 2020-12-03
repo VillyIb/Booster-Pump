@@ -6,8 +6,9 @@ using NCD_API_SerialConverter.Contracts;
 using BoosterPumpConfiguration;
 using BoosterPumpLibrary.Logger;
 using System.Diagnostics.CodeAnalysis;
+using Modules;
 
-namespace BoosterPumpApplicationAsync
+namespace BoosterPumpApplication
 {
     [ExcludeFromCodeCoverage]
     public class Setup
@@ -18,7 +19,6 @@ namespace BoosterPumpApplicationAsync
         {
             Configuration = configuration;
         }
-
 
         public void Register(IServiceCollection services)
         {
@@ -32,18 +32,21 @@ namespace BoosterPumpApplicationAsync
 
             services.AddOptions();
 
-            services.AddTransient<ControllerService, ControllerService>();
-
             services.AddSingleton(typeof(ISerialConverter), typeof(SerialConverter));
             services.AddSingleton(typeof(INcdApiSerialPort), typeof(SerialPortDecorator));
             services.AddSingleton(typeof(IOutputFileHandler), typeof(OutputFileHandler));
-            services.AddSingleton(typeof(IOutputFileHandler), typeof(OutputFileHandler));
 
-            //services.AddSingleton(typeof(IOutputFileHandler), typeof(OutputFileHandler));
-            //services.AddSingleton(typeof(IOutputFileHandler), typeof(OutputFileHandler));
-            //services.AddSingleton(typeof(IOutputFileHandler), typeof(OutputFileHandler));
+            //services.AddScoped(typeof(IController), typeof(TestController));
+            services.AddScoped(typeof(IController), typeof(Controller));
 
+            services.AddScoped(typeof(As1115Module), typeof(As1115Module));
+            services.AddScoped(typeof(AMS5812_0150_D_B_Module), typeof(AMS5812_0150_D_B_Module));
+            services.AddScoped(typeof(AMS5812_0300_A_PressureModule), typeof(AMS5812_0300_A_PressureModule));
 
+            services.AddScoped(typeof(LPS25HB_BarometerModule), typeof(As1115Module));
+
+            services.AddScoped(typeof(TCA9546MultiplexerModule), typeof(TCA9546MultiplexerModule));
+            services.AddScoped(typeof(MCP4725_4_20mA_CurrentTransmitterV2), typeof(MCP4725_4_20mA_CurrentTransmitterV2));
         }
     }
 }

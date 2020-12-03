@@ -56,7 +56,7 @@ namespace Modules
 
         protected override IEnumerable<RegisterBase> Registers => new List<RegisterBase> { Settings0X20, Settings0X10 };
 
-        public LPS25HB_BarometerModule(ISerialConverter serialPort, int? addressIncrement = 0) : base(serialPort, addressIncrement)
+        public LPS25HB_BarometerModule(ISerialConverter serialPort) : base(serialPort)
         { }
 
         public override void Init()

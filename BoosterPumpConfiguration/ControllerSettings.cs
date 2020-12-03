@@ -68,6 +68,8 @@
         public float CommonGradient { get; set; }
 
         public float CommonIntercept { get; set; }
+
+        public int AverageSize { get; set; }
     }
 
     /// <summary>

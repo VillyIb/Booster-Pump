@@ -1,13 +1,13 @@
-﻿using BoosterPumpLibrary.Logger;
-using System;
+﻿using System;
 using System.Collections.Concurrent;
-using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
-using eu.iamia.Configuration;
 using System.Diagnostics.CodeAnalysis;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using eu.iamia.Configuration;
+using BoosterPumpLibrary.Logger;
+using BoosterPumpApplication;
 
 namespace BoosterPumpApplicationAsync
 {
@@ -29,21 +29,9 @@ namespace BoosterPumpApplicationAsync
 
             using (var scope = serviceProvider.CreateScope())
             {
-                var cs = scope.ServiceProvider.GetService<ControllerService>();
-
-                var enabled = cs.Enabled;
-                var minSpeedPct = cs.MinSpeedPct;
-                var logWriter = scope.ServiceProvider.GetService<IBufferedLogWriter>();
-
-
-                //var subdir = Configuration["Database:SubDirectory"];
-                //var filePrefix = Configuration["Database:FilePrefix"];
-                //var userProfile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-                //var logfilePrefix = Path.Combine(userProfile, subdir, filePrefix);
+                var logWriter = scope.ServiceProvider.GetRequiredService<IBufferedLogWriter>();
 
                 var tasks = new ConcurrentBag<Task>();
-
-                //IOutputFileHandler outputFileHandler = new OutputFileHandler(logfilePrefix);
 
                 using var tokenSource = new CancellationTokenSource();
                 var token = tokenSource.Token;
@@ -51,11 +39,10 @@ namespace BoosterPumpApplicationAsync
                 var logTask = logWriter.AggregateExecuteAsync(token);
                 tasks.Add(logTask);
 
-                var controller = new ControlAsync();
+                var controller = scope.ServiceProvider.GetRequiredService<IController>();
 
                 var controlTask = controller.ExecuteAsync(token, logWriter);
                 tasks.Add(controlTask);
-
 
                 while (true)
                 {
@@ -67,7 +54,7 @@ namespace BoosterPumpApplicationAsync
                         {
                             await Task.WhenAll(tasks.ToArray());
                         }
-                        catch (OperationCanceledException ex)
+                        catch (OperationCanceledException)
                         {
                             Console.WriteLine($"\n{nameof(OperationCanceledException)} thrown\n");
                         }
