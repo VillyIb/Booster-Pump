@@ -8,6 +8,8 @@ namespace NCD_API_SerialConverter.Contracts
     /// </summary>
     public interface INcdApiSerialPort
     {
+        void Open();
+
         /// <summary>
         /// Sends the specified byteSequence to a NCD device.
         /// </summary>

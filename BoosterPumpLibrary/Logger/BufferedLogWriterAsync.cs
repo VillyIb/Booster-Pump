@@ -34,7 +34,7 @@ namespace BoosterPumpLibrary.Logger
         /// <param name="window"></param>
         /// <param name="flushAll"></param>
         /// <returns></returns>
-        public async Task AggregateFlush(DateTime window, bool flushAll = false)
+        public async Task AggregateFlushAsync(DateTime window, bool flushAll = false)
         {
             var threshold = RoundToMinute(window);
 
@@ -64,7 +64,7 @@ namespace BoosterPumpLibrary.Logger
             }
             if (!String.IsNullOrEmpty(aggregateValue))
             {
-                await AggregateFile.WriteLine(threshold, aggregateValue); // TODO modify aggregation operation divide by aggregateCount.
+                await AggregateFile.WriteLineAsync(threshold, aggregateValue); // TODO modify aggregation operation divide by aggregateCount.
             }
             await AggregateFile.Close();
         }
@@ -73,7 +73,7 @@ namespace BoosterPumpLibrary.Logger
         /// Waits until NextMinute + 2 seconds in order to let other tasks finish before kicking in.
         /// </summary>
         /// <returns></returns>
-        public async Task WaitUntilSecond02InNextMinute()
+        public async Task WaitUntilSecond02InNextMinuteAsync()
         {
             var now = DateTime.UtcNow;
             var thisMinute = RoundToMinute(now);
@@ -84,12 +84,21 @@ namespace BoosterPumpLibrary.Logger
 
         public async Task AggregateExecuteAsync(CancellationToken cancellationToken)
         {
-            do
+            try
             {
-                await WaitUntilSecond02InNextMinute();
-                await AggregateFlush(DateTime.UtcNow);
+                Console.Write("\r\n+BufferedLogWriterAsync.ExecuteAsync");
+                do
+                {
+                    Console.Write("\r\n  BufferedLogWriterAsync.ExecuteAsync-loop");
+                    await WaitUntilSecond02InNextMinuteAsync();
+                    await AggregateFlushAsync(DateTime.UtcNow);
+                }
+                while (!cancellationToken.IsCancellationRequested);
             }
-            while (!cancellationToken.IsCancellationRequested);
+            catch(Exception ex)
+            {
+                Console.Error.WriteLine(ex.ToString());
+            }
         }
 
         public void Add(string row, DateTime timestampUtc)

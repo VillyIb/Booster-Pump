@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using eu.iamia.Configuration;
 using BoosterPumpLibrary.Logger;
 using BoosterPumpApplication;
+using NCD_API_SerialConverter.Contracts;
 
 namespace BoosterPumpApplicationAsync
 {
@@ -29,6 +30,9 @@ namespace BoosterPumpApplicationAsync
 
             using (var scope = serviceProvider.CreateScope())
             {
+                var serialPort = scope.ServiceProvider.GetRequiredService<INcdApiSerialPort>();
+                serialPort.Open();
+
                 var logWriter = scope.ServiceProvider.GetRequiredService<IBufferedLogWriter>();
 
                 var tasks = new ConcurrentBag<Task>();

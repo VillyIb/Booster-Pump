@@ -9,6 +9,7 @@ namespace BoosterPumpLibrary.ModuleBase
 {
     public abstract partial class BaseModuleV2
     {
+        public Guid Id { get; }
         public abstract byte DefaultAddress { get; }
 
         public ByteWrapper AddressIncrement { get; protected set; }
@@ -23,8 +24,10 @@ namespace BoosterPumpLibrary.ModuleBase
         {
             SerialPort = serialPort;
             AddressIncrement = null;
+            Id = Guid.NewGuid();
         }
 
+        // TODO NOT generic - valid value range is independent for each module.
         /// <summary>
         /// Adds the specified value to the DefaultAddress, legal values: {0|1}.
         /// </summary>

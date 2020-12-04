@@ -10,7 +10,7 @@ namespace BoosterPumpLibrary.Logger
 
     public interface IOutputFileHandler
     {
-        Task WriteLine(DateTime timestamp, string line);
+        Task WriteLineAsync(DateTime timestamp, string line);
 
         Task Close();
     }
@@ -18,11 +18,11 @@ namespace BoosterPumpLibrary.Logger
     [ExcludeFromCodeCoverage]
     public class OutputFileHandler : IOutputFileHandler, IDisposable
     {
-        private readonly string LogfilePrefix;
+        public DatabaseSettings Settings { get; }
 
         public OutputFileHandler(IOptions<DatabaseSettings> settings)
         {
-            LogfilePrefix = settings.Value.FilePrefix;
+            Settings = settings.Value;
         }
 
         private string CurrentFilename { get; set; }
@@ -39,10 +39,14 @@ namespace BoosterPumpLibrary.Logger
         private async Task OpenFile(string filename)
         {
             CurrentFilename = filename;
-            var file = new FileInfo($"{LogfilePrefix}{filename}");
+
+            var userProfile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            var logfilePrefix = Path.Combine(userProfile, Settings.SubDirectory, Settings.FilePrefix);
+            var file = new FileInfo($"{logfilePrefix}{filename}");
             await using var fs = file.Open(FileMode.OpenOrCreate);
             Console.WriteLine($"\r\nWriting to logfile {file.Name}");
             Sw = new StreamWriter(fs);
+            Sw.AutoFlush = true;
 
             fs.Position = fs.Seek(0, SeekOrigin.End);
             if (fs.Position == 0L)
@@ -60,14 +64,14 @@ namespace BoosterPumpLibrary.Logger
         /// <param name="timestamp"></param>
         /// <param name="line"></param>
         /// <exception cref="">If a file could not be opened for write access</exception>
-        public async Task WriteLine(DateTime timestamp, string line)
+        public async Task WriteLineAsync(DateTime timestamp, string line)
         {
             var filename = GetFilename(timestamp);
             if (!filename.Equals(CurrentFilename))
             {
                 await Close();
-                await OpenFile(filename);
             }
+            await OpenFile(filename);
             await Sw.WriteLineAsync(line);
             await Sw.FlushAsync();
         }
