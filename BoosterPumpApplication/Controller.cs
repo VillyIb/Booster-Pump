@@ -40,7 +40,7 @@ namespace BoosterPumpApplication
         {
             try
             {
-                Console.Write("+Controller.ExecuteAsync");
+                Console.WriteLine("+Controller.ExecuteAsync");
                 var stopwatch = new Stopwatch();
 
                 var displayModule = ServiceProvider.GetRequiredService<As1115Module>();
@@ -104,14 +104,14 @@ namespace BoosterPumpApplication
                         var flowSouthEastValue = Math.Log10(Math.Max(0.1, flowSouthEastAverage) + 1) * 10;
 
                         var controllingFlow = flowNorthWestvalue * ControllerSettings.WestGreadient + flowSouthEastValue * ControllerSettings.EastGradient;
-                        var speed1 = controllingFlow/100.0 * ControllerSettings.CommonGradient + ControllerSettings.CommonIntercept;
+                        var speed1 = controllingFlow / 100.0 * ControllerSettings.CommonGradient + ControllerSettings.CommonIntercept;
 
                         speed2 = (float)Math.Min(0.999, Math.Max(ControllerSettings.MinSpeedPct, speed1));
                     }
 
                     if (Math.Abs(speedCurrent - speed2) > 0.05f)
                     {
-                        displayModule.SetBcdValue(speed2*100.0f);
+                        displayModule.SetBcdValue(speed2 * 100.0f);
                         speedController.SetSpeed(speed2);
                         speedCurrent = speed2;
                     }
@@ -145,9 +145,43 @@ namespace BoosterPumpApplication
                     line.AppendFormat(CultureInfo, "{0:G}\t", ControllerSettings.CommonIntercept);
                     line.AppendFormat(CultureInfo, "{0:G}\t", 0.0);
 
-                    logWriter.Add(line.ToString(), now);
+                    //logWriter.Add(line.ToString(), now);
                     var fill = "".PadLeft(80, ' ');
-                    Console.Write($"\r{fill}\r{line}");
+                    //Console.Write($"\r{fill}\r{line}");
+
+                    // Headline: "Timestamp;Second of day;Manifold-P;NW-F;SE-F;Sys-P;Speed;DSpeed;Bar1-P;Bar2-P;Bar1-T;Bar2-T;Manifold-T;NW-T;SE-T;Sys-T;Com-Grad;Com-Intc"
+
+                    var payload = new float[]
+                    {
+                        manifoldPressureDifference.Pressure + MeasurementSettings.ManifoldPressureCorrection
+                        , flowNorthWest.Pressure + MeasurementSettings.FlowNorthWestCorrection
+                        , flowSouthEast.Pressure + MeasurementSettings.FlowSouthEastCorrection
+                        , systemPressure.Pressure + MeasurementSettings.SystemPressureCorrection
+
+                        , speed2
+                        , speedCurrent - speed2
+
+                        , (float)barometerModule1.AirPressure
+                        , (float)barometerModule2.AirPressure
+
+                        , (float)barometerModule2.Temperature
+                        , (float)barometerModule1.Temperature
+
+                        , manifoldPressureDifference.Temperature
+                        , flowNorthWest.Temperature
+                        , systemPressure.Temperature
+                        , systemPressure.Temperature
+
+                        , ControllerSettings.CommonGradient
+                        , ControllerSettings.CommonIntercept
+
+                        , 0.0f
+                    };
+
+                    var bufferline = new BufferLineMeasurement(now, payload);
+
+                    Console.Write($"\r{fill}\r{bufferline.LogText}\r");
+                    logWriter.Add(bufferline);
 
                     stopwatch.Stop();
                     var duration = (int)stopwatch.ElapsedMilliseconds;
@@ -157,7 +191,7 @@ namespace BoosterPumpApplication
                     }
                 } while (!cancellationToken.IsCancellationRequested);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Console.Error.WriteLine(ex.ToString());
             }

@@ -1,13 +1,18 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Globalization;
 
 namespace BoosterPumpLibrary.Logger
 {
     public class BufferedLogWriterAsync : IBufferedLogWriter, IComponent
     {
+        private static CultureInfo CultureInfo => CultureInfo.GetCultureInfo("da-DK"); //  da-DK
+
         private readonly IOutputFileHandler AggregateFile;
 
         private readonly ConcurrentQueue<BufferLine> Queue;
@@ -27,7 +32,7 @@ namespace BoosterPumpLibrary.Logger
         {
             return new DateTime(value.Ticks - value.Ticks % TimeSpan.TicksPerMinute, value.Kind);
         }
-               
+
         /// <summary>
         /// Flushes all waiting messages with the specified (minute) window, optionally flush all.
         /// </summary>
@@ -41,6 +46,7 @@ namespace BoosterPumpLibrary.Logger
             await Console.Error.WriteLineAsync($"\r\nProbing AggregateFlush: {threshold.ToLocalTime()}, now: {DateTime.Now}");
 
             var aggregateValue = "";
+            var aggregateMeasures = new List<float> { 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f };
             var aggregateCount = 0;
 
             while (!Queue.IsEmpty && Queue.TryPeek(out BufferLine current))
@@ -49,9 +55,20 @@ namespace BoosterPumpLibrary.Logger
 
                 try
                 {
-                    aggregateValue = $"{aggregateValue}, {current.LogText}"; // TODO modify aggregation operation
+                    if (current is BufferLineMeasurement measurement)
+                    {
+                        aggregateCount++;
+                        for (var index = 0; index < aggregateMeasures.Count; index++)
+                        {
+                            aggregateMeasures[index] += measurement.Values[index];
+                        }
+                    }
+                    else
+                    {
+                        aggregateValue = $"{aggregateValue}, {current.LogText}";
+                    }
+
                     // TODO optionally write to full-log file.
-                    aggregateCount++;
                     Queue.TryDequeue(out current);
 
                     await Console.Error.WriteLineAsync($"    Dequeued: {current.Timestamp.ToLocalTime().ToString("O")}");
@@ -64,11 +81,22 @@ namespace BoosterPumpLibrary.Logger
             }
             if (!String.IsNullOrEmpty(aggregateValue))
             {
-                await AggregateFile.WriteLineAsync(threshold, aggregateValue); // TODO modify aggregation operation divide by aggregateCount.
+                await AggregateFile.WriteLineAsync(threshold, aggregateValue);
             }
+
+            if (aggregateCount > 0)
+            {
+                var line = aggregateMeasures.Aggregate(
+                    "",
+                    (result, current) => result + (current / aggregateCount).ToString("0000.0", CultureInfo) + AggregateFile.SeparatorCharacter
+                );
+                line += "\r\n";
+                await AggregateFile.WriteLineAsync(threshold, line);
+            }
+
             await AggregateFile.Close();
         }
-           
+
         /// <summary>
         /// Waits until NextMinute + 2 seconds in order to let other tasks finish before kicking in.
         /// </summary>
@@ -86,16 +114,15 @@ namespace BoosterPumpLibrary.Logger
         {
             try
             {
-                Console.Write("\r\n+BufferedLogWriterAsync.ExecuteAsync");
+                Console.WriteLine("\r\n+BufferedLogWriterAsync.ExecuteAsync");
                 do
                 {
-                    Console.Write("\r\n  BufferedLogWriterAsync.ExecuteAsync-loop");
                     await WaitUntilSecond02InNextMinuteAsync();
                     await AggregateFlushAsync(DateTime.UtcNow);
                 }
                 while (!cancellationToken.IsCancellationRequested);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Console.Error.WriteLine(ex.ToString());
             }
@@ -113,6 +140,11 @@ namespace BoosterPumpLibrary.Logger
         public void Dispose()
         {
             throw new NotImplementedException();
+        }
+
+        public void Add(BufferLine payload)
+        {
+            Queue.Enqueue(payload);
         }
     }
 }

@@ -34,7 +34,7 @@ namespace BoosterPumpTest
 
         [Fact(Timeout = 250000, Skip = "Too time consuming")]
         //[Fact(Timeout = 250000)]
-        public async Task AssertExececuteShouldReturnXRowsInMSeconds()
+        public async Task AssertExecuteShouldReturnXRowsInMSeconds()
         {
 
             var now = DateTime.UtcNow;

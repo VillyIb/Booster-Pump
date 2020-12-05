@@ -25,7 +25,9 @@
 
         public string FilePrefix { get; set; }
 
-        public int FlushInterval { get; set; }
+        public string Headline { get; set; }
+
+        public char SeparatorCharacter { get; set; }
     }
 
     /// <summary>

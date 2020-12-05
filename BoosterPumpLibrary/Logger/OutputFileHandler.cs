@@ -10,6 +10,11 @@ namespace BoosterPumpLibrary.Logger
 
     public interface IOutputFileHandler
     {
+        /// <summary>
+        /// Character og separate columns in file.
+        /// </summary>
+        char SeparatorCharacter { get; }
+
         Task WriteLineAsync(DateTime timestamp, string line);
 
         Task Close();
@@ -43,20 +48,18 @@ namespace BoosterPumpLibrary.Logger
             var userProfile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
             var logfilePrefix = Path.Combine(userProfile, Settings.SubDirectory, Settings.FilePrefix);
             var file = new FileInfo($"{logfilePrefix}{filename}");
-            await using var fs = file.Open(FileMode.OpenOrCreate);
+            var fs = file.Open(FileMode.OpenOrCreate);
             Console.WriteLine($"\r\nWriting to logfile {file.Name}");
-            Sw = new StreamWriter(fs);
-            Sw.AutoFlush = true;
+            Sw = new StreamWriter(fs) {AutoFlush = true};
 
             fs.Position = fs.Seek(0, SeekOrigin.End);
             if (fs.Position == 0L)
             {
-                await Sw.WriteLineAsync("Timestamp\tSecond of day" +
-                                        "\tPressure Manifold\tFlow NorthWest\tFlow SouthEast\tSystem Pressure" +
-                                        "\tTBarometer 1\tBarometer 2\tTemperature1\tTemperature2"
-                );
+                await Sw.WriteLineAsync(Settings.Headline.Replace(';', SeparatorCharacter));
             }
         }
+
+        public char SeparatorCharacter => Settings.SeparatorCharacter; // TODO verify string '\t' translates to tab.
 
         /// <summary>
         /// Writes line to file.
@@ -85,8 +88,10 @@ namespace BoosterPumpLibrary.Logger
                     await Sw.FlushAsync();
                     Sw.Close();
                 }
-                catch
-                { }
+                catch (Exception ex)
+                {
+                    await Console.Error.WriteLineAsync(ex.ToString());
+                }
             }
 
             Sw = null;

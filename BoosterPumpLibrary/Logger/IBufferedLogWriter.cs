@@ -8,6 +8,8 @@ namespace BoosterPumpLibrary.Logger
     {
         void Add(string row, DateTime timestamp);
 
+        void Add(BufferLine payload);
+
         Task AggregateExecuteAsync(CancellationToken cancellationToken);
     }
 }

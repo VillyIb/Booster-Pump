@@ -28,9 +28,9 @@ namespace BoosterPumpLibrary.Logger
     {
         private static CultureInfo CultureInfo => CultureInfo.GetCultureInfo("da-DK"); //  da-DK
 
-        public List<double> Values { get; }
+        public List<float> Values { get; }
 
-        public BufferLineMeasurement(DateTime timestamp, params double[] values) : base(timestamp)
+        public BufferLineMeasurement(DateTime timestamp, params float[] values) : base(timestamp)
         {
             Values = values.ToList();
         }
@@ -40,9 +40,13 @@ namespace BoosterPumpLibrary.Logger
             get
             {
                 var result = new StringBuilder();
+
+                var secondOfDay = Timestamp.ToLocalTime().TimeOfDay.TotalMilliseconds / 100;
+                result.AppendFormat(CultureInfo, "{0:O}\t{1:000000}\t", Timestamp.ToLocalTime(), secondOfDay);
+
                 foreach (var value in Values)
                 {
-                    result.AppendFormat(CultureInfo, "{0:0000.0}", Math.Round(value, 1));
+                    result.AppendFormat(CultureInfo, "{0:0000.0}\t", Math.Round(value, 1));
                 }
                 return result.ToString();
             }
