@@ -40,8 +40,8 @@ namespace BoosterPumpApplicationAsync
                 using var tokenSource = new CancellationTokenSource();
                 var token = tokenSource.Token;
 
-                //var logTask = logWriter.AggregateExecuteAsync(token);
-                //tasks.Add(logTask);
+                var logTask = logWriter.AggregateExecuteAsync(token);
+                tasks.Add(logTask);
 
                 var controller = scope.ServiceProvider.GetRequiredService<IController>();
 
@@ -53,7 +53,7 @@ namespace BoosterPumpApplicationAsync
                     var input = Console.ReadLine();
                     if ("Q" == input || "q" == input)
                     {
-                        Console.WriteLine($"\r\nClosing application");
+                        Console.WriteLine($"\r\nClosing application, please wait");
                         tokenSource.Cancel();
                         try
                         {

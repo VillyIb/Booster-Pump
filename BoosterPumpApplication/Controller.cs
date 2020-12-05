@@ -51,7 +51,7 @@ namespace BoosterPumpApplication
                 Console.WriteLine("+Controller.ExecuteAsync");
                 var stopwatch = new Stopwatch();
 
-                var displayModule = ServiceProvider.GetRequiredService<As1115Module>();
+                //var displayModule = ServiceProvider.GetRequiredService<As1115Module>();
 
                 var manifoldPressureDifference = ServiceProvider.GetRequiredService<AMS5812_0150_D_B_Module>();
 
@@ -87,8 +87,8 @@ namespace BoosterPumpApplication
                         //barometerModule1.ReadDevice();
                         //barometerModule2.ReadDevice();
 
-                        //multiplexer.SelectOpenChannels(MultiplexerChannels.Channel0);
-                        //manifoldPressureDifference.ReadFromDevice();
+                        multiplexer.SelectOpenChannels(MultiplexerChannels.Channel0);
+                        manifoldPressureDifference.ReadFromDevice();
 
                         multiplexer.SelectOpenChannels(MultiplexerChannels.Channel1);
                         flowNorthWest.ReadFromDevice();
@@ -100,6 +100,8 @@ namespace BoosterPumpApplication
 
                         multiplexer.SelectOpenChannels(MultiplexerChannels.Channel3);
                         systemPressure.ReadFromDevice();
+
+                        multiplexer.SelectOpenChannels(MultiplexerChannels.None);
 
                         if (flowNorthWestStack.Count >= ControllerSettings.AverageSize)
                         {
@@ -123,9 +125,9 @@ namespace BoosterPumpApplication
 
                         if (Math.Abs(speedCurrent - speed2) > 0.0005f)
                         {
-                            displayModule.SetBcdValue(speed2 * 100.0f);
-                            //speedController.SetSpeed(speed2);
-                            speedCurrent = speed2;
+                            //displayModule.SetBcdValue(speed2 * 100.0f);
+                            speedController.SetSpeed(speed2);
+                           
                         }
 
                         var now = DateTime.UtcNow;
@@ -134,40 +136,8 @@ namespace BoosterPumpApplication
                             now.Kind
                         );
 
-                        var line = new StringBuilder();
-
-                        var timestamp = now.ToLocalTime().ToString("O");
-                        var secondOfDay =
-                            (now.ToLocalTime().TimeOfDay.TotalMilliseconds / 100).ToString("000000", CultureInfo);
-                        line.Append($"{timestamp}\t{secondOfDay}\t");
-
-                        line.AppendFormat(CultureInfo, "{0:G}\t",
-                            manifoldPressureDifference.Pressure + MeasurementSettings.ManifoldPressureCorrection);
-                        line.AppendFormat(CultureInfo, "{0:G}\t",
-                            flowNorthWest.Pressure + MeasurementSettings.FlowNorthWestCorrection);
-                        line.AppendFormat(CultureInfo, "{0:G}\t",
-                            flowSouthEast.Pressure + MeasurementSettings.FlowSouthEastCorrection);
-                        line.AppendFormat(CultureInfo, "{0:G}\t",
-                            systemPressure.Pressure + MeasurementSettings.SystemPressureCorrection);
-                        line.AppendFormat(CultureInfo, "{0:G}\t", speed2);
-                        line.AppendFormat(CultureInfo, "{0:G}\t", speedCurrent - speed2);
-                        line.AppendFormat(CultureInfo, "{0:G}\t", barometerModule1.AirPressure);
-                        line.AppendFormat(CultureInfo, "{0:G}\t", barometerModule2.AirPressure);
-                        ;
-                        line.AppendFormat(CultureInfo, "{0:G}\t", barometerModule1.Temperature);
-                        line.AppendFormat(CultureInfo, "{0:G}\t", barometerModule2.Temperature);
-                        line.AppendFormat(CultureInfo, "{0:G}\t", manifoldPressureDifference.Temperature);
-                        line.AppendFormat(CultureInfo, "{0:G}\t", flowNorthWest.Temperature);
-                        line.AppendFormat(CultureInfo, "{0:G}\t", flowSouthEast.Temperature);
-                        line.AppendFormat(CultureInfo, "{0:G}\t", systemPressure.Temperature);
-                        line.AppendFormat(CultureInfo, "{0:G}\t", ControllerSettings.CommonGradient);
-                        line.AppendFormat(CultureInfo, "{0:G}\t", ControllerSettings.CommonIntercept);
-                        line.AppendFormat(CultureInfo, "{0:G}\t", 0.0);
-
-                        //logWriter.Add(line.ToString(), now);
                         var fill = "".PadLeft(80, ' ');
-                        //Console.Write($"\r{fill}\r{line}");
-
+                       
                         // Headline: "Timestamp;Second of day;Manifold-P;NW-F;SE-F;Sys-P;Speed;DSpeed;Bar1-P;Bar2-P;Bar1-T;Bar2-T;Manifold-T;NW-T;SE-T;Sys-T;Com-Grad;Com-Intc"
 
                         var payload = new float[]
@@ -175,7 +145,8 @@ namespace BoosterPumpApplication
                             manifoldPressureDifference.Pressure + MeasurementSettings.ManifoldPressureCorrection,
                             flowNorthWest.Pressure + MeasurementSettings.FlowNorthWestCorrection,
                             flowSouthEast.Pressure + MeasurementSettings.FlowSouthEastCorrection,
-                            systemPressure.Pressure + MeasurementSettings.SystemPressureCorrection, speed2 * 100.0f,
+                            systemPressure.Pressure + MeasurementSettings.SystemPressureCorrection
+                            , speed2 * 100.0f,
                             (speedCurrent - speed2) * 100.0f, (float) barometerModule1.AirPressure,
                             (float) barometerModule2.AirPressure, (float) barometerModule2.Temperature,
                             (float) barometerModule1.Temperature, manifoldPressureDifference.Temperature,
@@ -184,6 +155,8 @@ namespace BoosterPumpApplication
                         };
 
                         var bufferline = new BufferLineMeasurement(now, payload);
+
+                        speedCurrent = speed2;
 
                         Console.Write($"\r{fill}\r{bufferline.LogText}\r");
                         logWriter.Add(bufferline);

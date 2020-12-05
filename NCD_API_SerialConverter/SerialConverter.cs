@@ -23,7 +23,7 @@ namespace NCD_API_SerialConverter
         protected IDataFromDevice Execute(IEnumerable<byte> data)
         {
             SerialPort.Write(data);
-            Thread.Sleep(5);
+            //Thread.Sleep(5);
             var returnValue = SerialPort.Read();
             return returnValue;
         }

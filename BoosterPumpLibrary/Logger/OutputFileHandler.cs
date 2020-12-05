@@ -15,7 +15,7 @@ namespace BoosterPumpLibrary.Logger
         /// </summary>
         char SeparatorCharacter { get; }
 
-        Task WriteLineAsync(DateTime timestamp, string line);
+        Task WriteLineAsync(DateTime timestamp, string suffix, string line);
 
         Task Close();
     }
@@ -34,10 +34,10 @@ namespace BoosterPumpLibrary.Logger
 
         private StreamWriter Sw { get; set; }
 
-        private string GetFilename(DateTime timestamp)
+        private string GetFilename(DateTime timestamp, string suffix)
         {
             var daylightSaving = timestamp.IsDaylightSavingTime() ? "S" : "N";
-            var filename = $"_{timestamp.Day:00}_{timestamp.Hour:00}{daylightSaving}.txt";
+            var filename = $"_{suffix}_{timestamp.Day:00}_{timestamp.Hour:00}{daylightSaving}.txt";
             return filename;
         }
 
@@ -67,14 +67,14 @@ namespace BoosterPumpLibrary.Logger
         /// <param name="timestamp"></param>
         /// <param name="line"></param>
         /// <exception cref="">If a file could not be opened for write access</exception>
-        public async Task WriteLineAsync(DateTime timestamp, string line)
+        public async Task WriteLineAsync(DateTime timestamp, string suffix, string line)
         {
-            var filename = GetFilename(timestamp);
+            var filename = GetFilename(timestamp, suffix);
             if (!filename.Equals(CurrentFilename))
             {
                 await Close();
+                await OpenFile(filename);
             }
-            await OpenFile(filename);
             await Sw.WriteLineAsync(line);
             await Sw.FlushAsync();
         }

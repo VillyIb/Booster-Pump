@@ -120,7 +120,7 @@ namespace NCD_API_SerialConverter
                     }
                     else if (0x5E == ReadResult.Payload[1])
                     {
-                        throw new ApplicationException("Timeout Error, Chip did Not Acknowledge");
+                         throw new ApplicationException("Timeout Error, Chip did Not Acknowledge");
                     }
                 }
             }
@@ -129,7 +129,7 @@ namespace NCD_API_SerialConverter
             stopwatch.Stop();
             if (stopwatch.ElapsedMilliseconds > 20)
             {
-                 Console.WriteLine($"{ReadResult.ToString()} - {stopwatch.ElapsedMilliseconds}\t");
+                 Console.WriteLine($"{ReadResult.ToString()} - {stopwatch.ElapsedMilliseconds} ms    ");
             }
 
             return ReadResult;

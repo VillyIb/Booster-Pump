@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Globalization;
+using System.Text;
 
 namespace BoosterPumpLibrary.Logger
 {
@@ -48,6 +49,7 @@ namespace BoosterPumpLibrary.Logger
             var aggregateValue = "";
             var aggregateMeasures = new List<float> { 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f };
             var aggregateCount = 0;
+            var consoleBuffer = new StringBuilder();
 
             while (!Queue.IsEmpty && Queue.TryPeek(out BufferLine current))
             {
@@ -61,6 +63,14 @@ namespace BoosterPumpLibrary.Logger
                         for (var index = 0; index < aggregateMeasures.Count; index++)
                         {
                             aggregateMeasures[index] += measurement.Values[index];
+
+                            var seed = string.Format(CultureInfo, "{1:O}{0}{2:000000}{0}", AggregateFile.SeparatorCharacter, current.Timestamp.ToLocalTime(), current.Timestamp.ToLocalTime().TimeOfDay.TotalMilliseconds / 100);
+                            var line = aggregateMeasures.Aggregate(
+                                seed,
+                                (result, current) => result + (current).ToString("0000.0", CultureInfo) +
+                                                     AggregateFile.SeparatorCharacter
+                            );
+                            await AggregateFile.WriteLineAsync(threshold, "S", line);
                         }
                     }
                     else
@@ -71,7 +81,9 @@ namespace BoosterPumpLibrary.Logger
                     // TODO optionally write to full-log file.
                     Queue.TryDequeue(out current);
 
-                    await Console.Error.WriteLineAsync($"    Dequeued: {current.Timestamp.ToLocalTime().ToString("O")}");
+                    //await Console.Error.WriteLineAsync($"    Dequeued: {current.Timestamp.ToLocalTime().ToString("O")}");
+                    // ReSharper disable once PossibleNullReferenceException
+                    consoleBuffer.Append($"    Dequeued: {current.Timestamp.ToLocalTime():O}\r\n");
                 }
                 catch (Exception ex)
                 {
@@ -81,7 +93,7 @@ namespace BoosterPumpLibrary.Logger
             }
             if (!String.IsNullOrEmpty(aggregateValue))
             {
-                await AggregateFile.WriteLineAsync(threshold, aggregateValue);
+                await AggregateFile.WriteLineAsync(threshold, "M", aggregateValue);
             }
 
             if (aggregateCount > 0)
@@ -92,10 +104,11 @@ namespace BoosterPumpLibrary.Logger
                     seed,
                     (result, current) => result + (current / aggregateCount).ToString("0000.0", CultureInfo) + AggregateFile.SeparatorCharacter
                 );
-                await AggregateFile.WriteLineAsync(threshold, line);
+                await AggregateFile.WriteLineAsync(threshold, "M", line);
             }
 
             await AggregateFile.Close();
+            Console.WriteLine(consoleBuffer.ToString());
         }
 
         /// <summary>

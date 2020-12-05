@@ -7,9 +7,13 @@ using BoosterPumpLibrary.Settings;
 
 namespace Modules
 {
+    /// <summary>
+    /// Select one or more concatenating with '|' [None|Channel0|Channel1|Channel2|Channel3]
+    /// </summary>
     [Flags]
     public enum MultiplexerChannels
     {
+        None = 0,
         Channel0 = 1,
         Channel1 = 2,
         Channel2 = 4,

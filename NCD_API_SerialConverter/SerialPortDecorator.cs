@@ -70,7 +70,7 @@ namespace NCD_API_SerialConverter
         {
             var dataArray = byteSequence.ToArray();
             SerialPortSelected.DiscardInBuffer();
-            Thread.Sleep(5);
+            //Thread.Sleep(5);
             SerialPortSelected.Write(dataArray, 0, dataArray.Length);
         }
 
