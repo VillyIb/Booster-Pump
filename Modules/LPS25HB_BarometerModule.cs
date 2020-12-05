@@ -77,6 +77,7 @@ namespace Modules
             SelectRegisterForReadingWithAutoIncrement(Reading0X28);
             var readCommand = new ReadCommand { DeviceAddress = DeviceAddress, LengthRequested = (byte)Reading0X28.Size };
             var readings = SerialPort.Execute(readCommand);
+            if (!readings.IsValid) { return; }
 
             var mapped = new byte[8];
             Array.Copy(readings.Payload, 0, mapped, 0, readings.Payload.Length);

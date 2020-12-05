@@ -40,8 +40,9 @@ namespace Modules
         {
             var command = new ReadCommand { DeviceAddress = DeviceAddress, LengthRequested = 4 };
             var response = SerialPort.Execute(command);
+            if (!response.IsValid) { return; }
 
-            var measuredPressure = response.Payload[0] <<8 | response.Payload[1];
+            var measuredPressure = response.Payload[0] << 8 | response.Payload[1];
 
             Pressure = (float)Math.Round(
                 (measuredPressure - DevicePressureMin) *

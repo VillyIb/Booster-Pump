@@ -61,11 +61,7 @@
 
         public float EastGradient { get; set; }
 
-        public float EastIntercept { get; set; }
-
-        public float WestGreadient { get; set; }
-
-        public float SestIntercept { get; set; }
+        public float WestGradient { get; set; }
 
         public float CommonGradient { get; set; }
 

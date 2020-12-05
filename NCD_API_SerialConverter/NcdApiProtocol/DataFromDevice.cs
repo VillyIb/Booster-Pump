@@ -17,6 +17,8 @@ namespace NCD_API_SerialConverter.NcdApiProtocol
 
         public byte[] Payload { get; set; }
 
+        public bool IsValid { get; set; }
+
         public byte Checksum { get; set; }
 
         public bool CheckConsistency

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Ports;
 using System.Diagnostics.CodeAnalysis;
+using System.Threading;
 using NCD_API_SerialConverter.NcdApiProtocol;
 using Microsoft.Extensions.Options;
 using BoosterPumpConfiguration;
@@ -31,7 +32,7 @@ namespace NCD_API_SerialConverter
         {
             var ports = SerialPort.GetPortNames().ToList();
             var port = ports.Last();
-            Console.WriteLine($"Selected port: {port}");
+            Console.WriteLine($"Serial port: {port}, Speed: {SerialPortSettings.BaudRate} bps, Timeout: {SerialPortSettings.Timeout} ms");
             if (null != SerialPortSelected && SerialPortSelected.IsOpen) { SerialPortSelected.Close(); }
             SerialPortSelected = new SerialPort(port, SerialPortSettings.BaudRate);
             SerialPortSelected.Open();
@@ -69,6 +70,7 @@ namespace NCD_API_SerialConverter
         {
             var dataArray = byteSequence.ToArray();
             SerialPortSelected.DiscardInBuffer();
+            Thread.Sleep(5);
             SerialPortSelected.Write(dataArray, 0, dataArray.Length);
         }
 

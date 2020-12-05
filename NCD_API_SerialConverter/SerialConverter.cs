@@ -1,4 +1,8 @@
-﻿namespace NCD_API_SerialConverter
+﻿using System;
+using System.Threading;
+using NCD_API_SerialConverter.NcdApiProtocol;
+
+namespace NCD_API_SerialConverter
 {
     using BoosterPumpLibrary.Commands;
     using BoosterPumpLibrary.Contracts;
@@ -19,14 +23,23 @@
         protected IDataFromDevice Execute(IEnumerable<byte> data)
         {
             SerialPort.Write(data);
+            Thread.Sleep(5);
             var returnValue = SerialPort.Read();
             return returnValue;
         }
 
         public IDataFromDevice Execute(ReadCommand command)
         {
-            IX ncdApiCommand = new DeviceRead(command);
-            return Execute(ncdApiCommand.ApiEncodedData());
+            try
+            {
+                IX ncdApiCommand = new DeviceRead(command);
+                return Execute(ncdApiCommand.ApiEncodedData());
+            }
+            catch (ApplicationException ex)
+            {
+                Console.WriteLine($"Command: {command}, Error: {ex.Message}");
+                throw;
+            }
         }
 
         public IDataFromDevice Execute(WriteCommand command)

@@ -86,11 +86,12 @@ namespace BoosterPumpLibrary.Logger
 
             if (aggregateCount > 0)
             {
+                var seed = string.Format(CultureInfo, "{1:O}{0}{2:000000}{0}", AggregateFile.SeparatorCharacter, threshold.ToLocalTime(), threshold.ToLocalTime().TimeOfDay.TotalMilliseconds / 100);
+
                 var line = aggregateMeasures.Aggregate(
-                    "",
+                    seed,
                     (result, current) => result + (current / aggregateCount).ToString("0000.0", CultureInfo) + AggregateFile.SeparatorCharacter
                 );
-                line += "\r\n";
                 await AggregateFile.WriteLineAsync(threshold, line);
             }
 
