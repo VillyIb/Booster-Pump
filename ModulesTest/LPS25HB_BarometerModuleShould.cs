@@ -32,9 +32,7 @@ namespace ModulesTest
         {
             // Returns: Pressure XL, L, H, Temperature L, H
             var fakeReturnValue = new DataFromDevice {Header = 0xAA, ByteCount = 5, Payload = new byte[] {0x66, 0xF6, 0x3F, 0xA0, 0xFD}, Checksum = 0xE7};
-            // ReSharper disable once UnusedVariable
-            var ok = fakeReturnValue.CheckConsistency;
-            FakeSerialPort.Execute(Arg.Any<ReadCommand>()).Returns(fakeReturnValue);
+           FakeSerialPort.Execute(Arg.Any<ReadCommand>()).Returns(fakeReturnValue);
             Sut.ReadDevice();
 
             Assert.Equal(1023.4, Sut.AirPressure);

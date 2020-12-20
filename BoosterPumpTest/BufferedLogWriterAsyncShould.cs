@@ -57,10 +57,10 @@ namespace BoosterPumpTest
             await Task.WhenAll(stopTask, controllerTask, writerTask);
 
             // Assert
-            await fakeFileHandler.Received().WriteLineAsync(Arg.Any<DateTime>(), Arg.Any<string>());
-            await fakeFileHandler.Received(1).WriteLineAsync(Arg.Is<DateTime>(probe2), Arg.Any<string>());
-            await fakeFileHandler.Received(1).WriteLineAsync(Arg.Is<DateTime>(probe3), Arg.Any<string>());
-            await fakeFileHandler.Received(1).WriteLineAsync(Arg.Is<DateTime>(probe4), Arg.Any<string>());
+            await fakeFileHandler.Received().WriteLineAsync(Arg.Any<DateTime>(), Arg.Any<string>(), Arg.Any<string>());
+            await fakeFileHandler.Received(1).WriteLineAsync(Arg.Is<DateTime>(probe2), Arg.Any<string>(), Arg.Any<string>());
+            await fakeFileHandler.Received(1).WriteLineAsync(Arg.Is<DateTime>(probe3), Arg.Any<string>(), Arg.Any<string>());
+            await fakeFileHandler.Received(1).WriteLineAsync(Arg.Is<DateTime>(probe4), Arg.Any<string>(), Arg.Any<string>());
         }
     }
 }

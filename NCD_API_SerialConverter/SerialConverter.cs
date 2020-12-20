@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Threading;
-using NCD_API_SerialConverter.NcdApiProtocol;
 
 namespace NCD_API_SerialConverter
 {

@@ -7,6 +7,9 @@ namespace Modules
     using BoosterPumpLibrary.ModuleBase;
     using BoosterPumpLibrary.Settings;
 
+    /// <summary>
+    /// Display module 3 digits
+    /// </summary>
     public class As1115Module : BaseModuleV2
     {
         // see:https://s3.amazonaws.com/controleverything.media/controleverything/Production%20Run%2013/45_AS1115_I2CL_3CE_AMB/Datasheets/AS1115_Datasheet_EN_v2.pdf

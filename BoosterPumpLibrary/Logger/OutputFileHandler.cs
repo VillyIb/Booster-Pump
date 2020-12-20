@@ -65,6 +65,7 @@ namespace BoosterPumpLibrary.Logger
         /// Writes line to file.
         /// </summary>
         /// <param name="timestamp"></param>
+        /// <param name="suffix"></param>
         /// <param name="line"></param>
         /// <exception cref="">If a file could not be opened for write access</exception>
         public async Task WriteLineAsync(DateTime timestamp, string suffix, string line)

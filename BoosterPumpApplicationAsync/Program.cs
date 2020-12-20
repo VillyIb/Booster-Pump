@@ -8,7 +8,10 @@ using Microsoft.Extensions.DependencyInjection;
 using eu.iamia.Configuration;
 using BoosterPumpLibrary.Logger;
 using BoosterPumpApplication;
+using BoosterPumpLibrary.Contracts;
+using NCD_API_SerialConverter;
 using NCD_API_SerialConverter.Contracts;
+using NCD_API_SerialConverter.NcdApiProtocol.SerialConverterCommands;
 
 namespace BoosterPumpApplicationAsync
 {
@@ -32,6 +35,16 @@ namespace BoosterPumpApplicationAsync
             {
                 var serialPort = scope.ServiceProvider.GetRequiredService<INcdApiSerialPort>();
                 serialPort.Open();
+
+                {
+                    var ncdCommand = new ConverterScan();
+                    var serialConverter = scope.ServiceProvider.GetRequiredService<SerialConverter>();
+                    var dataFromDevice = serialConverter.Execute(ncdCommand);
+                    if (!(dataFromDevice.IsValid))
+                    {
+                        throw new ApplicationException(dataFromDevice.ToString());
+                    }
+                }
 
                 var logWriter = scope.ServiceProvider.GetRequiredService<IBufferedLogWriter>();
 

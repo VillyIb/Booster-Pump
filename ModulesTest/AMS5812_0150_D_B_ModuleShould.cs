@@ -22,7 +22,7 @@ namespace ModulesTest
         [Fact]
         public void SendReadSequenceCallingReadFromDevice()
         {
-            IDataFromDevice fakeReturnValue = new DataFromDevice { Header = 0xAA, ByteCount = 0x04, Payload = new byte[] { 0x3F, 0xEB, 0x36, 0xE2 }, Checksum = 0xD8 };
+            IDataFromDevice fakeReturnValue = new DataFromDevice { Header = 0xAA, ByteCount = 0x04, Payload = new byte[] { 0x3F, 0xEB, 0x36, 0xE2 }, Checksum = 0xF0 };
             _FakeSerialPort.Execute(Arg.Any<ReadCommand>()).Returns(fakeReturnValue);
 
             _Sut.ReadFromDevice();

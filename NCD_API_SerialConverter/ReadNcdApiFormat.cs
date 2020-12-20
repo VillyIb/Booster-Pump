@@ -103,12 +103,6 @@ namespace NCD_API_SerialConverter
             ReadResult.Payload = Buffer.Take(Buffer.Count - 1).ToArray();
             ReadResult.Checksum = Buffer.Last();
 
-            if (ReadResult.CheckConsistency)
-            {
-                //throw new ApplicationException("Checksum verification failed");
-                ReadResult.IsValid = true;
-            }
-
             // check for error
             if(ReadResult.IsValid && ReadResult.ByteCount == 4)
             {

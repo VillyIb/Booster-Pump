@@ -51,7 +51,8 @@ namespace BoosterPumpApplication
                 Console.WriteLine("+Controller.ExecuteAsync");
                 var stopwatch = new Stopwatch();
 
-                //var displayModule = ServiceProvider.GetRequiredService<As1115Module>();
+                var displayModule = ServiceProvider.GetRequiredService<As1115Module>();
+                displayModule.Init();
 
                 var manifoldPressureDifference = ServiceProvider.GetRequiredService<AMS5812_0150_D_B_Module>();
 
@@ -74,6 +75,8 @@ namespace BoosterPumpApplication
 
                 var logWriter = ServiceProvider.GetRequiredService<IBufferedLogWriter>();
 
+
+
                 float speed2 = 0.50f;
                 float speedCurrent = 0.01f;
 
@@ -84,22 +87,39 @@ namespace BoosterPumpApplication
                         stopwatch.Reset();
                         stopwatch.Start();
 
+                        {
+                            var ncdCommand = new ConverterScan();
+                            var dataFromDevice = ((SerialConverter)SerialConverter).Execute(ncdCommand);
+                            if (!(dataFromDevice.IsValid))
+                            {
+                                throw new ApplicationException(dataFromDevice.ToString());
+                            }
+                        }
+
                         //barometerModule1.ReadDevice();
                         //barometerModule2.ReadDevice();
 
                         multiplexer.SelectOpenChannels(MultiplexerChannels.Channel0);
-                        manifoldPressureDifference.ReadFromDevice();
+                        {
+                            manifoldPressureDifference.ReadFromDevice();
+                        }
 
                         multiplexer.SelectOpenChannels(MultiplexerChannels.Channel1);
-                        flowNorthWest.ReadFromDevice();
-                        flowNorthWestStack.Enqueue(flowNorthWest.Pressure + MeasurementSettings.FlowNorthWestCorrection);
+                        {
+                            flowNorthWest.ReadFromDevice();
+                            flowNorthWestStack.Enqueue(flowNorthWest.Pressure + MeasurementSettings.FlowNorthWestCorrection);
+                        }
 
                         multiplexer.SelectOpenChannels(MultiplexerChannels.Channel2);
-                        flowSouthEast.ReadFromDevice();
-                        flowSouthEastStack.Enqueue(flowSouthEast.Pressure + MeasurementSettings.FlowSouthEastCorrection);
+                        {
+                            flowSouthEast.ReadFromDevice();
+                            flowSouthEastStack.Enqueue(flowSouthEast.Pressure + MeasurementSettings.FlowSouthEastCorrection);
+                        }
 
                         multiplexer.SelectOpenChannels(MultiplexerChannels.Channel3);
-                        systemPressure.ReadFromDevice();
+                        {
+                            systemPressure.ReadFromDevice();
+                        }
 
                         multiplexer.SelectOpenChannels(MultiplexerChannels.None);
 
@@ -115,19 +135,25 @@ namespace BoosterPumpApplication
                             var flowNorthWestvalue = Math.Log10(Math.Max(0.1, flowNorthWestAverage) + 1) ;
                             var flowSouthEastValue = Math.Log10(Math.Max(0.1, flowSouthEastAverage) + 1);
 
-                            var controllingFlow = flowNorthWestvalue * ControllerSettings.WestGradient +
-                                                  flowSouthEastValue * ControllerSettings.EastGradient;
-                            var speed1 = controllingFlow * ControllerSettings.CommonGradient +
-                                         ControllerSettings.CommonIntercept;
+                            var controllingFlow = flowNorthWestvalue * ControllerSettings.WestGradient + flowSouthEastValue * ControllerSettings.EastGradient;
+                            var speed1 = controllingFlow * ControllerSettings.CommonGradient + ControllerSettings.CommonIntercept;
 
                             speed2 = (float)Math.Min(0.999, Math.Max(ControllerSettings.MinSpeedPct, speed1));
                         }
 
                         if (Math.Abs(speedCurrent - speed2) > 0.0005f)
                         {
-                            //displayModule.SetBcdValue(speed2 * 100.0f);
-                            speedController.SetSpeed(speed2);
-                           
+                            multiplexer.SelectOpenChannels(MultiplexerChannels.Channel2);
+                            {
+                                displayModule.SetBcdValue(speed2 * 100.0f);
+                            }
+
+                            multiplexer.SelectOpenChannels(MultiplexerChannels.Channel3);
+                            {
+                                speedController.SetSpeed(speed2);
+                            }
+
+                            multiplexer.SelectOpenChannels(MultiplexerChannels.None);
                         }
 
                         var now = DateTime.UtcNow;

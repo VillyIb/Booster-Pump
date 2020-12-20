@@ -33,6 +33,7 @@ namespace BoosterPumpApplication
             services.AddOptions();
 
             services.AddSingleton(typeof(ISerialConverter), typeof(SerialConverter));
+            services.AddSingleton(typeof(SerialConverter), typeof(SerialConverter));
             services.AddSingleton(typeof(INcdApiSerialPort), typeof(SerialPortDecorator));
             services.AddSingleton(typeof(IOutputFileHandler), typeof(OutputFileHandler));
             services.AddSingleton(typeof(IBufferedLogWriter), typeof(BufferedLogWriterAsync));

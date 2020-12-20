@@ -17,19 +17,32 @@ namespace NCD_API_SerialConverter.NcdApiProtocol
 
         public byte[] Payload { get; set; }
 
-        public bool IsValid { get; set; }
+        public bool IsValid => CheckConsistency;
 
         public byte Checksum { get; set; }
 
-        public bool CheckConsistency
+        public byte CalculatedChecksum
         {
             get
             {
-                if(ByteCount != Payload.Length) { return false; }
-
+                if (ByteCount != Payload.Length)
+                {
+                    return byte.MinValue;
+                }
                 var checksum = Header + ByteCount;
                 checksum = Payload.Aggregate(checksum, (current1, current) => current1 + current) & 0xff;
-                return Checksum == (byte)checksum;
+
+                return (byte)checksum;
+            }
+        }
+
+        private bool CheckConsistency
+        {
+            get
+            {
+                if (null == Payload) { return false; }
+                if (ByteCount != Payload.Length) { return false; }
+                return CalculatedChecksum == Checksum;
             }
         }
 
@@ -37,9 +50,12 @@ namespace NCD_API_SerialConverter.NcdApiProtocol
         {
             yield return Header;
             yield return ByteCount;
-            foreach (var current in Payload)
+            if (null != Payload)
             {
-                yield return current;
+                foreach (var current in Payload)
+                {
+                    yield return current;
+                }
             }
             yield return Checksum;
         }
