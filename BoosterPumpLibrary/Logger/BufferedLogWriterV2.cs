@@ -10,7 +10,7 @@ using System.Text;
 
 namespace BoosterPumpLibrary.Logger
 {
-    public class BufferedLogWriterAsync : IBufferedLogWriter, IComponent
+    public class BufferedLogWriterV2 : IBufferedLogWriter, IComponent
     {
         private static CultureInfo CultureInfo => CultureInfo.GetCultureInfo("da-DK"); //  da-DK
 
@@ -18,20 +18,90 @@ namespace BoosterPumpLibrary.Logger
 
         private readonly ConcurrentQueue<BufferLine> Queue;
 
-        public BufferedLogWriterAsync(IOutputFileHandler aggregateFile)
+        public BufferedLogWriterV2(IOutputFileHandler aggregateFile)
         {
             AggregateFile = aggregateFile;
             Queue = new ConcurrentQueue<BufferLine>();
         }
 
         /// <summary>
-        /// Returns the starttime for the current minute 'yyyy-MM-dd HH:mm:00.0000000'
+        /// Returns the start time for the current minute 'yyyy-MM-dd HH:mm:00.0000000'
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
         public static DateTime RoundToMinute(DateTime value)
         {
             return new DateTime(value.Ticks - value.Ticks % TimeSpan.TicksPerMinute, value.Kind);
+        }
+
+        public void AggregateFlush(DateTime window, bool flushAll = false)
+        {
+            var threshold = RoundToMinute(window);
+
+             Console.Error.WriteLine($"\r\nProbing AggregateFlush: {threshold.ToLocalTime()}, now: {DateTime.Now}");
+
+            var aggregateValue = "";
+            var aggregateMeasures = new List<float> { 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f };
+            var aggregateCount = 0;
+            var consoleBuffer = new StringBuilder();
+
+            while (!Queue.IsEmpty && Queue.TryPeek(out BufferLine line))
+            {
+                if (!flushAll && threshold <= RoundToMinute(line.Timestamp)) { break; }
+
+                try
+                {
+                    if (line is BufferLineMeasurement measurement)
+                    {
+                        aggregateCount++;
+                        for (var index = 0; index < aggregateMeasures.Count; index++)
+                        {
+                            aggregateMeasures[index] += measurement.Values[index];
+
+                            var seed = string.Format(CultureInfo, "{1:O}{0}{2:000000}{0}", AggregateFile.SeparatorCharacter, line.Timestamp.ToLocalTime(), line.Timestamp.ToLocalTime().TimeOfDay.TotalMilliseconds / 100);
+                            var aggregate = aggregateMeasures.Aggregate(
+                                seed,
+                                (result, current) => result + (current).ToString("0000.0", CultureInfo) +
+                                                     AggregateFile.SeparatorCharacter
+                            );
+                            AggregateFile.WriteLine(threshold, "S", aggregate);
+                        }
+                    }
+                    else
+                    {
+                        aggregateValue = $"{aggregateValue}, {line.LogText}";
+                    }
+
+                    // TODO optionally write to full-log file.
+                    Queue.TryDequeue(out line);
+
+                    // ReSharper disable once PossibleNullReferenceException
+                    consoleBuffer.Append($"    Dequeued: {line.Timestamp.ToLocalTime():O}\r\n");
+                }
+                catch (Exception ex)
+                {
+                    Queue.Enqueue(new BufferLine(ex.Message, DateTime.UtcNow));
+                    Thread.Sleep(1000);
+                }
+            }
+            if (!String.IsNullOrEmpty(aggregateValue))
+            {
+                 AggregateFile.WriteLine(threshold, "M", aggregateValue);
+            }
+
+            if (aggregateCount > 0)
+            {
+                var seed = string.Format(CultureInfo, "{1:O}{0}{2:000000}{0}", AggregateFile.SeparatorCharacter, threshold.ToLocalTime(), threshold.ToLocalTime().TimeOfDay.TotalMilliseconds / 100);
+
+                var line = aggregateMeasures.Aggregate(
+                    seed,
+                    (result, current) => result + (current / aggregateCount).ToString("0000.0", CultureInfo) + AggregateFile.SeparatorCharacter
+                );
+                 AggregateFile.WriteLine(threshold, "M", line);
+            }
+
+            AggregateFile.Close();
+            Console.WriteLine(consoleBuffer.ToString());
         }
 
         /// <summary>
@@ -51,39 +121,39 @@ namespace BoosterPumpLibrary.Logger
             var aggregateCount = 0;
             var consoleBuffer = new StringBuilder();
 
-            while (!Queue.IsEmpty && Queue.TryPeek(out BufferLine current))
+            while (!Queue.IsEmpty && Queue.TryPeek(out BufferLine line))
             {
-                if (!flushAll && threshold <= RoundToMinute(current.Timestamp)) { break; }
+                if (!flushAll && threshold <= RoundToMinute(line.Timestamp)) { break; }
 
                 try
                 {
-                    if (current is BufferLineMeasurement measurement)
+                    if (line is BufferLineMeasurement measurement)
                     {
                         aggregateCount++;
                         for (var index = 0; index < aggregateMeasures.Count; index++)
                         {
                             aggregateMeasures[index] += measurement.Values[index];
 
-                            var seed = string.Format(CultureInfo, "{1:O}{0}{2:000000}{0}", AggregateFile.SeparatorCharacter, current.Timestamp.ToLocalTime(), current.Timestamp.ToLocalTime().TimeOfDay.TotalMilliseconds / 100);
-                            var line = aggregateMeasures.Aggregate(
+                            var seed = string.Format(CultureInfo, "{1:O}{0}{2:000000}{0}", AggregateFile.SeparatorCharacter, line.Timestamp.ToLocalTime(), line.Timestamp.ToLocalTime().TimeOfDay.TotalMilliseconds / 100);
+                            var aggregate = aggregateMeasures.Aggregate(
                                 seed,
                                 (result, current) => result + (current).ToString("0000.0", CultureInfo) +
                                                      AggregateFile.SeparatorCharacter
                             );
-                            await AggregateFile.WriteLineAsync(threshold, "S", line);
+                            await AggregateFile.WriteLineAsync(threshold, "S", aggregate);
                         }
                     }
                     else
                     {
-                        aggregateValue = $"{aggregateValue}, {current.LogText}";
+                        aggregateValue = $"{aggregateValue}, {line.LogText}";
                     }
 
                     // TODO optionally write to full-log file.
-                    Queue.TryDequeue(out current);
+                    Queue.TryDequeue(out line);
 
                     //await Console.Error.WriteLineAsync($"    Dequeued: {current.Timestamp.ToLocalTime().ToString("O")}");
                     // ReSharper disable once PossibleNullReferenceException
-                    consoleBuffer.Append($"    Dequeued: {current.Timestamp.ToLocalTime():O}\r\n");
+                    consoleBuffer.Append($"    Dequeued: {line.Timestamp.ToLocalTime():O}\r\n");
                 }
                 catch (Exception ex)
                 {
@@ -107,7 +177,7 @@ namespace BoosterPumpLibrary.Logger
                 await AggregateFile.WriteLineAsync(threshold, "M", line);
             }
 
-            await AggregateFile.Close();
+            await AggregateFile.CloseAsync();
             Console.WriteLine(consoleBuffer.ToString());
         }
 
@@ -122,6 +192,11 @@ namespace BoosterPumpLibrary.Logger
             var nextMinute02 = thisMinute.AddSeconds(62);
             var delay = nextMinute02.Subtract(now);
             await Task.Delay(delay);
+        }
+
+        public void AggregateExecute()
+        {
+            AggregateFlush(DateTime.UtcNow);
         }
 
         public async Task AggregateExecuteAsync(CancellationToken cancellationToken)

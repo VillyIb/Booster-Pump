@@ -8,6 +8,11 @@ namespace BoosterPumpApplicationAsync
 {
     public class TestController : IController
     {
+        public void Execute(IBufferedLogWriter logger)
+        {
+            // TODO implement
+        }
+
         public async Task ExecuteAsync(CancellationToken cancellationToken, IBufferedLogWriter logger)
         {
             try

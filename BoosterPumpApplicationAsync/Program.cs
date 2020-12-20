@@ -8,7 +8,6 @@ using Microsoft.Extensions.DependencyInjection;
 using eu.iamia.Configuration;
 using BoosterPumpLibrary.Logger;
 using BoosterPumpApplication;
-using BoosterPumpLibrary.Contracts;
 using NCD_API_SerialConverter;
 using NCD_API_SerialConverter.Contracts;
 using NCD_API_SerialConverter.NcdApiProtocol.SerialConverterCommands;
@@ -22,9 +21,10 @@ namespace BoosterPumpApplicationAsync
 
         static async Task Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            Console.WriteLine("Executing in async mode");
 
             Configuration = ConfigurationSetup.Init();
+
             IServiceCollection services = new ServiceCollection();
             var setup = new Setup(Configuration);
             setup.Register(services);

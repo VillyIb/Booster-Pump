@@ -7,6 +7,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace BoosterPumpLibrary.Logger
 {
@@ -104,6 +105,16 @@ namespace BoosterPumpLibrary.Logger
         {
             ConditionallyFlushBuffer(timestamp);
             Buffer.Add(new BufferLine(row, timestamp));
+        }
+
+        public void Add(BufferLine payload)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task AggregateExecuteAsync(CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
         }
 
         protected virtual void Dispose(bool disposing)

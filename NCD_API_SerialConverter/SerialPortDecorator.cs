@@ -100,7 +100,7 @@ namespace NCD_API_SerialConverter
         {
             if (disposing)
             {
-                // Dispose managed state (managed objects).
+                // DisposeAsync managed state (managed objects).
                 try
                 {
                     SerialPortSelected?.Dispose();

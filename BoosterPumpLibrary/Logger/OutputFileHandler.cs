@@ -15,9 +15,13 @@ namespace BoosterPumpLibrary.Logger
         /// </summary>
         char SeparatorCharacter { get; }
 
+        void WriteLine(DateTime timestamp, string suffix, string line);
+
         Task WriteLineAsync(DateTime timestamp, string suffix, string line);
 
-        Task Close();
+        void Close();
+
+        Task CloseAsync();
     }
 
     [ExcludeFromCodeCoverage]
@@ -41,7 +45,7 @@ namespace BoosterPumpLibrary.Logger
             return filename;
         }
 
-        private async Task OpenFile(string filename)
+        private void OpenFile(string filename)
         {
             CurrentFilename = filename;
 
@@ -50,7 +54,26 @@ namespace BoosterPumpLibrary.Logger
             var file = new FileInfo($"{logfilePrefix}{filename}");
             var fs = file.Open(FileMode.OpenOrCreate);
             Console.WriteLine($"\r\nWriting to logfile {file.Name}");
-            Sw = new StreamWriter(fs) {AutoFlush = true};
+            Sw = new StreamWriter(fs) { AutoFlush = true };
+
+            fs.Position = fs.Seek(0, SeekOrigin.End);
+            if (fs.Position == 0L)
+            {
+                Sw.WriteLine(Settings.Headline.Replace(';', SeparatorCharacter));
+            }
+        }
+
+
+        private async Task OpenFileAsync(string filename)
+        {
+            CurrentFilename = filename;
+
+            var userProfile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            var logfilePrefix = Path.Combine(userProfile, Settings.SubDirectory, Settings.FilePrefix);
+            var file = new FileInfo($"{logfilePrefix}{filename}");
+            var fs = file.Open(FileMode.OpenOrCreate);
+            Console.WriteLine($"\r\nWriting to logfile {file.Name}");
+            Sw = new StreamWriter(fs) { AutoFlush = true };
 
             fs.Position = fs.Seek(0, SeekOrigin.End);
             if (fs.Position == 0L)
@@ -60,6 +83,18 @@ namespace BoosterPumpLibrary.Logger
         }
 
         public char SeparatorCharacter => Settings.SeparatorCharacter; // TODO verify string '\t' translates to tab.
+
+        public void WriteLine(DateTime timestamp, string suffix, string line)
+        {
+            var filename = GetFilename(timestamp, suffix);
+            if (!filename.Equals(CurrentFilename))
+            {
+                Close();
+                OpenFile(filename);
+            }
+            Sw.WriteLine(line);
+            Sw.Flush();
+        }
 
         /// <summary>
         /// Writes line to file.
@@ -73,14 +108,34 @@ namespace BoosterPumpLibrary.Logger
             var filename = GetFilename(timestamp, suffix);
             if (!filename.Equals(CurrentFilename))
             {
-                await Close();
-                await OpenFile(filename);
+                await CloseAsync();
+                await OpenFileAsync(filename);
             }
             await Sw.WriteLineAsync(line);
             await Sw.FlushAsync();
         }
 
-        public async Task Close()
+        public void Close()
+        {
+            if (Sw != null)
+            {
+                try
+                {
+                    Sw.Flush();
+                    Sw.Close();
+                }
+                catch (Exception ex)
+                {
+                    Console.Error.WriteLine(ex.ToString());
+                }
+            }
+
+            Sw = null;
+            CurrentFilename = null;
+
+        }
+
+        public async Task CloseAsync()
         {
             if (Sw != null)
             {
@@ -99,14 +154,37 @@ namespace BoosterPumpLibrary.Logger
             CurrentFilename = null;
         }
 
-        protected virtual async Task Dispose(bool disposing)
+        protected virtual void Dispose(bool disposing)
         {
             try
             {
                 if (disposing)
                 {
                     // release managed resources
-                    await Close();
+                    Close();
+                }
+                // release unmanaged resources
+
+            }
+            catch (Exception)
+            {
+                // No action
+            }
+            finally
+            {
+                Sw = null;
+                CurrentFilename = null;
+            }
+        }
+
+        protected virtual async Task DisposeAsync(bool disposing)
+        {
+            try
+            {
+                if (disposing)
+                {
+                    // release managed resources
+                    await CloseAsync();
                 }
                 // release unmanaged resources
 
@@ -124,7 +202,8 @@ namespace BoosterPumpLibrary.Logger
 
         public void Dispose()
         {
-            Dispose(true).Wait();
+            //DisposeAsync(true).Wait(); // TODO make switcheable
+            Dispose(true);
             GC.SuppressFinalize(this);
 
         }

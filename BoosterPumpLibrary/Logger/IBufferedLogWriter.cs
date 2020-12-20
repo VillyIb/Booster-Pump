@@ -10,6 +10,8 @@ namespace BoosterPumpLibrary.Logger
 
         void Add(BufferLine payload);
 
+        void AggregateExecute();
+
         Task AggregateExecuteAsync(CancellationToken cancellationToken);
     }
 }

@@ -10,7 +10,7 @@ namespace BoosterPumpTest
 {
     public class BufferedLogWriterAsyncShould
     {
-        BufferedLogWriterAsync Sut;
+        BufferedLogWriterV2 Sut;
         IOutputFileHandler fakeFileHandler;
         CancellationTokenSource TokenSource;
         ControllerTest ControllerTest;
@@ -20,7 +20,7 @@ namespace BoosterPumpTest
         {
             // Arrange
             fakeFileHandler = Substitute.For<IOutputFileHandler>();
-            Sut = new BufferedLogWriterAsync(fakeFileHandler);
+            Sut = new BufferedLogWriterV2(fakeFileHandler);
             TokenSource = new CancellationTokenSource();
             ControllerTest = new ControllerTest();
         }
@@ -38,11 +38,11 @@ namespace BoosterPumpTest
         {
 
             var now = DateTime.UtcNow;
-            var delay = BufferedLogWriterAsync.RoundToMinute(now).AddSeconds(75).Subtract(now);
+            var delay = BufferedLogWriterV2.RoundToMinute(now).AddSeconds(75).Subtract(now);
             await Task.Delay(delay);
             Console.WriteLine($"\r\n\n---------------------------------------------------------------------------------------\n\r{DateTime.Now}");
 
-            var probe1 = BufferedLogWriterAsync.RoundToMinute(DateTime.UtcNow.AddSeconds(15));
+            var probe1 = BufferedLogWriterV2.RoundToMinute(DateTime.UtcNow.AddSeconds(15));
             var probe2 = probe1.AddMinutes(1);
             var probe3 = probe2.AddMinutes(1);
             var probe4 = probe3.AddMinutes(1);

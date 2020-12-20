@@ -1,15 +1,20 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
+using BoosterPumpApplication;
 using BoosterPumpLibrary.Logger;
 using eu.iamia.Configuration;
-using Microsoft.Extensions.Configuration;
 using Modules;
 using NCD_API_SerialConverter;
+using NCD_API_SerialConverter.Contracts;
+using NCD_API_SerialConverter.NcdApiProtocol.SerialConverterCommands;
 
 namespace BoosterPumpApplication1
 {
@@ -17,9 +22,10 @@ namespace BoosterPumpApplication1
 
     public class Program
     {
+
         private static CultureInfo CultureInfo => CultureInfo.GetCultureInfo("da-DK"); //  da-DK
 
-        private static BufferedLogWriter LogWriter { get; set; }
+        private static BufferedLogWriterV2 LogWriter { get; set; }
 
         private static IConfiguration Configuration;
 
@@ -47,128 +53,60 @@ namespace BoosterPumpApplication1
             Console.Write($"\r{row}");
         }
 
-        //private  DirectoryInfo LocateDirectory(DirectoryInfo current, string target)
-        //{
-        //    var subdirectories = current.GetDirectories(target, SearchOption.AllDirectories);
-        //    return subdirectories.FirstOrDefault();
-        //}
 
-        //private DirectoryInfo LocateDirectory(string target)
-        //{
 
-        //}
-               
         // ReSharper disable once UnusedParameter.Local
         public static void Main(string[] args)
         {
-            Configuration = ConfigurationSetup.Init();
-
-            var subdir = Configuration["Database:SubDirectory"];
-            var filePrefix = Configuration["Database:FilePrefix"];
-            var userProfile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            var logfilePrefix = Path.Combine(userProfile, subdir, filePrefix);
-
-            var portName = Configuration["SerialPort:Name"];
-            var serialPort = new SerialPortDecorator(null); // todo creae from service.
-            var serialConverter = new SerialConverter(serialPort);
-
-            bool.TryParse(Configuration["Controller:Enabled"], out var controllerEnabled);
-
-            var displayModule = new As1115Module(serialConverter);
-
-            var manifoldPressureDifference = new AMS5812_0150_D_B_Module(serialConverter);
-            var manifoldPressureCorrection = float.Parse(Configuration["Measurements:ManifoldPressureCorrection"], CultureInfo.InvariantCulture);
-
-            var flowNorthWest = new AMS5812_0150_D_B_Module(serialConverter);
-            var flowNorthWestCorrection = float.Parse(Configuration["Measurements:FlowNorthWestCorrection"], CultureInfo.InvariantCulture);
-
-            var flowSouthEast = new AMS5812_0150_D_B_Module(serialConverter);
-            var flowSouthEastCorrection = float.Parse(Configuration["Measurements:FlowSouthEastCorrection"], CultureInfo.InvariantCulture);
-
-            var systemPressure = new AMS5812_0300_A_PressureModule(serialConverter);
-            var systemPressureCorrection = float.Parse(Configuration["Measurements:SystemPressureCorrection"], CultureInfo.InvariantCulture);
-
-            var barometerModule1 = new LPS25HB_BarometerModule(serialConverter);
-            var barometerModule2 = new LPS25HB_BarometerModule(serialConverter, 1);
-
-            var multiplexer = new TCA9546MultiplexerModule(serialConverter);
-
-            var speedController = controllerEnabled ? new MCP4725_4_20mA_CurrentTransmitterV2(serialConverter) : null;
-
-
-            LogWriter = new BufferedLogWriter(null);
+            Console.WriteLine("Executing in SYNC mode");
 
             try
             {
-                serialPort.Open();
+                Configuration = ConfigurationSetup.Init();
 
-                Thread.Sleep(100);
+                IServiceCollection services = new ServiceCollection();
+                var setup = new Setup(Configuration);
+                setup.Register(services);
 
-                barometerModule1.Init();
-                barometerModule2.Init();
+                IServiceProvider serviceProvider = services.BuildServiceProvider();
 
-                var msMinRoundtripTime = int.Parse(Configuration["Measurements:RoundTripTime"]);
-
-                Console.WriteLine($"logfilePrefix: {logfilePrefix}");
-                Console.WriteLine($"portName: {portName}");
-                Console.WriteLine($"manifoldPressureCorrection: {manifoldPressureCorrection}");
-                Console.WriteLine($"flowNorthWestCorrection: {flowNorthWestCorrection}");
-                Console.WriteLine($"flowSouthEastCorrection: {flowSouthEastCorrection}");
-                Console.WriteLine($"systemPressureCorrection: {systemPressureCorrection}");
-                Console.WriteLine($"controllerEnabled: {controllerEnabled}");
-
-                var stopwatch = new Stopwatch();
-                while (true)
+                using (var scope = serviceProvider.CreateScope())
                 {
-                    stopwatch.Reset();
-                    stopwatch.Start();
+                    var serialPort = scope.ServiceProvider.GetRequiredService<INcdApiSerialPort>();
+                    serialPort.Open();
 
-                    barometerModule1.ReadDevice();
-                    barometerModule2.ReadDevice();
-
-                    multiplexer.SelectOpenChannels(MultiplexerChannels.Channel0);
-                    manifoldPressureDifference.ReadFromDevice();
-
-                    multiplexer.SelectOpenChannels(MultiplexerChannels.Channel1);
-                    flowNorthWest.ReadFromDevice();
-
-                    multiplexer.SelectOpenChannels(MultiplexerChannels.Channel2);
-                    flowSouthEast.ReadFromDevice();
-
-                    multiplexer.SelectOpenChannels(MultiplexerChannels.Channel3);
-                    systemPressure.ReadFromDevice();
-
-                    Log(
-                        Math.Round(manifoldPressureDifference.Pressure + manifoldPressureCorrection, 1),
-                        Math.Round(flowNorthWest.Pressure + flowNorthWestCorrection, 1),
-                        Math.Round(flowSouthEast.Pressure + flowSouthEastCorrection, 1),
-                        Math.Round(systemPressure.Pressure - barometerModule1.AirPressure + systemPressureCorrection, 1),
-                        Math.Round(barometerModule1.AirPressure, 1),
-                        Math.Round(barometerModule2.AirPressure, 1),
-                        Math.Round(barometerModule1.Temperature, 1),
-                        Math.Round(barometerModule2.Temperature, 1)
-                    );
-
-                    if (controllerEnabled)
                     {
-                        displayModule.SetBcdValue(50.0f);
-                        speedController.SetSpeed(50.0f);
+                        var ncdCommand = new ConverterScan();
+                        var serialConverter = scope.ServiceProvider.GetRequiredService<SerialConverter>();
+                        var dataFromDevice = serialConverter.Execute(ncdCommand);
+                        if (!(dataFromDevice.IsValid))
+                        {
+                            throw new ApplicationException(dataFromDevice.ToString());
+                        }
                     }
 
-                    stopwatch.Stop();
+                    var logWriter = scope.ServiceProvider.GetRequiredService<IBufferedLogWriter>();
+                    var controller = scope.ServiceProvider.GetRequiredService<IController>();
 
-                    var duration = (int)stopwatch.ElapsedMilliseconds;
-
-                    if (duration < msMinRoundtripTime)
+                    while (true)
                     {
-                        Thread.Sleep(msMinRoundtripTime - duration);
+                        var loop = 100;
+                        while (loop-- > 0)
+                        {
+                            controller.Execute(logWriter);
+                        }
+
+                        logWriter.AggregateExecute();
                     }
+
+                    LogWriter = new BufferedLogWriterV2(null);
+
                 }
             }
 
             finally
             {
-                serialPort.Dispose();
+
                 LogWriter.Dispose();
             }
         }
