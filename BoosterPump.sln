@@ -23,9 +23,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoosterPumpApplicationAsync
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BoosterPumpConfiguration", "BoosterPumpConfiguration\BoosterPumpConfiguration.csproj", "{7828DC15-9C66-4DD4-98C4-1FA5E60D669E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoosterPumpApplication", "BoosterPumpApplication\BoosterPumpApplication.csproj", "{103F3DD2-B6AA-46C5-90B2-6E9659649678}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BoosterPumpApplication", "BoosterPumpApplication\BoosterPumpApplication.csproj", "{103F3DD2-B6AA-46C5-90B2-6E9659649678}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BoosterPumpApplication1", "BoosterPumpApplication1\BoosterPumpApplication1.csproj", "{06329D8D-5C59-4D7D-8C96-48B51209CAB7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eu.iamia.Util", "eu.iamia.Util\eu.iamia.Util.csproj", "{2DE4BB7A-B5E7-472B-A6F7-F69CB1D52C11}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eu.iamia.Util.Test", "eu.iamia.Util.Test\eu.iamia.Util.Test.csproj", "{56DBE9C5-3624-462E-A07A-DF6EE71AFA53}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -81,6 +85,14 @@ Global
 		{06329D8D-5C59-4D7D-8C96-48B51209CAB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{06329D8D-5C59-4D7D-8C96-48B51209CAB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{06329D8D-5C59-4D7D-8C96-48B51209CAB7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2DE4BB7A-B5E7-472B-A6F7-F69CB1D52C11}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2DE4BB7A-B5E7-472B-A6F7-F69CB1D52C11}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2DE4BB7A-B5E7-472B-A6F7-F69CB1D52C11}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2DE4BB7A-B5E7-472B-A6F7-F69CB1D52C11}.Release|Any CPU.Build.0 = Release|Any CPU
+		{56DBE9C5-3624-462E-A07A-DF6EE71AFA53}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{56DBE9C5-3624-462E-A07A-DF6EE71AFA53}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{56DBE9C5-3624-462E-A07A-DF6EE71AFA53}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{56DBE9C5-3624-462E-A07A-DF6EE71AFA53}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

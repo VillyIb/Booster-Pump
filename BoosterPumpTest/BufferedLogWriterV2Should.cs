@@ -1,66 +1,22 @@
 ﻿using System;
-using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 using NSubstitute;
 using BoosterPumpLibrary.Logger;
-using Xunit.Abstractions;
+using eu.iamia.Util;
 
 namespace BoosterPumpTest
 {
     public class BufferedLogWriterV2Should
     {
-        private readonly ITestOutputHelper TestOutputHelper;
         readonly BufferedLogWriterV2 Sut;
         readonly IOutputFileHandler FakeFileHandler;
-        readonly CancellationTokenSource TokenSource;
-        readonly ControllerTest ControllerTest;
 
-        public BufferedLogWriterV2Should(ITestOutputHelper testOutputHelper)
+        public BufferedLogWriterV2Should()
         {
-            TestOutputHelper = testOutputHelper;
             // Arrange
             FakeFileHandler = Substitute.For<IOutputFileHandler>();
             Sut = new BufferedLogWriterV2(FakeFileHandler);
-            TokenSource = new CancellationTokenSource();
-            ControllerTest = new ControllerTest();
-        }
-
-        private async Task RequestCancellationAfterDelay()
-        {
-            await Task.Delay(2 * 60 * 1000);
-            Console.WriteLine($"\r\nDelay Ended {DateTime.Now}");
-            TokenSource.Cancel();
-        }
-
-        [Fact(Timeout = 250000, Skip = "Too time consuming")]
-        //[Fact(Timeout = 250000)]
-        public async Task AggregateExecuteAsync_WritesLineToFile()
-        {
-            var now = DateTime.UtcNow;
-            var delay = BufferedLogWriterV2.RoundToMinute(now).AddSeconds(75).Subtract(now);
-            await Task.Delay(delay);
-            TestOutputHelper.WriteLine($"\r\n\n---------------------------------------------------------------------------------------\n\r{DateTime.Now}");
-
-            var probe1 = BufferedLogWriterV2.RoundToMinute(DateTime.UtcNow.AddSeconds(15));
-            var probe2 = probe1.AddMinutes(1);
-            var probe3 = probe2.AddMinutes(1);
-            var probe4 = probe3.AddMinutes(1);
-
-            var stopTask = RequestCancellationAfterDelay();
-
-            // Act
-            var writerTask = Sut.AggregateExecuteAsync(TokenSource.Token);
-            var controllerTask = ControllerTest.ExecuteAsync(TokenSource.Token, Sut);
-
-            TestOutputHelper.WriteLine("Waiting for all to finish");
-            await Task.WhenAll(stopTask, controllerTask, writerTask);
-
-            // Assert
-            await FakeFileHandler.Received().WriteLineAsync(Arg.Any<DateTime>(), Arg.Any<string>(), Arg.Any<string>());
-            await FakeFileHandler.Received(1).WriteLineAsync(Arg.Is(probe2), Arg.Any<string>(), Arg.Any<string>());
-            await FakeFileHandler.Received(1).WriteLineAsync(Arg.Is(probe3), Arg.Any<string>(), Arg.Any<string>());
-            await FakeFileHandler.Received(1).WriteLineAsync(Arg.Is(probe4), Arg.Any<string>(), Arg.Any<string>());
         }
 
         [Fact]
@@ -77,25 +33,97 @@ namespace BoosterPumpTest
             Assert.Equal(timestamp, BufferedLogWriterV2.RoundToMinute(timestamp.AddSeconds(12).AddMilliseconds(12)));
         }
 
-        [Fact]
-        public void AggregateExecute_()
+        private static void InitSystemDateTime(int minute)
         {
-            Sut.AggregateExecute();
-            Assert.True(false);
+            SystemDateTime.SetTime(new DateTime(2000, 01, 01, 12, minute, 30, DateTimeKind.Utc), 0D);
+        }
+
+        private void SetupBufferLines()
+        {
+            InitSystemDateTime(10);
+            Sut.Add(new BufferLine("A", SystemDateTime.UtcNow));
+            InitSystemDateTime(11);
+            Sut.Add(new BufferLine("B", SystemDateTime.UtcNow));
+            Sut.Add(new BufferLine("C", SystemDateTime.UtcNow));
+            InitSystemDateTime(12);
+            Sut.Add(new BufferLine("D", SystemDateTime.UtcNow));
+        }
+
+        private void SetupBufferLineMeasurements()
+        {
+            InitSystemDateTime(10);
+            Sut.Add(new BufferLineMeasurement(SystemDateTime.UtcNow, 1f, 2f, 3f, 4f, 5f, 6f, 7f, 8f, 9f, 10f, 11f, 12f, 13f, 14f, 15f, 16f, 17f));
+            InitSystemDateTime(11);
+            Sut.Add(new BufferLineMeasurement(SystemDateTime.UtcNow, 1f, 2f, 3f, 4f, 5f, 6f, 7f, 8f, 9f, 10f, 11f, 12f, 13f, 14f, 15f, 16f, 17f));
+            Sut.Add(new BufferLineMeasurement(SystemDateTime.UtcNow, 1f, 2f, 3f, 4f, 5f, 6f, 7f, 8f, 9f, 10f, 11f, 12f, 13f, 14f, 15f, 16f, 17f));
+            InitSystemDateTime(12);
+            Sut.Add(new BufferLineMeasurement(SystemDateTime.UtcNow, 1f, 2f, 3f, 4f, 5f, 6f, 7f, 8f, 9f, 10f, 11f, 12f, 13f, 14f, 15f, 16f, 17f));
         }
 
         [Fact]
-        public void AggregateFlush_()
+        public void AggregateFlush_WriteOlderEntriesAggregated()
         {
-            Sut.AggregateFlush(DateTime.UtcNow);
-            Assert.True(false);
+            SetupBufferLines();
+            Sut.AggregateFlush(SystemDateTime.UtcNow);
+            FakeFileHandler.Received(1).WriteLine(Arg.Any<DateTime>(), Arg.Is("T"), Arg.Is("A, B, C"));
         }
 
+
         [Fact]
-        public void AggregateFlushUnconditionally_()
+        public void AggregateFlushUnconditionally_WriteAllEntriesAggregated()
         {
+            SetupBufferLines();
             Sut.AggregateFlushUnconditionally();
-            Assert.True(false);
+            FakeFileHandler.Received(1).WriteLine(Arg.Any<DateTime>(), Arg.Is("T"), Arg.Is("A, B, C, D"));
+        }
+
+        [Fact]
+        public void AggregateFlush_WriteOlderEntriesSpecificAndAggregated()
+        {
+            SetupBufferLineMeasurements();
+            Sut.AggregateFlush((SystemDateTime.UtcNow));
+            FakeFileHandler.Received(1).WriteLine(Arg.Any<DateTime>(), Arg.Is("M"), Arg.Any<string>());
+            FakeFileHandler.Received(3).WriteLine(Arg.Any<DateTime>(), Arg.Is("S"), Arg.Any<string>());
+        }
+
+        [Fact]
+        public void AggregateFlushUnconditionally_WriteAllEntriesSpecificAndAggregated()
+        {
+            SetupBufferLineMeasurements(); Sut.AggregateFlushUnconditionally();
+            FakeFileHandler.Received(1).WriteLine(Arg.Any<DateTime>(), Arg.Is("M"), Arg.Any<string>());
+            FakeFileHandler.Received(4).WriteLine(Arg.Any<DateTime>(), Arg.Is("S"), Arg.Any<string>());
+        }
+
+        [Fact]
+        public async Task AggregateFlushAsync_WriteOlderEntriesAggregated()
+        {
+            SetupBufferLines();
+            await Sut.AggregateFlushAsync(SystemDateTime.UtcNow);
+            await FakeFileHandler.Received(1).WriteLineAsync(Arg.Any<DateTime>(), Arg.Is("T"), Arg.Is("A, B, C"));
+        }
+
+        [Fact]
+        public async Task AggregateFlushUnconditionallyAsync_WriteAllEntriesAggregated()
+        {
+            SetupBufferLines();
+            await Sut.AggregateFlushUnconditionalAsync();
+            await FakeFileHandler.Received(1).WriteLineAsync(Arg.Any<DateTime>(), Arg.Is("T"), Arg.Is("A, B, C, D"));
+        }
+
+        [Fact]
+        public async Task AggregateFlushAsync_WriteOlderSpecificAndAggregated()
+        {
+            SetupBufferLineMeasurements(); await Sut.AggregateFlushAsync(SystemDateTime.UtcNow);
+            await FakeFileHandler.Received(1).WriteLineAsync(Arg.Any<DateTime>(), Arg.Is("M"), Arg.Any<string>());
+            await FakeFileHandler.Received(3).WriteLineAsync(Arg.Any<DateTime>(), Arg.Is("S"), Arg.Any<string>());
+        }
+
+        [Fact]
+        public async Task AggregateFlushUnconditionalAsync_WriteAllEntriesSpecificAndAggregated()
+        {
+            SetupBufferLineMeasurements(); await Sut.AggregateFlushUnconditionalAsync();
+            await FakeFileHandler.Received(1).WriteLineAsync(Arg.Any<DateTime>(), Arg.Is("M"), Arg.Any<string>());
+            await FakeFileHandler.Received(4).WriteLineAsync(Arg.Any<DateTime>(), Arg.Is("S"), Arg.Any<string>());
         }
     }
 }

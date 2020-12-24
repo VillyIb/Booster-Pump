@@ -1,6 +1,10 @@
 ﻿using System;
 namespace BoosterPumpTest
 {
+    /// <summary>
+    /// 
+    /// </summary>
+    [Obsolete("Use SystemDateTime", true)]
     public class DateTimeTest
     {
         /// <summary>

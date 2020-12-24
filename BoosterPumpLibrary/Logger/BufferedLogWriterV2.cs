@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Globalization;
 using System.Text;
+using eu.iamia.Util;
 
 namespace BoosterPumpLibrary.Logger
 {
@@ -54,7 +55,7 @@ namespace BoosterPumpLibrary.Logger
         {
             var threshold = RoundToMinute(window);
 
-             Console.Error.WriteLine($"\r\nProbing AggregateFlush: {threshold.ToLocalTime()}, now: {DateTime.Now}");
+            Console.Error.WriteLine($"\r\nProbing AggregateFlush: {threshold.ToLocalTime()}, now: {DateTime.Now}");
 
             var aggregateValue = "";
             var aggregateMeasures = new List<float> { 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f };
@@ -73,19 +74,20 @@ namespace BoosterPumpLibrary.Logger
                         for (var index = 0; index < aggregateMeasures.Count; index++)
                         {
                             aggregateMeasures[index] += measurement.Values[index];
-
-                            var seed = string.Format(CultureInfo, "{1:O}{0}{2:000000}{0}", AggregateFile.SeparatorCharacter, line.Timestamp.ToLocalTime(), line.Timestamp.ToLocalTime().TimeOfDay.TotalMilliseconds / 100);
-                            var aggregate = aggregateMeasures.Aggregate(
-                                seed,
-                                (result, current) => result + (current).ToString("0000.0", CultureInfo) +
-                                                     AggregateFile.SeparatorCharacter
-                            );
-                            AggregateFile.WriteLine(threshold, "S", aggregate);
                         }
+
+                        var seed = string.Format(CultureInfo, "{1:O}{0}{2:000000}{0}", AggregateFile.SeparatorCharacter, line.Timestamp.ToLocalTime(), line.Timestamp.ToLocalTime().TimeOfDay.TotalMilliseconds / 100);
+                        var aggregate = measurement.Values.Aggregate(
+                            seed,
+                            (result, current) => result + (current).ToString("0000.0", CultureInfo) +
+                                                 AggregateFile.SeparatorCharacter
+                        );
+                        AggregateFile.WriteLine(threshold, "S", aggregate); // specific line
+
                     }
                     else
                     {
-                        aggregateValue = $"{aggregateValue}, {line.LogText}";
+                        aggregateValue = aggregateValue.Any() ? $"{aggregateValue}, {line.LogText}" : line.LogText;
                     }
 
                     // TODO optionally write to full-log file.
@@ -97,12 +99,11 @@ namespace BoosterPumpLibrary.Logger
                 catch (Exception ex)
                 {
                     Queue.Enqueue(new BufferLine(ex.Message, DateTime.UtcNow));
-                    Thread.Sleep(1000);
                 }
             }
             if (!String.IsNullOrEmpty(aggregateValue))
             {
-                 AggregateFile.WriteLine(threshold, "M", aggregateValue);
+                AggregateFile.WriteLine(threshold, "T", aggregateValue);
             }
 
             if (aggregateCount > 0)
@@ -113,7 +114,7 @@ namespace BoosterPumpLibrary.Logger
                     seed,
                     (result, current) => result + (current / aggregateCount).ToString("0000.0", CultureInfo) + AggregateFile.SeparatorCharacter
                 );
-                 AggregateFile.WriteLine(threshold, "M", line);
+                AggregateFile.WriteLine(threshold, "M", line); // average
             }
 
             AggregateFile.Close();
@@ -126,7 +127,7 @@ namespace BoosterPumpLibrary.Logger
         /// <param name="window"></param>
         /// <param name="flushAll"></param>
         /// <returns></returns>
-        public async Task AggregateFlushAsync(DateTime window, bool flushAll = false)
+        private async Task AggregateFlushAsync(DateTime window, bool flushAll)
         {
             var threshold = RoundToMinute(window);
 
@@ -149,19 +150,19 @@ namespace BoosterPumpLibrary.Logger
                         for (var index = 0; index < aggregateMeasures.Count; index++)
                         {
                             aggregateMeasures[index] += measurement.Values[index];
-
-                            var seed = string.Format(CultureInfo, "{1:O}{0}{2:000000}{0}", AggregateFile.SeparatorCharacter, line.Timestamp.ToLocalTime(), line.Timestamp.ToLocalTime().TimeOfDay.TotalMilliseconds / 100);
-                            var aggregate = aggregateMeasures.Aggregate(
-                                seed,
-                                (result, current) => result + (current).ToString("0000.0", CultureInfo) +
-                                                     AggregateFile.SeparatorCharacter
-                            );
-                            await AggregateFile.WriteLineAsync(threshold, "S", aggregate);
                         }
+
+                        var seed = string.Format(CultureInfo, "{1:O}{0}{2:000000}{0}", AggregateFile.SeparatorCharacter, line.Timestamp.ToLocalTime(), line.Timestamp.ToLocalTime().TimeOfDay.TotalMilliseconds / 100);
+                        var aggregate = aggregateMeasures.Aggregate(
+                            seed,
+                            (result, current) => result + (current).ToString("0000.0", CultureInfo) +
+                                                 AggregateFile.SeparatorCharacter
+                        );
+                        await AggregateFile.WriteLineAsync(threshold, "S", aggregate); // 
                     }
                     else
                     {
-                        aggregateValue = $"{aggregateValue}, {line.LogText}";
+                        aggregateValue  = aggregateValue.Any() ? $"{aggregateValue}, {line.LogText}" : line.LogText;
                     }
 
                     // TODO optionally write to full-log file.
@@ -179,7 +180,7 @@ namespace BoosterPumpLibrary.Logger
             }
             if (!String.IsNullOrEmpty(aggregateValue))
             {
-                await AggregateFile.WriteLineAsync(threshold, "M", aggregateValue);
+                await AggregateFile.WriteLineAsync(threshold, "T", aggregateValue);
             }
 
             if (aggregateCount > 0)
@@ -196,6 +197,18 @@ namespace BoosterPumpLibrary.Logger
             await AggregateFile.CloseAsync();
             Console.WriteLine(consoleBuffer.ToString());
         }
+
+        public async Task AggregateFlushAsync(DateTime window)
+        {
+            await AggregateFlushAsync(window, false);
+        }
+
+        public async Task AggregateFlushUnconditionalAsync()
+        {
+            await AggregateFlushAsync(SystemDateTime.UtcNow, true);
+        }
+
+
 
         public void AggregateFlush(DateTime window)
         {
@@ -220,11 +233,7 @@ namespace BoosterPumpLibrary.Logger
             await Task.Delay(delay);
         }
 
-        public void AggregateExecute()
-        {
-            AggregateFlush(DateTime.UtcNow, false);
-        }
-
+        // TODO move our of this class.
         public async Task AggregateExecuteAsync(CancellationToken cancellationToken)
         {
             try
@@ -249,10 +258,12 @@ namespace BoosterPumpLibrary.Logger
             Queue.Enqueue(new BufferLine(row, timestampUtc));
         }
 
+        [ExcludeFromCodeCoverage]
         public ISite Site { get => throw new NotImplementedException(); set { } }
 
         public event EventHandler Disposed;
 
+        [ExcludeFromCodeCoverage]
         public void Dispose()
         {
             throw new NotImplementedException();

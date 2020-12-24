@@ -10,13 +10,16 @@ namespace BoosterPumpLibrary.Logger
 
         void Add(BufferLine payload);
 
+
         void AggregateFlush(DateTime window);
 
         void AggregateFlushUnconditionally();
 
-        void AggregateExecute();
 
         Task AggregateExecuteAsync(CancellationToken cancellationToken);
+
+        Task AggregateFlushUnconditionalAsync();
+
 
         bool IsNextMinute();
     }
