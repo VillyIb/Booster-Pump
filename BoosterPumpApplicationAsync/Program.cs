@@ -21,65 +21,64 @@ namespace BoosterPumpApplicationAsync
 
         static async Task Main(string[] args)
         {
-            Console.WriteLine("Executing in async mode");
+            Console.WriteLine("Executing in ASync mode");
 
             Configuration = ConfigurationSetup.Init();
 
-            IServiceCollection services = new ServiceCollection();
             var setup = new Setup(Configuration);
+            IServiceCollection services = new ServiceCollection();
             setup.Register(services);
 
             IServiceProvider serviceProvider = services.BuildServiceProvider();
 
-            using (var scope = serviceProvider.CreateScope())
+            using var scope = serviceProvider.CreateScope();
+            var serialPort = scope.ServiceProvider.GetRequiredService<INcdApiSerialPort>();
+            serialPort.Open();
+
             {
-                var serialPort = scope.ServiceProvider.GetRequiredService<INcdApiSerialPort>();
-                serialPort.Open();
-
+                var ncdCommand = new ConverterScan();
+                var serialConverter = scope.ServiceProvider.GetRequiredService<SerialConverter>();
+                var dataFromDevice = serialConverter.Execute(ncdCommand);
+                if (!(dataFromDevice.IsValid))
                 {
-                    var ncdCommand = new ConverterScan();
-                    var serialConverter = scope.ServiceProvider.GetRequiredService<SerialConverter>();
-                    var dataFromDevice = serialConverter.Execute(ncdCommand);
-                    if (!(dataFromDevice.IsValid))
-                    {
-                        throw new ApplicationException(dataFromDevice.ToString());
-                    }
-                }
-
-                var logWriter = scope.ServiceProvider.GetRequiredService<IBufferedLogWriter>();
-
-                var tasks = new ConcurrentBag<Task>();
-
-                using var tokenSource = new CancellationTokenSource();
-                var token = tokenSource.Token;
-
-                var logTask = logWriter.AggregateExecuteAsync(token);
-                tasks.Add(logTask);
-
-                var controller = scope.ServiceProvider.GetRequiredService<IController>();
-
-                var controlTask = controller.ExecuteAsync(token, logWriter);
-                tasks.Add(controlTask);
-
-                while (true)
-                {
-                    var input = Console.ReadLine();
-                    if ("Q" == input || "q" == input)
-                    {
-                        Console.WriteLine($"\r\nClosing application, please wait");
-                        tokenSource.Cancel();
-                        try
-                        {
-                            await Task.WhenAll(tasks.ToArray());
-                        }
-                        catch (OperationCanceledException)
-                        {
-                            Console.WriteLine($"\n{nameof(OperationCanceledException)} thrown\n");
-                        }
-                        break;
-                    }
+                    throw new ApplicationException(dataFromDevice.ToString());
                 }
             }
+
+            var logWriter = scope.ServiceProvider.GetRequiredService<IBufferedLogWriter>();
+
+            var tasks = new ConcurrentBag<Task>();
+
+            using var tokenSource = new CancellationTokenSource();
+            var token = tokenSource.Token;
+
+            var logTask = logWriter.AggregateExecuteAsync(token);
+            tasks.Add(logTask);
+
+            var controller = scope.ServiceProvider.GetRequiredService<IController>();
+
+            var controlTask = controller.ExecuteAsync(token, logWriter);
+            tasks.Add(controlTask);
+
+            while (true)
+            {
+                var input = Console.ReadLine();
+                if ("Q" == input || "q" == input)
+                {
+                    Console.WriteLine($"\r\nClosing application, please wait");
+                    tokenSource.Cancel();
+                    try
+                    {
+                        await Task.WhenAll(tasks.ToArray());
+                    }
+                    catch (OperationCanceledException)
+                    {
+                        Console.WriteLine($"\n{nameof(OperationCanceledException)} thrown\n");
+                    }
+                    break;
+                }
+            }
+
 
             Console.WriteLine("Terminated");
         }

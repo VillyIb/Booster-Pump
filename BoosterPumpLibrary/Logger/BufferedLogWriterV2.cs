@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Globalization;
@@ -34,7 +35,22 @@ namespace BoosterPumpLibrary.Logger
             return new DateTime(value.Ticks - value.Ticks % TimeSpan.TicksPerMinute, value.Kind);
         }
 
-        public void AggregateFlush(DateTime window, bool flushAll = false)
+        private DateTime NextMinute = DateTime.MinValue;
+
+        /// <summary>
+        /// Returns true when the current DateTime reaches or pass NextMinute.
+        /// </summary>
+        /// <returns></returns>
+        public bool IsNextMinute()
+        {
+            if (NextMinute >= DateTime.UtcNow) { return false; }
+
+            var now = DateTime.UtcNow;
+            NextMinute = RoundToMinute(now).AddSeconds(62);
+            return true;
+        }
+
+        protected void AggregateFlush(DateTime window, bool flushAll)
         {
             var threshold = RoundToMinute(window);
 
@@ -181,11 +197,21 @@ namespace BoosterPumpLibrary.Logger
             Console.WriteLine(consoleBuffer.ToString());
         }
 
+        public void AggregateFlush(DateTime window)
+        {
+            AggregateFlush(window, false);
+        }
+
+        public void AggregateFlushUnconditionally()
+        {
+            AggregateFlush(DateTime.UtcNow, true);
+        }
+
         /// <summary>
         /// Waits until NextMinute + 2 seconds in order to let other tasks finish before kicking in.
         /// </summary>
         /// <returns></returns>
-        public async Task WaitUntilSecond02InNextMinuteAsync()
+        private async Task WaitUntilSecond02InNextMinuteAsync()
         {
             var now = DateTime.UtcNow;
             var thisMinute = RoundToMinute(now);
@@ -196,7 +222,7 @@ namespace BoosterPumpLibrary.Logger
 
         public void AggregateExecute()
         {
-            AggregateFlush(DateTime.UtcNow);
+            AggregateFlush(DateTime.UtcNow, false);
         }
 
         public async Task AggregateExecuteAsync(CancellationToken cancellationToken)
@@ -217,6 +243,7 @@ namespace BoosterPumpLibrary.Logger
             }
         }
 
+        [ExcludeFromCodeCoverage]
         public void Add(string row, DateTime timestampUtc)
         {
             Queue.Enqueue(new BufferLine(row, timestampUtc));
@@ -231,6 +258,7 @@ namespace BoosterPumpLibrary.Logger
             throw new NotImplementedException();
         }
 
+        [ExcludeFromCodeCoverage]
         public void Add(BufferLine payload)
         {
             Queue.Enqueue(payload);

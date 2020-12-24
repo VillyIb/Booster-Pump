@@ -1,17 +1,12 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Globalization;
-using System.IO;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using BoosterPumpApplication;
 using BoosterPumpLibrary.Logger;
 using eu.iamia.Configuration;
-using Modules;
 using NCD_API_SerialConverter;
 using NCD_API_SerialConverter.Contracts;
 using NCD_API_SerialConverter.NcdApiProtocol.SerialConverterCommands;
@@ -53,8 +48,6 @@ namespace BoosterPumpApplication1
             Console.Write($"\r{row}");
         }
 
-
-
         // ReSharper disable once UnusedParameter.Local
         public static void Main(string[] args)
         {
@@ -64,44 +57,50 @@ namespace BoosterPumpApplication1
             {
                 Configuration = ConfigurationSetup.Init();
 
-                IServiceCollection services = new ServiceCollection();
                 var setup = new Setup(Configuration);
+                IServiceCollection services = new ServiceCollection();
                 setup.Register(services);
 
                 IServiceProvider serviceProvider = services.BuildServiceProvider();
 
-                using (var scope = serviceProvider.CreateScope())
+                using var scope = serviceProvider.CreateScope();
+                var serialPort = scope.ServiceProvider.GetRequiredService<INcdApiSerialPort>();
+                serialPort.Open();
+
                 {
-                    var serialPort = scope.ServiceProvider.GetRequiredService<INcdApiSerialPort>();
-                    serialPort.Open();
-
+                    var ncdCommand = new ConverterScan();
+                    var serialConverter = scope.ServiceProvider.GetRequiredService<SerialConverter>();
+                    var dataFromDevice = serialConverter.Execute(ncdCommand);
+                    if (!(dataFromDevice.IsValid))
                     {
-                        var ncdCommand = new ConverterScan();
-                        var serialConverter = scope.ServiceProvider.GetRequiredService<SerialConverter>();
-                        var dataFromDevice = serialConverter.Execute(ncdCommand);
-                        if (!(dataFromDevice.IsValid))
-                        {
-                            throw new ApplicationException(dataFromDevice.ToString());
-                        }
+                        throw new ApplicationException(dataFromDevice.ToString());
                     }
-
-                    var logWriter = scope.ServiceProvider.GetRequiredService<IBufferedLogWriter>();
-                    var controller = scope.ServiceProvider.GetRequiredService<IController>();
-
-                    while (true)
-                    {
-                        var loop = 100;
-                        while (loop-- > 0)
-                        {
-                            controller.Execute(logWriter);
-                        }
-
-                        logWriter.AggregateExecute();
-                    }
-
-                    LogWriter = new BufferedLogWriterV2(null);
-
                 }
+
+                var logWriter = scope.ServiceProvider.GetRequiredService<IBufferedLogWriter>();
+                var controller = scope.ServiceProvider.GetRequiredService<IController>();
+
+                var loop = true;
+                while (loop)
+                {
+                    if (logWriter.IsNextMinute())
+                    {
+                        logWriter.AggregateFlush(DateTime.UtcNow);
+                    }
+
+                    controller.Execute(logWriter);
+
+                    if (Console.KeyAvailable)
+                    {
+                        if (ConsoleKey.Q == Console.ReadKey(false).Key)
+                        {
+                            Console.WriteLine("Quit selected");
+                            loop = false;
+                        }
+                    }
+                }
+
+                logWriter.AggregateFlushUnconditionally();
             }
 
             finally

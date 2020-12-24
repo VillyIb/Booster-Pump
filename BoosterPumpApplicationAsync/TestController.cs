@@ -10,7 +10,7 @@ namespace BoosterPumpApplicationAsync
     {
         public void Execute(IBufferedLogWriter logger)
         {
-            // TODO implement
+            logger.Add("xxx", DateTime.UtcNow);
         }
 
         public async Task ExecuteAsync(CancellationToken cancellationToken, IBufferedLogWriter logger)
