@@ -97,7 +97,7 @@ namespace BoosterPumpLibrary.Logger
                 }
                 catch (Exception ex)
                 {
-                    Queue.Enqueue(new BufferLine(ex.Message, DateTime.UtcNow));
+                    Queue.Enqueue(new BufferLine(ex.Message, SystemDateTime.UtcNow));
                 }
             }
             if (!String.IsNullOrEmpty(aggregateValue))
@@ -173,7 +173,7 @@ namespace BoosterPumpLibrary.Logger
                 }
                 catch (Exception ex)
                 {
-                    Queue.Enqueue(new BufferLine(ex.Message, DateTime.UtcNow));
+                    Queue.Enqueue(new BufferLine(ex.Message, SystemDateTime.UtcNow));
                 }
             }
             if (!String.IsNullOrEmpty(aggregateValue))

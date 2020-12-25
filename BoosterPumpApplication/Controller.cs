@@ -9,6 +9,7 @@ using BoosterPumpLibrary.Logger;
 using Modules;
 using System.Diagnostics.CodeAnalysis;
 using BoosterPumpLibrary.Contracts;
+using eu.iamia.Util;
 using NCD_API_SerialConverter;
 using NCD_API_SerialConverter.NcdApiProtocol.SerialConverterCommands;
 
@@ -164,7 +165,7 @@ namespace BoosterPumpApplication
                         Multiplexer.SelectOpenChannels(MultiplexerChannels.None);
                     }
 
-                    var now = DateTime.UtcNow;
+                    var now = SystemDateTime.UtcNow;
                     now = new DateTime(
                         now.Ticks - now.Ticks % (TimeSpan.TicksPerSecond / 10),
                         now.Kind

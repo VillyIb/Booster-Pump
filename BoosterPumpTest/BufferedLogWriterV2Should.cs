@@ -55,7 +55,7 @@ namespace BoosterPumpTest
         [Fact]
         public void RoundToMinute_RemovesSecondsAndFractions()
         {
-            var timestamp = DateTime.Today.AddHours(12).AddMinutes(12);
+            var timestamp = SystemDateTime.Today.AddHours(12).AddMinutes(12);
             Assert.Equal(timestamp, BufferedLogWriterV2.RoundToMinute(timestamp.AddSeconds(12).AddMilliseconds(12)));
         }
 
