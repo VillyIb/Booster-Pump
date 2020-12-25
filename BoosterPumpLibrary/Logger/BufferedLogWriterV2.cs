@@ -4,7 +4,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Globalization;
 using System.Text;
@@ -44,9 +43,9 @@ namespace BoosterPumpLibrary.Logger
         /// <returns></returns>
         public bool IsNextMinute()
         {
-            if (NextMinute >= DateTime.UtcNow) { return false; }
+            if (NextMinute >= SystemDateTime.UtcNow) { return false; }
 
-            var now = DateTime.UtcNow;
+            var now = SystemDateTime.UtcNow;
             NextMinute = RoundToMinute(now).AddSeconds(62);
             return true;
         }
@@ -62,10 +61,11 @@ namespace BoosterPumpLibrary.Logger
             var aggregateCount = 0;
             var consoleBuffer = new StringBuilder();
 
-            while (!Queue.IsEmpty && Queue.TryPeek(out BufferLine line))
+            while (!Queue.IsEmpty && Queue.TryPeek(out var line))
             {
                 if (!flushAll && threshold <= RoundToMinute(line.Timestamp)) { break; }
 
+                Queue.TryDequeue(out line);
                 try
                 {
                     if (line is BufferLineMeasurement measurement)
@@ -79,7 +79,7 @@ namespace BoosterPumpLibrary.Logger
                         var seed = string.Format(CultureInfo, "{1:O}{0}{2:000000}{0}", AggregateFile.SeparatorCharacter, line.Timestamp.ToLocalTime(), line.Timestamp.ToLocalTime().TimeOfDay.TotalMilliseconds / 100);
                         var aggregate = measurement.Values.Aggregate(
                             seed,
-                            (result, current) => result + (current).ToString("0000.0", CultureInfo) +
+                            (result, current) => result + current.ToString("0000.0", CultureInfo) +
                                                  AggregateFile.SeparatorCharacter
                         );
                         AggregateFile.WriteLine(threshold, "S", aggregate); // specific line
@@ -91,7 +91,6 @@ namespace BoosterPumpLibrary.Logger
                     }
 
                     // TODO optionally write to full-log file.
-                    Queue.TryDequeue(out line);
 
                     // ReSharper disable once PossibleNullReferenceException
                     consoleBuffer.Append($"    Dequeued: {line.Timestamp.ToLocalTime():O}\r\n");
@@ -138,10 +137,11 @@ namespace BoosterPumpLibrary.Logger
             var aggregateCount = 0;
             var consoleBuffer = new StringBuilder();
 
-            while (!Queue.IsEmpty && Queue.TryPeek(out BufferLine line))
+            while (!Queue.IsEmpty && Queue.TryPeek(out var line))
             {
                 if (!flushAll && threshold <= RoundToMinute(line.Timestamp)) { break; }
 
+                Queue.TryDequeue(out line);
                 try
                 {
                     if (line is BufferLineMeasurement measurement)
@@ -155,18 +155,17 @@ namespace BoosterPumpLibrary.Logger
                         var seed = string.Format(CultureInfo, "{1:O}{0}{2:000000}{0}", AggregateFile.SeparatorCharacter, line.Timestamp.ToLocalTime(), line.Timestamp.ToLocalTime().TimeOfDay.TotalMilliseconds / 100);
                         var aggregate = aggregateMeasures.Aggregate(
                             seed,
-                            (result, current) => result + (current).ToString("0000.0", CultureInfo) +
+                            (result, current) => result + current.ToString("0000.0", CultureInfo) +
                                                  AggregateFile.SeparatorCharacter
                         );
                         await AggregateFile.WriteLineAsync(threshold, "S", aggregate); // 
                     }
                     else
                     {
-                        aggregateValue  = aggregateValue.Any() ? $"{aggregateValue}, {line.LogText}" : line.LogText;
+                        aggregateValue = aggregateValue.Any() ? $"{aggregateValue}, {line.LogText}" : line.LogText;
                     }
 
                     // TODO optionally write to full-log file.
-                    Queue.TryDequeue(out line);
 
                     //await Console.Error.WriteLineAsync($"    Dequeued: {current.Timestamp.ToLocalTime().ToString("O")}");
                     // ReSharper disable once PossibleNullReferenceException
@@ -175,7 +174,6 @@ namespace BoosterPumpLibrary.Logger
                 catch (Exception ex)
                 {
                     Queue.Enqueue(new BufferLine(ex.Message, DateTime.UtcNow));
-                    await Task.Delay(1000);
                 }
             }
             if (!String.IsNullOrEmpty(aggregateValue))
@@ -208,8 +206,6 @@ namespace BoosterPumpLibrary.Logger
             await AggregateFlushAsync(SystemDateTime.UtcNow, true);
         }
 
-
-
         public void AggregateFlush(DateTime window)
         {
             AggregateFlush(window, false);
@@ -224,38 +220,13 @@ namespace BoosterPumpLibrary.Logger
         /// Waits until NextMinute + 2 seconds in order to let other tasks finish before kicking in.
         /// </summary>
         /// <returns></returns>
-        private async Task WaitUntilSecond02InNextMinuteAsync()
+        public async Task WaitUntilSecond02InNextMinuteAsync()
         {
-            var now = DateTime.UtcNow;
+            var now = SystemDateTime.UtcNow;
             var thisMinute = RoundToMinute(now);
             var nextMinute02 = thisMinute.AddSeconds(62);
             var delay = nextMinute02.Subtract(now);
             await Task.Delay(delay);
-        }
-
-        // TODO move our of this class.
-        public async Task AggregateExecuteAsync(CancellationToken cancellationToken)
-        {
-            try
-            {
-                Console.WriteLine("\r\n+BufferedLogWriterAsync.ExecuteAsync");
-                do
-                {
-                    await WaitUntilSecond02InNextMinuteAsync();
-                    await AggregateFlushAsync(DateTime.UtcNow);
-                }
-                while (!cancellationToken.IsCancellationRequested);
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine(ex.ToString());
-            }
-        }
-
-        [ExcludeFromCodeCoverage]
-        public void Add(string row, DateTime timestampUtc)
-        {
-            Queue.Enqueue(new BufferLine(row, timestampUtc));
         }
 
         [ExcludeFromCodeCoverage]

@@ -94,7 +94,7 @@ namespace NCD_API_SerialConverter
                 ReadBlock();
                 ReadRest();
             }
-            catch (TimeoutException exception)
+            catch (TimeoutException)
             {
                 Console.Error.WriteLine("TimeoutException");
                 return ReadResult;
@@ -104,7 +104,7 @@ namespace NCD_API_SerialConverter
             ReadResult.Checksum = Buffer.Last();
 
             // check for error
-            if(ReadResult.IsValid && ReadResult.ByteCount == 4)
+            if (ReadResult.IsValid && ReadResult.ByteCount == 4)
             {
                 if (0xBC == ReadResult.Payload[0])
                 {
@@ -112,9 +112,9 @@ namespace NCD_API_SerialConverter
                     {
                         throw new ApplicationException("Timeout Error, Chip did Not Respond");
                     }
-                    else if (0x5E == ReadResult.Payload[1])
+                    if (0x5E == ReadResult.Payload[1])
                     {
-                         throw new ApplicationException("Timeout Error, Chip did Not Acknowledge");
+                        throw new ApplicationException("Timeout Error, Chip did Not Acknowledge");
                     }
                 }
             }
@@ -123,7 +123,7 @@ namespace NCD_API_SerialConverter
             stopwatch.Stop();
             if (stopwatch.ElapsedMilliseconds > 20)
             {
-                 Console.WriteLine($"{ReadResult.ToString()} - {stopwatch.ElapsedMilliseconds} ms    ");
+                Console.WriteLine($"{ReadResult} - {stopwatch.ElapsedMilliseconds} ms    ");
             }
 
             return ReadResult;

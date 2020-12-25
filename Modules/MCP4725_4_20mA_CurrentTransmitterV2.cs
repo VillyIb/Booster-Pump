@@ -2,6 +2,8 @@
 using BoosterPumpLibrary.Settings;
 using System;
 using System.Collections.Generic;
+// ReSharper disable CommentTypo
+// ReSharper disable StringLiteralTypo
 
 namespace Modules
 {
@@ -9,7 +11,7 @@ namespace Modules
     public class MCP4725_4_20mA_CurrentTransmitterV2 : BoosterPumpLibrary.ModuleBase.BaseModuleV2
     {
         // Product, see: https://store.ncd.io/product/1-channel-4-20ma-current-loop-transmitter-i2c-mini-module/
-        // Datasheet see: https://media.ncd.io/sites/2/20170721135048/MCP4725.pdf
+        // DataSheet see: https://media.ncd.io/sites/2/20170721135048/MCP4725.pdf
 
         public override byte DefaultAddress => 0x60; // optional 0x61
 
@@ -25,16 +27,17 @@ namespace Modules
         /// C0 and C1, 0: or 1: FastMode (not supported), 2: Write to DAC register. 3: Write to DAC register and EEPROM.
         /// See table 6-2
         /// </summary>
-        private  BitSetting WriteToDacOrEeprom => Setting.GetOrCreateSubRegister(2, 5 + 16, "Write to DAC or EEPROM");
+        // ReSharper disable once IdentifierTypo
+        private BitSetting WriteToDacOrEeprom => Setting.GetOrCreateSubRegister(2, 5 + 16, "Write to DAC or EEPROM");
 
         /// <summary>
         /// 12 bit floating point value. (0..4095).
         /// </summary>
-        private  BitSetting Speed => Setting.GetOrCreateSubRegister(12, 4, "Speed");        
+        private BitSetting Speed => Setting.GetOrCreateSubRegister(12, 4, "Speed");
 
         protected override IEnumerable<RegisterBase> Registers => new[] { Setting };
 
-        public override void Init()
+        public virtual void Init()
         {
             SetNormalPower();
             SetSpeedPersistent(0.50f);
@@ -62,6 +65,7 @@ namespace Modules
             WriteToDacOrEeprom.Value = 2;
         }
 
+        // ReSharper disable once IdentifierTypo
         protected void WriteToDacAndEeprom()
         {
             WriteToDacOrEeprom.Value = 3;

@@ -30,8 +30,6 @@ namespace BoosterPumpLibrary.Settings
 
         public string Description { get; protected set; }
 
-        public bool Writeable { get; protected set; }
-
         public RegisterBase ParentRegister { get; set; }
 
         private void CheckRange(ulong value)
@@ -75,7 +73,7 @@ namespace BoosterPumpLibrary.Settings
             var result = new StringBuilder();
             var mask = 1UL << Size + Offset - 1;
 
-            for (int index = 0; index < 64 && mask > 0; index++)
+            for (var index = 0; index < 64 && mask > 0; index++)
             {
                 result.Append((value & mask) > 0 ? "1" : "0");
                 mask = mask >> 1;

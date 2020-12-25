@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Ports;
 using System.Diagnostics.CodeAnalysis;
-using System.Threading;
 using NCD_API_SerialConverter.NcdApiProtocol;
 using Microsoft.Extensions.Options;
 using BoosterPumpConfiguration;

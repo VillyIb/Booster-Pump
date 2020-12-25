@@ -38,7 +38,7 @@ namespace BoosterPumpLibrary.Logger
 
         private StreamWriter Sw { get; set; }
 
-        private string GetFilename(DateTime timestamp, string suffix)
+        private static string GetFilename(DateTime timestamp, string suffix)
         {
             var daylightSaving = timestamp.IsDaylightSavingTime() ? "S" : "N";
             var filename = $"_{suffix}_{timestamp.Day:00}_{timestamp.Hour:00}{daylightSaving}.txt";
@@ -95,6 +95,8 @@ namespace BoosterPumpLibrary.Logger
             Sw.WriteLine(line);
             Sw.Flush();
         }
+
+        // ReSharper disable once InvalidXmlDocComment
 
         /// <summary>
         /// Writes line to file.
@@ -177,32 +179,8 @@ namespace BoosterPumpLibrary.Logger
             }
         }
 
-        protected virtual async Task DisposeAsync(bool disposing)
-        {
-            try
-            {
-                if (disposing)
-                {
-                    // release managed resources
-                    await CloseAsync();
-                }
-                // release unmanaged resources
-
-            }
-            catch (Exception)
-            {
-                // No action
-            }
-            finally
-            {
-                Sw = null;
-                CurrentFilename = null;
-            }
-        }
-
         public void Dispose()
         {
-            //DisposeAsync(true).Wait(); // TODO make switcheable
             Dispose(true);
             GC.SuppressFinalize(this);
 

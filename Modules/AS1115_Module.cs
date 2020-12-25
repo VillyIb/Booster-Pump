@@ -19,7 +19,7 @@ namespace Modules
         private BitSetting Digit0 => Digits.GetOrCreateSubRegister(8, 16, "Digit0");
         private BitSetting Digit1 => Digits.GetOrCreateSubRegister(8, 8, "Digit0");
         private BitSetting Digit2 => Digits.GetOrCreateSubRegister(8, 0, "Digit0");
-               
+
         /// <summary>
         /// Register 0x09..0x0C
         /// </summary>
@@ -101,16 +101,16 @@ namespace Modules
             Setting0X0C,
             Setting0X0E,
 
-            Setting0X09, 
-            Setting0X0A, 
-            Setting0X0B, 
+            Setting0X09,
+            Setting0X0A,
+            Setting0X0B,
 
-            Setting0X10, 
+            Setting0X10,
             Setting0X11,
             Digits
         };
 
-        public override void Init()
+        public virtual void Init()
         {
             SetPrimarySettingsDirty();
             SetShutdownModeNormalResetFeature();
@@ -186,7 +186,7 @@ namespace Modules
         /// <param name="value"></param>
         public void SetDigitsVisible(byte value)
         {
-            ScanLimit.Value = (ulong)(value-1);
+            ScanLimit.Value = (ulong)(value - 1);
         }
 
         public void SetShutdownModeNormalResetFeature()
@@ -224,55 +224,55 @@ namespace Modules
         {
             if (value < -99 || 999 < value)
             {
-                Digit0.Value =0x0B; // 'E'
-                Digit1.Value =0x0B; // 'E'
-                Digit2.Value =0x0B; // 'E'
+                Digit0.Value = 0x0B; // 'E'
+                Digit1.Value = 0x0B; // 'E'
+                Digit2.Value = 0x0B; // 'E'
             }
             // -99 ... -10
             else if (value < -9.95)
             {
-                Digit0.Value =0x0A; // '-'
+                Digit0.Value = 0x0A; // '-'
                 var digit1 = (byte)Math.Abs(value / 10);
                 var digit2 = (byte)Math.Abs(value % 10);
-                Digit1.Value =digit1;
-                Digit2.Value =digit2;
+                Digit1.Value = digit1;
+                Digit2.Value = digit2;
             }
             // -9.9 ... -0.1
             else if (value < -0.095)
             {
-                Digit0.Value =0x0A; // '-'
+                Digit0.Value = 0x0A; // '-'
                 var digit1 = (byte)Math.Abs(value);
                 var digit2 = (byte)Math.Abs(value * 10 % 10);
-                Digit1.Value =(byte)(digit1 | 0b1000_0000);
-                Digit2.Value =digit2;
+                Digit1.Value = (byte)(digit1 | 0b1000_0000);
+                Digit2.Value = digit2;
             }
             // -0.09 ... 0.005 => 0.00
             else if (value < 0.005)
             {
-                Digit0.Value =0x00 | 0b1000_0000;
-                Digit1.Value =0x00;
-                Digit2.Value =0x00;
+                Digit0.Value = 0x00 | 0b1000_0000;
+                Digit1.Value = 0x00;
+                Digit2.Value = 0x00;
             }
             // 0.01 ... 9.99
             else if (value < 10)
             {
-                Digit0.Value =(byte)((byte)value | 0b1000_0000);
-                Digit1.Value =(byte)(value * 10 % 10);
-                Digit2.Value =(byte)(value * 100 % 10);
+                Digit0.Value = (byte)((byte)value | 0b1000_0000);
+                Digit1.Value = (byte)(value * 10 % 10);
+                Digit2.Value = (byte)(value * 100 % 10);
             }
             // 10.0 ... 99.9
             else if (value < 100)
             {
-                Digit0.Value =(byte)((byte)value / 10);
-                Digit1.Value =(byte)((byte)(value % 10) | 0b1000_0000);
-                Digit2.Value =(byte)(value * 10 % 10);
+                Digit0.Value = (byte)((byte)value / 10);
+                Digit1.Value = (byte)((byte)(value % 10) | 0b1000_0000);
+                Digit2.Value = (byte)(value * 10 % 10);
             }
             // 100 ... 999
             else
             {
-                Digit0.Value =(byte)(value / 100);
-                Digit1.Value =(byte)(value / 10 % 10);
-                Digit2.Value =(byte)(value % 10);
+                Digit0.Value = (byte)(value / 100);
+                Digit1.Value = (byte)(value / 10 % 10);
+                Digit2.Value = (byte)(value % 10);
             }
 
             Send();
@@ -284,9 +284,9 @@ namespace Modules
         /// <param name="value"></param>
         public void SetHexValue(byte[] value)
         {
-            Digit0.Value =value[0];
-            Digit1.Value =value[1];
-            Digit2.Value =value[2];
+            Digit0.Value = value[0];
+            Digit1.Value = value[1];
+            Digit2.Value = value[2];
         }
     }
 }

@@ -4,6 +4,7 @@ using BoosterPumpLibrary.Contracts;
 using BoosterPumpLibrary.Settings;
 using System.Collections.Generic;
 using System.Linq;
+// ReSharper disable UnusedMember.Global
 
 namespace BoosterPumpLibrary.ModuleBase
 {
@@ -17,8 +18,6 @@ namespace BoosterPumpLibrary.ModuleBase
         public byte DeviceAddress => DefaultAddress + (AddressIncrement ?? new ByteWrapper(0));
 
         protected ISerialConverter SerialPort { get; }
-
-        public abstract void Init();
 
         protected BaseModuleV2(ISerialConverter serialPort)
         {
@@ -36,7 +35,7 @@ namespace BoosterPumpLibrary.ModuleBase
         public void SetAddressIncrement(int value)
         {
             if (value < 0 | 1 < value) { throw new ArgumentOutOfRangeException(nameof(value), value, "Valid: {0:1}"); }
-            AddressIncrement = value;            
+            AddressIncrement = value;
         }
 
         protected abstract IEnumerable<RegisterBase> Registers

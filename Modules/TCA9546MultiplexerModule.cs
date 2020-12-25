@@ -40,15 +40,11 @@ namespace Modules
         /// Specify one or more channels {0...3} separated by , (comma).
         /// </summary>
         /// <param name="channels"></param>
-        public void SelectOpenChannels(params MultiplexerChannels[] channels) 
+        public void SelectOpenChannels(params MultiplexerChannels[] channels)
         {
-            byte aggregateBitPattern = channels.Aggregate<MultiplexerChannels, byte>(0, (current, channel) => (byte) (current | (byte) channel));
+            var aggregateBitPattern = channels.Aggregate<MultiplexerChannels, byte>(0, (current, channel) => (byte)(current | (byte)channel));
             ChannelSelection.Value = aggregateBitPattern;
             Send();
         }
-
-        public override void Init()
-        { }
-
     }
 }

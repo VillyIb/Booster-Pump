@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace BoosterPumpLibrary.Logger
 {
     public interface IBufferedLogWriter
     {
-        void Add(string row, DateTime timestamp);
-
         void Add(BufferLine payload);
 
 
@@ -15,11 +12,11 @@ namespace BoosterPumpLibrary.Logger
 
         void AggregateFlushUnconditionally();
 
-
-        Task AggregateExecuteAsync(CancellationToken cancellationToken);
+        Task AggregateFlushAsync(DateTime window);
 
         Task AggregateFlushUnconditionalAsync();
 
+        Task WaitUntilSecond02InNextMinuteAsync();
 
         bool IsNextMinute();
     }

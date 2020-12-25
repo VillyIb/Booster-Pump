@@ -56,7 +56,7 @@ namespace ModulesTest
         }
 
         [Fact]
-        public void VefifyMaptToPct()
+        public void VerifyMapToPct()
         {
             Assert.Equal("0.9998", Sut.GetPctValue(4095).ToString("N4"));
             Assert.Equal("0.5000", Sut.GetPctValue(4096 / 2).ToString("N4"));

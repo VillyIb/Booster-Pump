@@ -7,6 +7,7 @@
     {
         public static string Name => "SerialPort";
 
+        // ReSharper disable once UnusedMember.Global
         public string PortName { get; set; }
 
         public int BaudRate { get; set; }
@@ -55,6 +56,7 @@
     {
         public static string Name => "Controller";
 
+        // ReSharper disable once UnusedMember.Global
         public bool Enabled { get; set; }
 
         public float MinSpeedPct { get; set; }
@@ -77,6 +79,7 @@
     {
         public static string Name => "Alarm";
 
+        // ReSharper disable once UnusedMember.Global
         public string MinSystemPressure { get; set; }
     }
 }

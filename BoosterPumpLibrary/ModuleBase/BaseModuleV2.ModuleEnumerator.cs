@@ -65,11 +65,10 @@ namespace BoosterPumpLibrary.ModuleBase
 
             protected void Dispose(bool disposing)
             {
-                if (disposing)
-                {
-                    SelectedRegisters.Clear();
-                    Current = null;
-                }
+                if (!disposing) return;
+
+                SelectedRegisters.Clear();
+                Current = null;
             }
 
             public void Dispose()

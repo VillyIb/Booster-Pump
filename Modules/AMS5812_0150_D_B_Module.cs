@@ -60,10 +60,5 @@ namespace Modules
                 OutputTempMin,
                 2);
         }
-
-        public override void Init()
-        {
-            // No initialization required.
-        }
     }
 }

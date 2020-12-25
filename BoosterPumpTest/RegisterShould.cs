@@ -27,6 +27,7 @@ namespace BoosterPumpTest
         {
             Sut = new Register(0x00, "64 bit register", 8);
 
+            // ReSharper disable once StringLiteralTypo
             AlfaSetting = Sut.GetOrCreateSubRegister(1, 7, "Alfa"); // 0
             BravoSetting = Sut.GetOrCreateSubRegister(2, 6, "Bravo"); // 1..2
             CharlieSetting = Sut.GetOrCreateSubRegister(3, 5, "Charlie"); // 3..5

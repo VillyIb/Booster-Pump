@@ -59,7 +59,7 @@ namespace Modules
         public LPS25HB_BarometerModule(ISerialConverter serialPort) : base(serialPort)
         { }
 
-        public override void Init()
+        public virtual void Init()
         {
             PowerDown.Value = 1;
             OutputDataRate.Value = 1;
