@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Linq;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.DependencyInjection;
-using BoosterPumpConfiguration;
-using BoosterPumpLibrary.Logger;
 
-using Modules;
-using System.Diagnostics.CodeAnalysis;
-using BoosterPumpLibrary.Contracts;
-using eu.iamia.Util;
 using NCD_API_SerialConverter;
 using NCD_API_SerialConverter.NcdApiProtocol.SerialConverterCommands;
+using Modules;
+using eu.iamia.Util;
+using BoosterPumpLibrary.Logger;
+using BoosterPumpLibrary.Contracts;
+using BoosterPumpConfiguration;
 
 namespace BoosterPumpApplication
 {

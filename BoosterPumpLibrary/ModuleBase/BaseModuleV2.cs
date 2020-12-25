@@ -1,9 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using BoosterPumpLibrary.Commands;
 using BoosterPumpLibrary.Contracts;
 using BoosterPumpLibrary.Settings;
-using System.Collections.Generic;
-using System.Linq;
 // ReSharper disable UnusedMember.Global
 
 namespace BoosterPumpLibrary.ModuleBase

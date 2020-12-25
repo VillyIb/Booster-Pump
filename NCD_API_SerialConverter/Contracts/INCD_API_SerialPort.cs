@@ -1,5 +1,5 @@
-﻿using NCD_API_SerialConverter.NcdApiProtocol;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using NCD_API_SerialConverter.NcdApiProtocol;
 
 namespace NCD_API_SerialConverter.Contracts
 {
