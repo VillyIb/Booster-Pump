@@ -15,7 +15,7 @@ namespace NCD_API_SerialConverter
 
         public SerialConverter(INcdApiSerialPort serialPort)
         {
-            this.SerialPort = serialPort;
+            SerialPort = serialPort;
         }
 
         protected IDataFromDevice Execute(IEnumerable<byte> data)

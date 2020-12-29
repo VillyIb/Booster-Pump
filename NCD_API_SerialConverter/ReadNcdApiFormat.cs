@@ -7,7 +7,7 @@ using NCD_API_SerialConverter.NcdApiProtocol;
 
 namespace NCD_API_SerialConverter
 {
-    public class ReadNcdApiFormat
+    public class ReadNcdApiFormat : IReadNcdApiFormat
     {
         /// <summary>
         /// All values read from the Serial Port.

@@ -11,6 +11,7 @@ namespace BoosterPumpLibrary.ModuleBase
     public abstract partial class BaseModuleV2
     {
         public Guid Id { get; }
+
         public abstract byte DefaultAddress { get; }
 
         public ByteWrapper AddressIncrement { get; protected set; }
@@ -24,6 +25,7 @@ namespace BoosterPumpLibrary.ModuleBase
             SerialPort = serialPort;
             AddressIncrement = null;
             Id = Guid.NewGuid();
+            Console.WriteLine($"{this.GetType().Name}: {Id}");
         }
 
         // TODO NOT generic - valid value range is independent for each module.
