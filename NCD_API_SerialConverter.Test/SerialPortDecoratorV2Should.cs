@@ -20,6 +20,7 @@ namespace NCD_API_SerialConverter.Test
             Sut = new SerialPortDecoratorV2(Settings);
         }
 
+        [NCrunch.Framework.ExclusivelyUses("SerialPort")]
         [Fact]
         public void ScanCommand()
         {
@@ -29,11 +30,16 @@ namespace NCD_API_SerialConverter.Test
             var scanCommand = new byte[] { 0xAA, 0x02, 0xC1, 0x00, 0x6D };
 
             Sut.Write(scanCommand);
+            Sut.Write(scanCommand);
+            Sut.Write(scanCommand);
 
             var result1 = Sut.Read();
             var result2 = Sut.Read();
+            var result3 = Sut.Read();
+            //var result4 = Sut.Read();
         }
 
+        [NCrunch.Framework.ExclusivelyUses("SerialPort")]
         [Fact]
         public void Test2Way()
         {
@@ -43,9 +49,12 @@ namespace NCD_API_SerialConverter.Test
             var scanCommand = new byte[] { 0xAA, 0x02, 0xFE, 0x21, 0xCB };
 
             Sut.Write(scanCommand);
+            Sut.Write(scanCommand);
+            Sut.Write(scanCommand);
 
             var result1 = Sut.Read();
             var result2 = Sut.Read();
+            var result3 = Sut.Read();
         }
     }
 }

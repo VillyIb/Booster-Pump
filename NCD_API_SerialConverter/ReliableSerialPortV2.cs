@@ -24,6 +24,8 @@ namespace NCD_API_SerialConverter
             ContinuousRead();
         }
 
+        public event EventHandler<DataReceivedArgs> DataReceived;
+
         public virtual void OnDataReceived(byte[] data)
         {
             var handler = DataReceived;
@@ -35,10 +37,11 @@ namespace NCD_API_SerialConverter
 
         private void ContinuousRead()
         {
-            byte[] buffer = new byte[4096];
+            const int buffersize = 4096;
+            byte[] buffer = new byte[buffersize];
 
             void KickoffRead() =>
-                BaseStream.BeginRead(buffer, 0, buffer.Length, delegate(IAsyncResult ar)
+                BaseStream.BeginRead(buffer, 0, buffersize, delegate(IAsyncResult ar)
                 {
                     int count = base.BaseStream.EndRead(ar);
                     byte[] dst = new byte[count];
@@ -49,8 +52,6 @@ namespace NCD_API_SerialConverter
 
             KickoffRead();
         }
-
-        public event EventHandler<DataReceivedArgs> DataReceived;
 
     }
 

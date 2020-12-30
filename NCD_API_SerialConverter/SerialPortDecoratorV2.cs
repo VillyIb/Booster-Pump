@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO.Ports;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using BoosterPumpConfiguration;
 using Microsoft.Extensions.Options;
 using NCD_API_SerialConverter.Contracts;
@@ -49,6 +51,8 @@ namespace NCD_API_SerialConverter
         }
 
         private List<byte> Payload;
+
+        readonly AutoResetEvent ResultReady = new AutoResetEvent(false);
 
         public void Open()
         {
@@ -110,7 +114,8 @@ namespace NCD_API_SerialConverter
                                 State = NcdState.Overflow;
                                 Queue.Enqueue(DataFromDevice);
                                 DataFromDevice = null;
-                                autoEvent.Set();
+                                ResultReady.Set();
+                                Console.WriteLine("-- Finished reading");
                                 break;
                             }
                         case NcdState.Overflow:
@@ -118,48 +123,62 @@ namespace NCD_API_SerialConverter
                         default:
                             break;
                     }
-
-                    //Queue.Enqueue(current);
                 }
-
-
             };
         }
 
         private DataFromDevice DataFromDevice { get; set; }
 
+        private void ClearInputAndQueue()
+        {
+            Console.WriteLine($"\nState: {State:G}");
+            if (NcdState.Overflow != State && NcdState.Undefined != State)
+            {
+                // reading in progress
+                //Console.WriteLine("waiting for reading to finish.");
+                var stopwatch = new Stopwatch();
+                stopwatch.Start();
+                var result = ResultReady.WaitOne(1000) ? "Finished reading" : "Timeout";
+                stopwatch.Stop();
+                Console.WriteLine($"Reading intput '{result}' duration: {stopwatch.ElapsedTicks} ticks");
+            }
 
-
+            State = NcdState.Undefined;
+            DataFromDevice = null;
+            //Queue.Clear();
+        }
 
         public void Write(IEnumerable<byte> byteSequence)
         {
-            DataFromDevice = null;
-
+            ClearInputAndQueue();
+            var stopwatch = new Stopwatch();
             var output = byteSequence.ToArray();
-
+            stopwatch.Start();
             SerialPortSelected.Write(output, 0, output.Length);
+            var received2 = ResultReady.WaitOne(1000) ? $"Finished reading in {stopwatch.ElapsedTicks} ticks" : "timeout";
+            stopwatch.Stop();
+            Console.WriteLine($"{received2}: waited: {stopwatch.ElapsedMilliseconds} ms");
+            //Thread.Sleep(50);
         }
 
-        AutoResetEvent autoEvent = new AutoResetEvent(false);
 
         private NcdState State;
 
         private bool WaitForResponseToBeReady()
         {
-           var responseReady =  autoEvent.WaitOne(5000);
-           return responseReady;
+            var responseReady = ResultReady.WaitOne(5000);
+            return responseReady;
         }
 
         public DataFromDevice Read()
         {
-            if (WaitForResponseToBeReady())
+            do
             {
-                DataFromDevice current;
-                if (Queue.TryDequeue(out current))
+                if (Queue.TryDequeue(out var current))
                 {
                     return current;
                 }
-            }
+            } while (WaitForResponseToBeReady());
 
             return null;
         }
