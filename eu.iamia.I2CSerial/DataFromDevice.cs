@@ -1,35 +1,40 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Text;
+using eu.iamia.I2CContract;
 
-namespace NCD_API_SerialConverter.NcdApiProtocol
+namespace eu.iamia.I2CSerial
 {
-    using BoosterPumpLibrary.Contracts;
-    using System.Collections.Generic;
-    using System.Text;
-
     /// <summary>
     /// Data returned from device.
     /// </summary>
     public class DataFromDevice : IDataFromDevice
     {
-        public byte Header { get; set; }
+        public byte Header { get;  }
 
-        public byte ByteCount { get; set; }
+        public byte ByteCount { get;  }
 
-        public byte[] Payload { get; set; }
+        public ReadOnlyCollection<byte> Payload { get; }
 
         public bool IsValid => CheckConsistency;
 
-        public byte Checksum { get; set; }
+        public byte Checksum { get;  }
 
-        public ReadOnlyCollection<byte> PayloadAsReadonly => Array.AsReadOnly(Payload);
+        public DataFromDevice(byte header, byte byteCount, ReadOnlyCollection<byte> payload, byte checksum)
+        {
+            Header = header;
+            ByteCount = byteCount;
+            Payload = payload;
+            Checksum = checksum;
+        }
 
         public byte CalculatedChecksum
         {
             get
             {
-                if (ByteCount != Payload.Length)
+                if (ByteCount != Payload.Count)
                 {
                     return byte.MinValue;
                 }
@@ -45,7 +50,7 @@ namespace NCD_API_SerialConverter.NcdApiProtocol
             get
             {
                 if (null == Payload) { return false; }
-                if (ByteCount != Payload.Length) { return false; }
+                if (ByteCount != Payload.Count) { return false; }
                 return CalculatedChecksum == Checksum;
             }
         }

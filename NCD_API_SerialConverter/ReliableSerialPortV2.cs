@@ -28,31 +28,51 @@ namespace NCD_API_SerialConverter
 
         public virtual void OnDataReceived(byte[] data)
         {
-            var handler = DataReceived;
-            if (handler != null)
-            {
-                handler(this, new DataReceivedArgs { Data = data });
-            }
+            DataReceived?.Invoke(this, new DataReceivedArgs { Data = data });
         }
+
+        private const int BufferSize = 128;
+        private readonly byte[] Buffer = new byte[BufferSize];
+
+        private void KickoffRead() =>
+            BaseStream.BeginRead(
+                Buffer,
+                0,
+                BufferSize,
+                delegate (IAsyncResult ar)
+                {
+                    try
+                    {
+                        var count = base.BaseStream.EndRead(ar); // InvalidOperationException if port is closed.
+                        var dst = new byte[count];
+                        System.Buffer.BlockCopy(Buffer, 0, dst, 0, count);
+                        OnDataReceived(dst);
+                        KickoffRead(); // loop after finished reading - pushing to stack?
+                    }
+                    catch (InvalidOperationException ex)
+                    {
+                        var msg = ex.Message;
+                    }
+                },
+                null
+            );
+
+    
 
         private void ContinuousRead()
         {
-            const int buffersize = 4096;
-            byte[] buffer = new byte[buffersize];
-
-            void KickoffRead() =>
-                BaseStream.BeginRead(buffer, 0, buffersize, delegate(IAsyncResult ar)
-                {
-                    int count = base.BaseStream.EndRead(ar);
-                    byte[] dst = new byte[count];
-                    Buffer.BlockCopy(buffer, 0, dst, 0, count);
-                    OnDataReceived(dst);
-                    KickoffRead();
-                }, null);
-
             KickoffRead();
         }
 
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                // dispose managed state
+                DataReceived = null;
+            }
+            base.Dispose(disposing);
+        }
     }
 
     public class DataReceivedArgs : EventArgs

@@ -5,7 +5,6 @@ using System.Diagnostics;
 using System.IO.Ports;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 using BoosterPumpConfiguration;
 using Microsoft.Extensions.Options;
 using NCD_API_SerialConverter.Contracts;
@@ -48,11 +47,15 @@ namespace NCD_API_SerialConverter
             SerialPortSettings = settings;
             ReadUtil = new ReadNcdApiFormatV2(ReadByte, ReadBlock);
             Queue = new ConcurrentQueue<DataFromDevice>();
+            FreeBuffers = new Queue<DataFromDevice>(10);
         }
 
         private List<byte> Payload;
 
         readonly AutoResetEvent ResultReady = new AutoResetEvent(false);
+
+        private Queue<DataFromDevice> FreeBuffers { get; set; }
+
 
         public void Open()
         {
@@ -67,14 +70,27 @@ namespace NCD_API_SerialConverter
             };
             SerialPortSelected.Open();
 
+            DataFromDevice = new DataFromDevice();
+
             SerialPortSelected.DataReceived += (sender, args) =>
             {
-
                 foreach (var current in args.Data)
                 {
                     if (DataFromDevice is null)
                     {
-                        DataFromDevice = new DataFromDevice();
+                        if (FreeBuffers.Count > 0)
+                        {
+                            DataFromDevice = FreeBuffers.Dequeue();
+                        }
+
+                        if (DataFromDevice is null)
+                        {
+                            DataFromDevice = new DataFromDevice();
+                        }
+                    }
+
+                    if (DataFromDevice.Header == 0)
+                    {
                         State = NcdState.ExpectHeader;
                     }
 
@@ -82,6 +98,7 @@ namespace NCD_API_SerialConverter
                     {
                         case NcdState.Undefined:
                             break;
+
                         case NcdState.ExpectHeader:
                             {
                                 if (0xAA == current)
@@ -91,6 +108,7 @@ namespace NCD_API_SerialConverter
                                 }
                                 break;
                             }
+
                         case NcdState.ExpectLength:
                             {
                                 DataFromDevice.ByteCount = current;
@@ -98,6 +116,7 @@ namespace NCD_API_SerialConverter
                                 State = NcdState.ExpectPayload;
                                 break;
                             }
+
                         case NcdState.ExpectPayload:
                             {
                                 Payload.Add(current);
@@ -108,6 +127,7 @@ namespace NCD_API_SerialConverter
                                 }
                                 break;
                             }
+
                         case NcdState.ExpectChecksum:
                             {
                                 DataFromDevice.Checksum = current;
@@ -115,11 +135,13 @@ namespace NCD_API_SerialConverter
                                 Queue.Enqueue(DataFromDevice);
                                 DataFromDevice = null;
                                 ResultReady.Set();
-                                Console.WriteLine("-- Finished reading");
+                                //Console.WriteLine("-- Finished reading");
                                 break;
                             }
+
                         case NcdState.Overflow:
                             break;
+
                         default:
                             break;
                     }
@@ -131,7 +153,7 @@ namespace NCD_API_SerialConverter
 
         private void ClearInputAndQueue()
         {
-            Console.WriteLine($"\nState: {State:G}");
+            //Console.WriteLine($"\nState: {State:G}");
             if (NcdState.Overflow != State && NcdState.Undefined != State)
             {
                 // reading in progress
@@ -140,7 +162,7 @@ namespace NCD_API_SerialConverter
                 stopwatch.Start();
                 var result = ResultReady.WaitOne(1000) ? "Finished reading" : "Timeout";
                 stopwatch.Stop();
-                Console.WriteLine($"Reading intput '{result}' duration: {stopwatch.ElapsedTicks} ticks");
+                //Console.WriteLine($"Reading intput '{result}' duration: {stopwatch.ElapsedTicks} ticks");
             }
 
             State = NcdState.Undefined;
@@ -157,10 +179,9 @@ namespace NCD_API_SerialConverter
             SerialPortSelected.Write(output, 0, output.Length);
             var received2 = ResultReady.WaitOne(1000) ? $"Finished reading in {stopwatch.ElapsedTicks} ticks" : "timeout";
             stopwatch.Stop();
-            Console.WriteLine($"{received2}: waited: {stopwatch.ElapsedMilliseconds} ms");
+            //Console.WriteLine($"{received2}: waited: {stopwatch.ElapsedMilliseconds} ms");
             //Thread.Sleep(50);
         }
-
 
         private NcdState State;
 
@@ -185,7 +206,8 @@ namespace NCD_API_SerialConverter
 
         public void Dispose()
         {
-            throw new NotImplementedException();
+            SerialPortSelected.Close();
+            SerialPortSelected = null;
         }
     }
 

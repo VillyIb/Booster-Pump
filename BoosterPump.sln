@@ -27,9 +27,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BoosterPumpApplication", "B
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BoosterPumpApplication1", "BoosterPumpApplication1\BoosterPumpApplication1.csproj", "{06329D8D-5C59-4D7D-8C96-48B51209CAB7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eu.iamia.Util", "eu.iamia.Util\eu.iamia.Util.csproj", "{2DE4BB7A-B5E7-472B-A6F7-F69CB1D52C11}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eu.iamia.Util", "eu.iamia.Util\eu.iamia.Util.csproj", "{2DE4BB7A-B5E7-472B-A6F7-F69CB1D52C11}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eu.iamia.Util.Test", "eu.iamia.Util.Test\eu.iamia.Util.Test.csproj", "{56DBE9C5-3624-462E-A07A-DF6EE71AFA53}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eu.iamia.Util.Test", "eu.iamia.Util.Test\eu.iamia.Util.Test.csproj", "{56DBE9C5-3624-462E-A07A-DF6EE71AFA53}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestSerialConverterForMemoryLeak", "TestSerialConverterForMemoryLeak\TestSerialConverterForMemoryLeak.csproj", "{A2545E46-1EF7-4F61-87E7-D7F924D618AE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eu.iamia.I2CSerial", "eu.iamia.I2CSerial\eu.iamia.I2CSerial.csproj", "{66956B00-76B2-4A2B-B941-E075796023CB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eu.iamia.I2CContract", "eu.iamia.I2CContract\eu.iamia.I2CContract.csproj", "{07D4B3EE-5E4C-4F7F-AF3E-14D407DF0C71}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -93,6 +99,18 @@ Global
 		{56DBE9C5-3624-462E-A07A-DF6EE71AFA53}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{56DBE9C5-3624-462E-A07A-DF6EE71AFA53}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{56DBE9C5-3624-462E-A07A-DF6EE71AFA53}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A2545E46-1EF7-4F61-87E7-D7F924D618AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A2545E46-1EF7-4F61-87E7-D7F924D618AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A2545E46-1EF7-4F61-87E7-D7F924D618AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A2545E46-1EF7-4F61-87E7-D7F924D618AE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{66956B00-76B2-4A2B-B941-E075796023CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{66956B00-76B2-4A2B-B941-E075796023CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{66956B00-76B2-4A2B-B941-E075796023CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{66956B00-76B2-4A2B-B941-E075796023CB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{07D4B3EE-5E4C-4F7F-AF3E-14D407DF0C71}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{07D4B3EE-5E4C-4F7F-AF3E-14D407DF0C71}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{07D4B3EE-5E4C-4F7F-AF3E-14D407DF0C71}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{07D4B3EE-5E4C-4F7F-AF3E-14D407DF0C71}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

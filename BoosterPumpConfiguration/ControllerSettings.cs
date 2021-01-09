@@ -1,9 +1,11 @@
-﻿namespace BoosterPumpConfiguration
+﻿using eu.iamia.I2CSerial;
+
+namespace BoosterPumpConfiguration
 {
     /// <summary>
     /// Only read at startup
     /// </summary>
-    public class SerialPortSettings
+    public class SerialPortSettings : ISerialPortSettings
     {
         public static string Name => "SerialPort";
 
