@@ -8,7 +8,7 @@ namespace eu.iamia.I2CSerial
     {
         public byte Header => 0xAA;
 
-        ReadOnlyCollection<byte> Payload { get; }
+        private ReadOnlyCollection<byte> Payload { get; }
 
         public byte ByteCount => (byte)Payload.Count;
 

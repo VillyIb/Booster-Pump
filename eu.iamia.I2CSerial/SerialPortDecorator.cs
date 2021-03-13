@@ -2,16 +2,17 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO.Ports;
-using eu.iamia.I2CContract;
+using System.Linq;
 using Microsoft.Extensions.Options;
 
 namespace eu.iamia.I2CSerial
 {
-    [ExcludeFromCodeCoverage]
+    ////[ExcludeFromCodeCoverage] // Requires real hardware to test.
     public sealed class SerialPortDecorator : IDisposable, ISerialPortDecorator
     {
         private ISerialPortSettings SerialPortSettings { get; }
 
+        [ExcludeFromCodeCoverage]
         public SerialPortDecorator(IOptions<ISerialPortSettings> settings)
         {
             SerialPortSettings = settings.Value;
@@ -49,7 +50,7 @@ namespace eu.iamia.I2CSerial
                        try
                        {
                            var count = SerialPort.BaseStream.EndRead(ar); // InvalidOperationException if port is closed.
-                            var dst = new byte[count];
+                           var dst = new byte[count];
                            Buffer.BlockCopy(reusedBuffer, 0, dst, 0, count);
                            OnDataReceived(dst);
                            ReadUntilClosed(); // loop...
@@ -74,32 +75,39 @@ namespace eu.iamia.I2CSerial
 
         public void Open()
         {
+            var connectedPorts = SerialPort.GetPortNames();
+            if (!connectedPorts.Any(t =>
+                t.Equals(SerialPortSettings.PortName, StringComparison.InvariantCultureIgnoreCase)))
+            {
+                throw new ApplicationException($"Expected port '{SerialPortSettings.PortName}' not found");
+            }
+            
             SerialPort?.Close();
-
+            
             SerialPort = new SerialPort(SerialPortSettings.PortName, SerialPortSettings.BaudRate)
             {
                 ReadTimeout = SerialPortSettings.Timeout,
                 WriteTimeout = SerialPortSettings.Timeout
             };
 
+            SerialPort.Open();
+
             ReadContinuously();
         }
 
+        public void Write(IEnumerable<byte> byteSequence)
+        {
+            var output = byteSequence.ToArray();
+            SerialPort.Write(output, 0, output.Length);
+        }
+
+        [ExcludeFromCodeCoverage]
         public void Dispose()
         {
             Close();
         }
-
-        private Queue<IDataFromDevice> FreeBuffers { get; set; }
-
-
-        public void WriteLine(IEnumerable<byte> byteSequence)
-        {
-            
-        }
     }
 
-    [ExcludeFromCodeCoverage]
     public class DataReceivedArgs : EventArgs
     {
         public byte[] Data { get; set; }

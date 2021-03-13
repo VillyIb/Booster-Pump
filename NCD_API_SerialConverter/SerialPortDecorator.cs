@@ -12,6 +12,7 @@ using BoosterPumpConfiguration;
 
 namespace NCD_API_SerialConverter
 {
+    [Obsolete("Uses direct SerialPort operations")]
     [ExcludeFromCodeCoverage]
     public class SerialPortDecorator : INcdApiSerialPort, IDisposable
     {

@@ -3,6 +3,8 @@ using Xunit;
 
 namespace NCD_API_SerialConverter.Test
 {
+    using NCD_API_SerialConverter;
+
     public class SerialPortDecoratorV2Should
     {
         private SerialPortDecoratorV2 Sut;

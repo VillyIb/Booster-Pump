@@ -3,6 +3,7 @@ using System.IO.Ports;
 
 namespace NCD_API_SerialConverter
 {
+    [Obsolete("Use eu.iamia.I2CSerial.SerialPortDecorator", false)]
     public class ReliableSerialPortV2 : SerialPort
     {
         public ReliableSerialPortV2(string portName, int baudRate)

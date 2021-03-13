@@ -1,5 +1,8 @@
 ﻿namespace eu.iamia.I2CSerial
 {
+    /// <summary>
+    /// Values: {Undefined|ExpectHeader|ExpectLength|ExpectPayload|ExpectChecksum|Overflow}
+    /// </summary>
     public enum NcdState
     {
         Undefined = 0,

@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO.Ports;
 using System.Linq;
 using System.Threading;
+using System.Xml.Serialization;
 using BoosterPumpConfiguration;
 using Microsoft.Extensions.Options;
 using NCD_API_SerialConverter.Contracts;
@@ -60,11 +61,14 @@ namespace NCD_API_SerialConverter
         public void Open()
         {
             var ports = SerialPort.GetPortNames().ToList();
-            var port = ports.Last();
-            Console.WriteLine($"Serial port: {port}, Speed: {SerialPortSettings.BaudRate} bps, Timeout: {SerialPortSettings.Timeout} ms");
+            if(!ports.Any(t => t.Equals(SerialPortSettings.Name, StringComparison.InvariantCultureIgnoreCase)))
+            {
+                throw new ApplicationException($"The specified port {SerialPortSettings.Name} doesn't exist");
+            }
+
             if (null != SerialPortSelected && SerialPortSelected.IsOpen) { SerialPortSelected.Close(); }
 
-            SerialPortSelected = new ReliableSerialPortV2(port, SerialPortSettings.BaudRate)
+            SerialPortSelected = new ReliableSerialPortV2(SerialPortSettings.Name, SerialPortSettings.BaudRate)
             {
                 ReadTimeout = SerialPortSettings.Timeout
             };
