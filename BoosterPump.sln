@@ -33,11 +33,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eu.iamia.Util.Test", "eu.ia
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestSerialConverterForMemoryLeak", "TestSerialConverterForMemoryLeak\TestSerialConverterForMemoryLeak.csproj", "{A2545E46-1EF7-4F61-87E7-D7F924D618AE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eu.iamia.I2CSerial", "eu.iamia.I2CSerial\eu.iamia.I2CSerial.csproj", "{66956B00-76B2-4A2B-B941-E075796023CB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eu.iamia.NCDAPI", "eu.iamia.I2CSerial\eu.iamia.NCDAPI.csproj", "{66956B00-76B2-4A2B-B941-E075796023CB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eu.iamia.I2CContract", "eu.iamia.I2CContract\eu.iamia.I2CContract.csproj", "{07D4B3EE-5E4C-4F7F-AF3E-14D407DF0C71}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eu.iamia.NCDAPI.Contract", "eu.iamia.I2CContract\eu.iamia.NCDAPI.Contract.csproj", "{07D4B3EE-5E4C-4F7F-AF3E-14D407DF0C71}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eu.iamia.I2CSerial.SystemTest", "eu.iamia.I2CSerial.SystemTest\eu.iamia.I2CSerial.SystemTest.csproj", "{44616F2D-64D1-4884-B22D-4FE5534117B0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eu.iamia.ReliableSerialPort.SystemTest", "eu.iamia.I2CSerial.SystemTest\eu.iamia.ReliableSerialPort.SystemTest.csproj", "{44616F2D-64D1-4884-B22D-4FE5534117B0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eu.iamia.ReliableSerialPort", "eu.iamia.ReliableSerialPort\eu.iamia.ReliableSerialPort.csproj", "{87A10960-8ADF-4E44-A8FE-BC3856E3EBDC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eu.iamia.NCDAPI.Test", "eu.iamia.NCDAPI.Test\eu.iamia.NCDAPI.Test.csproj", "{6D13C201-076F-46BC-BA75-47A5BB032659}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -117,6 +121,14 @@ Global
 		{44616F2D-64D1-4884-B22D-4FE5534117B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{44616F2D-64D1-4884-B22D-4FE5534117B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{44616F2D-64D1-4884-B22D-4FE5534117B0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{87A10960-8ADF-4E44-A8FE-BC3856E3EBDC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{87A10960-8ADF-4E44-A8FE-BC3856E3EBDC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{87A10960-8ADF-4E44-A8FE-BC3856E3EBDC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{87A10960-8ADF-4E44-A8FE-BC3856E3EBDC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6D13C201-076F-46BC-BA75-47A5BB032659}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D13C201-076F-46BC-BA75-47A5BB032659}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6D13C201-076F-46BC-BA75-47A5BB032659}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D13C201-076F-46BC-BA75-47A5BB032659}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

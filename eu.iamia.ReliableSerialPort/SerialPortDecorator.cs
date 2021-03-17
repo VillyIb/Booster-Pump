@@ -5,10 +5,10 @@ using System.IO.Ports;
 using System.Linq;
 using Microsoft.Extensions.Options;
 
-namespace eu.iamia.I2CSerial
+namespace eu.iamia.ReliableSerialPort
 {
-    ////[ExcludeFromCodeCoverage] // Requires real hardware to test.
-    public sealed class SerialPortDecorator : IDisposable, ISerialPortDecorator
+    // Requires real hardware to test.
+    public sealed class SerialPortDecorator : ISerialPortDecorator
     {
         private ISerialPortSettings SerialPortSettings { get; }
 
@@ -63,7 +63,7 @@ namespace eu.iamia.I2CSerial
                    null
                );
 
-            ReadUntilClosed();
+            ReadUntilClosed(); // One-time Read...
         }
 
         public void Close()
@@ -81,9 +81,9 @@ namespace eu.iamia.I2CSerial
             {
                 throw new ApplicationException($"Expected port '{SerialPortSettings.PortName}' not found");
             }
-            
+
             SerialPort?.Close();
-            
+
             SerialPort = new SerialPort(SerialPortSettings.PortName, SerialPortSettings.BaudRate)
             {
                 ReadTimeout = SerialPortSettings.Timeout,
@@ -101,7 +101,6 @@ namespace eu.iamia.I2CSerial
             SerialPort.Write(output, 0, output.Length);
         }
 
-        [ExcludeFromCodeCoverage]
         public void Dispose()
         {
             Close();

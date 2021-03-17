@@ -1,27 +1,33 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using eu.iamia.NCDAPI.Contract;
 
-namespace eu.iamia.I2CSerial
+namespace eu.iamia.NCDAPI
 {
-    public class NcdFrame
+    public class DataToDevice : IDataToDevice
     {
         public byte Header => 0xAA;
 
-        private ReadOnlyCollection<byte> Payload { get; }
-
         public byte ByteCount => (byte)Payload.Count;
 
+        public ReadOnlyCollection<byte> Payload { get; }
+        
         public byte Checksum => (byte)(Payload.Aggregate(Header + ByteCount, (result, current) => result + current) & 0xff);
 
-        public NcdFrame(IEnumerable<byte> payload)
+        public DataToDevice(IEnumerable<byte> payload)
         {
             Payload = payload.ToList().AsReadOnly();
         }
 
+        /// <summary>
+        /// Header, ByteCount, Payload[], Checksum.
+        /// </summary>
+        /// <returns></returns>
         public IEnumerable<byte> BytesToTransmit()
         {
              yield return Header;
+             yield return ByteCount;
              if (null != Payload)
              {
                  foreach (var current in Payload)

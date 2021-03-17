@@ -5,14 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Configuration" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Options" Version="5.0.0" />
     <PackageReference Include="System.IO.Ports" Version="5.0.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\eu.iamia.I2CContract\eu.iamia.I2CContract.csproj" />
-    <ProjectReference Include="..\eu.iamia.Util\eu.iamia.Util.csproj" />
   </ItemGroup>
 
 </Project>

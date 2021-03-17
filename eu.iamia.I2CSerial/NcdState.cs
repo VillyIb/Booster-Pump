@@ -1,4 +1,4 @@
-﻿namespace eu.iamia.I2CSerial
+﻿namespace eu.iamia.NCDAPI
 {
     /// <summary>
     /// Values: {Undefined|ExpectHeader|ExpectLength|ExpectPayload|ExpectChecksum|Overflow}

@@ -1,7 +1,5 @@
-﻿using eu.iamia.I2CSerial;
-using System;
+﻿using eu.iamia.ReliableSerialPort;
 using Microsoft.Extensions.Configuration;
-
 
 namespace BoosterPumpConfiguration
 {

@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
-using eu.iamia.I2CContract;
+using eu.iamia.NCDAPI.Contract;
 
-namespace eu.iamia.I2CSerial
+namespace eu.iamia.NCDAPI
 {
     /// <summary>
     /// Data returned from device.
@@ -28,6 +27,14 @@ namespace eu.iamia.I2CSerial
             ByteCount = byteCount;
             Payload = payload;
             Checksum = checksum;
+        }
+
+        public DataFromDevice(IEnumerable<byte> payload)
+        {
+            Header = 0xAA;
+            Payload = new ReadOnlyCollection<byte>(payload.ToList());
+            ByteCount = (byte)Payload.Count;
+            Checksum = CalculatedChecksum;
         }
 
         public byte CalculatedChecksum

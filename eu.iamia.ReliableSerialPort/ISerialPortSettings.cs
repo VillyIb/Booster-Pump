@@ -1,4 +1,4 @@
-﻿namespace eu.iamia.I2CSerial
+﻿namespace eu.iamia.ReliableSerialPort
 {
     public interface ISerialPortSettings
     {

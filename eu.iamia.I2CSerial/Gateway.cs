@@ -1,18 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
-using eu.iamia.I2CContract;
+using eu.iamia.NCDAPI.Contract;
+using eu.iamia.ReliableSerialPort;
 using eu.iamia.Util;
 
-namespace eu.iamia.I2CSerial
+namespace eu.iamia.NCDAPI
 {
-    public class X : I2CCommunication
+    public class Gateway : IGateway, IDisposable
     {
         private static TimeSpan ReadTimeout => TimeSpan.FromSeconds(5);
 
         private ISerialPortDecorator SerialPort { get; }
 
-        public X(ISerialPortDecorator serialPort)
+        public Gateway(ISerialPortDecorator serialPort)
         {
             SerialPort = serialPort;
         }
@@ -35,9 +37,6 @@ namespace eu.iamia.I2CSerial
             {
                 switch (State)
                 {
-                    case NcdState.Undefined:
-                        break;
-
                     case NcdState.ExpectHeader:
                         {
                             if (Header == current)
@@ -114,7 +113,7 @@ namespace eu.iamia.I2CSerial
             {
                 Init();
 
-                var ncdFrame = new NcdFrame(command.Payload);
+                var ncdFrame = new DataToDevice(command.Payload);
                 SerialPort.Write(ncdFrame.BytesToTransmit());
 
                 return WaitForResultToBeReady()
@@ -125,6 +124,12 @@ namespace eu.iamia.I2CSerial
             {
                 Console.WriteLine($"Execute took: {timer.Stop()} ms");
             }
+        }
+
+        public void Dispose()
+        {
+            SerialPort?.Dispose();
+            ResultReady?.Dispose();
         }
     }
 

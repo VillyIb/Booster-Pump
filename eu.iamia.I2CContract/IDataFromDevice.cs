@@ -2,8 +2,11 @@
 
 using System.Collections.ObjectModel;
 
-namespace eu.iamia.I2CContract
+namespace eu.iamia.NCDAPI.Contract
 {
+    /// <summary>
+    /// Raw I2C Command Response.
+    /// </summary>
     public interface IDataFromDevice
     {
         /// <summary>

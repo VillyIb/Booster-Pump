@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -6,11 +6,14 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="5.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="5.0.0" />
+    <PackageReference Include="System.IO.Ports" Version="5.0.1" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\eu.iamia.I2CContract\eu.iamia.NCDAPI.Contract.csproj" />
     <ProjectReference Include="..\eu.iamia.ReliableSerialPort\eu.iamia.ReliableSerialPort.csproj" />
+    <ProjectReference Include="..\eu.iamia.Util\eu.iamia.Util.csproj" />
   </ItemGroup>
 
 </Project>
