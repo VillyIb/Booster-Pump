@@ -7,17 +7,17 @@ namespace NCD_API_SerialConverter.NcdApiProtocol
     using BoosterPumpLibrary.Commands;
     using Contracts;
 
-    public abstract class CommandBase<T> : IX where T : CommandBase
+    public abstract class DeviceBase<T> : IX where T : CommandBase
     {
         public T BackingValue { get; }
 
-        protected CommandBase(T backingField)
+        protected DeviceBase(T backingField)
         {
             BackingValue = backingField;
         }
 
         // ReSharper disable once UnusedMember.Global
-        protected CommandBase()
+        protected DeviceBase()
         {
             BackingValue = null;
         }

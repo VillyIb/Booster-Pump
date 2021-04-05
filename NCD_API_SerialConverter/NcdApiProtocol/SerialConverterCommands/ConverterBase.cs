@@ -4,7 +4,7 @@
     using BoosterPumpLibrary.Commands;
     using NcdApiProtocol;
 
-    public abstract class ConverterBase : CommandBase<CommandBase>
+    public abstract class ConverterBase : DeviceBase<CommandBase>
     {
         public override byte Length => (byte)(Payload.Length + 1);
 

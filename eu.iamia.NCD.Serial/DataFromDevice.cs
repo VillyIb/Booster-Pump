@@ -2,9 +2,9 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
-using eu.iamia.NCDAPI.Contract;
+using eu.iamia.NCD.Serial.Contract;
 
-namespace eu.iamia.NCDAPI
+namespace eu.iamia.NCD.Serial
 {
     /// <summary>
     /// Data returned from device.

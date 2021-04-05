@@ -9,6 +9,7 @@ namespace NCD_API_SerialConverter
     using NcdApiProtocol.SerialConverterCommands;
     using System.Collections.Generic;
 
+    [Obsolete()]
     public class SerialConverter : ISerialConverter // ,  IModuleCommunication
     {
         private readonly INcdApiSerialPort SerialPort;

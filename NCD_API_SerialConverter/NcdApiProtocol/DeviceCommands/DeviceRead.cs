@@ -1,10 +1,12 @@
-﻿namespace NCD_API_SerialConverter.NcdApiProtocol.DeviceCommands
+﻿using BoosterPumpLibrary.ModuleBase;
+
+namespace NCD_API_SerialConverter.NcdApiProtocol.DeviceCommands
 {
     using System.Collections.Generic;
     using BoosterPumpLibrary.Commands;
     using NcdApiProtocol;
 
-    public class DeviceRead : CommandBase<ReadCommand>
+    public class DeviceRead : DeviceBase<ReadCommand>, IDevice
     {
         public DeviceRead(ReadCommand backingValue) : base(backingValue)
         { }

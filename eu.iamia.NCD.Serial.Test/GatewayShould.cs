@@ -2,12 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using eu.iamia.NCDAPI.Contract;
+using eu.iamia.NCD.Serial.Contract;
 using eu.iamia.ReliableSerialPort;
 using NSubstitute;
 using Xunit;
 
-namespace eu.iamia.NCDAPI.Test
+namespace eu.iamia.NCD.Serial.Test
 {
     public class GatewayShould
     {
@@ -24,7 +24,7 @@ namespace eu.iamia.NCDAPI.Test
         public void ImplementsIGateway()
         {
             Init();
-            Assert.False((Sut as IGateway) is null);
+            Assert.False(Sut is null);
         }
 
         [Fact]
@@ -75,9 +75,9 @@ namespace eu.iamia.NCDAPI.Test
             var command = new DataToDevice(new List<byte> { 0xFE, 0x21 });
 
 
-            FakeSerialPortDecoratorX FakeSerialPortDecoratorX = Substitute.ForPartsOf<FakeSerialPortDecoratorX>();
-            FakeSerialPortDecoratorX.GetResponse().Returns(fakeResponse);
-            Sut = new Gateway((ISerialPortDecorator)FakeSerialPortDecoratorX);
+            FakeSerialPortDecorator fakeSerialPortDecorator = Substitute.ForPartsOf<FakeSerialPortDecorator>();
+            fakeSerialPortDecorator.GetResponse().Returns(fakeResponse);
+            Sut = new Gateway(fakeSerialPortDecorator);
 
             IDataFromDevice response = Sut.Execute(command);
             Assert.Equal(expectedResponse, response.Payload);
@@ -87,7 +87,7 @@ namespace eu.iamia.NCDAPI.Test
     }
 
     [ExcludeFromCodeCoverage]
-    public class FakeSerialPortDecoratorX : ISerialPortDecorator
+    public class FakeSerialPortDecorator : ISerialPortDecorator
     {
         public virtual IEnumerable<byte> GetResponse() => new List<byte> { 0x00 };
 

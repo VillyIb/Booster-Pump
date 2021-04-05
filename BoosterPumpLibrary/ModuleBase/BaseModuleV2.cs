@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO.Ports;
 using System.Linq;
-using BoosterPumpLibrary.Commands;
 using BoosterPumpLibrary.Contracts;
 using BoosterPumpLibrary.Settings;
+using eu.iamia.NCD.Serial.Contract;
+using eu.iamia.NCD.API;
+using eu.iamia.NCD.Serial;
+
 // ReSharper disable UnusedMember.Global
 
 namespace BoosterPumpLibrary.ModuleBase
@@ -18,11 +22,23 @@ namespace BoosterPumpLibrary.ModuleBase
 
         public byte DeviceAddress => DefaultAddress + (AddressIncrement ?? new ByteWrapper(0));
 
+        [Obsolete]
         protected ISerialConverter SerialPort { get; }
 
+        [Obsolete(message:"Use BaseModule(IGateway)")]
         protected BaseModuleV2(ISerialConverter serialPort)
         {
-            SerialPort = serialPort;
+            //SerialPort = serialPort;
+            AddressIncrement = null;
+            Id = Guid.NewGuid();
+            Console.WriteLine($"{this.GetType().Name}: {Id}");
+        }
+
+        protected IGateway Gateway { get; }
+
+        protected BaseModuleV2(IGateway gateway)
+        {
+            Gateway = gateway;
             AddressIncrement = null;
             Id = Guid.NewGuid();
             Console.WriteLine($"{this.GetType().Name}: {Id}");
@@ -48,17 +64,34 @@ namespace BoosterPumpLibrary.ModuleBase
             return new ModuleEnumerator(Registers.Where(t => t.IsDirty), DeviceAddress);
         }
 
+        public void SendOld()
+        {
+            //using var enumerator = GetEnumerator();
+            //var retryCount = 0;
+            //while (enumerator.MoveNext())
+            //{
+            //    var command = enumerator.Current;
+            //    var fromDevice = SerialPort.Execute(command);
+
+            //    // ReSharper disable once ConditionIsAlwaysTrueOrFalse
+            //    if (retryCount > 0 && (fromDevice.Payload.Length != 1 || fromDevice.Payload[0] != 55))
+            //    {
+            //        enumerator.Reset();
+            //        retryCount--;
+            //    }
+            //}
+        }
+
         public void Send()
         {
             using var enumerator = GetEnumerator();
             var retryCount = 0;
-            while (enumerator.MoveNext())
+            while (enumerator.MoveNext() && enumerator.Current != null)
             {
-                var command = enumerator.Current;
-                var fromDevice = SerialPort.Execute(command);
+                var fromDevice = Gateway.Execute(new DataToDevice(new DeviceFactory().GetDevice(enumerator.Current).GetDevicePayload()));
 
                 // ReSharper disable once ConditionIsAlwaysTrueOrFalse
-                if (retryCount > 0 && (fromDevice.Payload.Length != 1 || fromDevice.Payload[0] != 55))
+                if (retryCount > 0 && (fromDevice.Payload.Count != 1 || fromDevice.Payload[0] != 55))
                 {
                     enumerator.Reset();
                     retryCount--;
@@ -66,18 +99,32 @@ namespace BoosterPumpLibrary.ModuleBase
             }
         }
 
+        public void SelectRegisterForReadingOld(Register register)
+        {
+            //var writeCommand = new WriteCommand(DeviceAddress, new[] {register.RegisterAddress});
+            //// ReSharper disable once UnusedVariable
+            //var returnValue = SerialPort.Execute(writeCommand);
+        }
+
+        public void SelectRegisterForReadingWithAutoIncrementOld(Register register)
+        {
+            //var writeCommand = new WriteCommand(DeviceAddress, new[] {(byte) (register.RegisterAddress | 0x80)});
+            //// ReSharper disable once UnusedVariable
+            //var returnValue = SerialPort.Execute(writeCommand);
+        }
+
         public void SelectRegisterForReading(Register register)
         {
-            var writeCommand = new WriteCommand { DeviceAddress = DeviceAddress, Payload = new[] { register.RegisterAddress } };
+            var writeCommand = new WriteCommand(DeviceAddress, new[] {register.RegisterAddress});
             // ReSharper disable once UnusedVariable
-            var returnValue = SerialPort.Execute(writeCommand);
+            var returnValue = Gateway.Execute(new DataToDevice(new DeviceFactory().GetDevice(writeCommand).GetDevicePayload()));
         }
 
         public void SelectRegisterForReadingWithAutoIncrement(Register register)
         {
-            var writeCommand = new WriteCommand { DeviceAddress = DeviceAddress, Payload = new[] { (byte)(register.RegisterAddress | 0x80) } };
+            var writeCommand = new WriteCommand(DeviceAddress, new[] {(byte) (register.RegisterAddress | 0x80)});
             // ReSharper disable once UnusedVariable
-            var returnValue = SerialPort.Execute(writeCommand);
+            var returnValue = Gateway.Execute(new DataToDevice(new DeviceFactory().GetDevice(writeCommand).GetDevicePayload()));
         }
 
     }

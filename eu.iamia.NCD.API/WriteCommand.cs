@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using eu.iamia.NCD.API.Contract;
 
-namespace BoosterPumpLibrary.Commands
+namespace eu.iamia.NCD.API
 {
-    [Obsolete("Use: namespace eu.iamia.NCD.API.WriteCommand")]
-    public class WriteCommand : CommandBase
+    public class WriteCommand : CommandBase, INcdApiCommand
     {
         public IEnumerable<byte> Payload { get; set; }
 

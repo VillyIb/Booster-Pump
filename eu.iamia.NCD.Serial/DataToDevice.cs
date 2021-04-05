@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using eu.iamia.NCDAPI.Contract;
+using eu.iamia.NCD.Serial.Contract;
 
-namespace eu.iamia.NCDAPI
+namespace eu.iamia.NCD.Serial
 {
     public class DataToDevice : IDataToDevice
     {

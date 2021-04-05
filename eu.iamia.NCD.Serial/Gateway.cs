@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Threading;
-using eu.iamia.NCDAPI.Contract;
+using eu.iamia.NCD.Serial.Contract;
 using eu.iamia.ReliableSerialPort;
 using eu.iamia.Util;
 
-namespace eu.iamia.NCDAPI
+namespace eu.iamia.NCD.Serial
 {
     public class Gateway : IGateway, IDisposable
     {

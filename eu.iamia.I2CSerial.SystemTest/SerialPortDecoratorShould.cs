@@ -64,6 +64,7 @@ namespace eu.iamia.ReliableSerialPort.SystemTest
         /// Required devices: 0x48, 0x50, 0x58
         /// </summary>
         [Theory]
+        // Repeated by intention.
         [InlineData(110)]
         [InlineData(110)]
         [InlineData(110)]

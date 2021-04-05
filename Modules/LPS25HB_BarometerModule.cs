@@ -1,9 +1,14 @@
-﻿using BoosterPumpLibrary.Commands;
-using BoosterPumpLibrary.Contracts;
+﻿using BoosterPumpLibrary.Contracts;
 using BoosterPumpLibrary.ModuleBase;
 using BoosterPumpLibrary.Settings;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using eu.iamia.NCD.API;
+using eu.iamia.NCD.API.Contract;
+using eu.iamia.NCD.Serial;
+using eu.iamia.NCD.Serial.Contract;
+
 // ReSharper disable InconsistentNaming
 
 namespace Modules
@@ -59,6 +64,9 @@ namespace Modules
         public LPS25HB_BarometerModule(ISerialConverter serialPort) : base(serialPort)
         { }
 
+        public LPS25HB_BarometerModule(IGateway gateway) : base(gateway)
+        { }
+
         public virtual void Init()
         {
             PowerDown.Value = 1;
@@ -68,19 +76,23 @@ namespace Modules
             Send();
 
             SelectRegisterForReadingWithAutoIncrement(Reading0X28);
-            var readCommand = new ReadCommand { DeviceAddress = DeviceAddress, LengthRequested = 5 };
-            SerialPort.Execute(readCommand);
+            var readCommand = new ReadCommand(DeviceAddress, 5);
+            var returnValue = Gateway.Execute(new DataToDevice(new DeviceFactory().GetDevice(readCommand).GetDevicePayload()));
         }
 
         public void ReadDevice()
         {
             SelectRegisterForReadingWithAutoIncrement(Reading0X28);
-            var readCommand = new ReadCommand { DeviceAddress = DeviceAddress, LengthRequested = (byte)Reading0X28.Size };
-            var readings = SerialPort.Execute(readCommand);
+            var readCommand = new ReadCommand(DeviceAddress, (byte) Reading0X28.Size);
+            var readings = Gateway.Execute(new DataToDevice(new DeviceFactory().GetDevice(readCommand).GetDevicePayload()));
+
+            //var readings = SerialPort.Execute(readCommand);
             if (!readings.IsValid) { return; }
 
+            var length = readings.Payload.Count;
+
             var mapped = new byte[8];
-            Array.Copy(readings.Payload, 0, mapped, 0, readings.Payload.Length);
+            Array.Copy(readings.Payload.ToArray(), mapped,  length);
             Reading0X28.Value = BitConverter.ToUInt64(mapped, 0);
         }
     }

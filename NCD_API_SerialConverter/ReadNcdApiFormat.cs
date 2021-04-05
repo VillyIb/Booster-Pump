@@ -7,6 +7,7 @@ using NCD_API_SerialConverter.NcdApiProtocol;
 
 namespace NCD_API_SerialConverter
 {
+    [Obsolete("Use Gateway")]
     public class ReadNcdApiFormat : IReadNcdApiFormat
     {
         /// <summary>

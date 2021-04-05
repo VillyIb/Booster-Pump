@@ -11,6 +11,7 @@ namespace NCD_API_SerialConverter.NcdApiProtocol
     /// <summary>
     /// Data returned from device.
     /// </summary>
+    [Obsolete]
     public class DataFromDevice : IDataFromDevice
     {
         public byte Header { get; set; }

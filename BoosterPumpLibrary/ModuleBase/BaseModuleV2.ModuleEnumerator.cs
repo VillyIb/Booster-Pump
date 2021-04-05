@@ -3,8 +3,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using BoosterPumpLibrary.Commands;
+
 using BoosterPumpLibrary.Settings;
+using eu.iamia.NCD.API;
 
 namespace BoosterPumpLibrary.ModuleBase
 {
@@ -56,7 +57,7 @@ namespace BoosterPumpLibrary.ModuleBase
                     currentRegisterAddress = current.RegisterAddress;
                 }
 
-                var writeCommand = new WriteCommand { DeviceAddress = DeviceAddress, Payload = currentCommand };
+                var writeCommand = new WriteCommand(DeviceAddress, currentCommand);
 
                 Current = writeCommand;
 

@@ -1,11 +1,13 @@
-﻿namespace NCD_API_SerialConverter.NcdApiProtocol.DeviceCommands
+﻿using BoosterPumpLibrary.ModuleBase;
+
+namespace NCD_API_SerialConverter.NcdApiProtocol.DeviceCommands
 {
     using System.Collections.Generic;
     using System.Linq;
     using BoosterPumpLibrary.Commands;
     using NcdApiProtocol;
 
-    public class DeviceWrite : CommandBase<WriteCommand>
+    public class DeviceWrite : DeviceBase<WriteCommand>, IDevice
     {
         public DeviceWrite(WriteCommand backingValue) : base(backingValue)
         { }

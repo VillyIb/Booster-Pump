@@ -1,6 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 
-namespace eu.iamia.NCDAPI.Contract
+namespace eu.iamia.NCD.Serial.Contract
 {
     /// <summary>
     /// Raw I2C Command.

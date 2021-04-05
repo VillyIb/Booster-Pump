@@ -1,4 +1,4 @@
-﻿namespace eu.iamia.NCDAPI
+﻿namespace eu.iamia.NCD.Serial
 {
     /// <summary>
     /// Values: {Undefined|ExpectHeader|ExpectLength|ExpectPayload|ExpectChecksum|Overflow}

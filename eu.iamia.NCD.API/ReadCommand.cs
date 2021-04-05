@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using eu.iamia.NCD.API.Contract;
 
-namespace BoosterPumpLibrary.Commands
+namespace eu.iamia.NCD.API
 {
-    [Obsolete("Use: namespace eu.iamia.NCD.API.ReadCommand")]
-    public class ReadCommand : CommandBase
+    public class ReadCommand : CommandBase, INcdApiCommand
     {
         public byte LengthRequested { get; set; }
 

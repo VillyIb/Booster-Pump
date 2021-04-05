@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text;
 
-namespace BoosterPumpLibrary.Commands
+namespace eu.iamia.NCD.API
 {
     // see:https://ncd.io/serial-to-i2c-conversion/
 
