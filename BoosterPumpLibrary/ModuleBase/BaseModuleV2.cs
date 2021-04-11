@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO.Ports;
 using System.Linq;
 using BoosterPumpLibrary.Contracts;
 using BoosterPumpLibrary.Settings;
-using eu.iamia.NCD.Serial.Contract;
+using eu.iamia.NCD.DeviceCommunication.Contract;
 using eu.iamia.NCD.API;
 using eu.iamia.NCD.Serial;
 
@@ -22,17 +21,17 @@ namespace BoosterPumpLibrary.ModuleBase
 
         public byte DeviceAddress => DefaultAddress + (AddressIncrement ?? new ByteWrapper(0));
 
-        [Obsolete]
-        protected ISerialConverter SerialPort { get; }
+        //[Obsolete]
+        //protected ISerialConverter SerialPort { get; }
 
-        [Obsolete(message:"Use BaseModule(IGateway)")]
-        protected BaseModuleV2(ISerialConverter serialPort)
-        {
-            //SerialPort = serialPort;
-            AddressIncrement = null;
-            Id = Guid.NewGuid();
-            Console.WriteLine($"{this.GetType().Name}: {Id}");
-        }
+        //[Obsolete(message:"Use BaseModule(IGateway)")]
+        //protected BaseModuleV2(ISerialConverter serialPort)
+        //{
+        //    //SerialPort = serialPort;
+        //    AddressIncrement = null;
+        //    Id = Guid.NewGuid();
+        //    Console.WriteLine($"{this.GetType().Name}: {Id}");
+        //}
 
         protected IGateway Gateway { get; }
 
@@ -88,10 +87,10 @@ namespace BoosterPumpLibrary.ModuleBase
             var retryCount = 0;
             while (enumerator.MoveNext() && enumerator.Current != null)
             {
-                var fromDevice = Gateway.Execute(new DataToDevice(new DeviceFactory().GetDevice(enumerator.Current).GetDevicePayload()));
+                var fromDevice = Gateway.Execute(enumerator.Current);
 
                 // ReSharper disable once ConditionIsAlwaysTrueOrFalse
-                if (retryCount > 0 && (fromDevice.Payload.Count != 1 || fromDevice.Payload[0] != 55))
+                if (retryCount > 0 && (fromDevice.Payload.Count() != 1 || fromDevice.Payload[0] != 55))
                 {
                     enumerator.Reset();
                     retryCount--;
@@ -117,14 +116,14 @@ namespace BoosterPumpLibrary.ModuleBase
         {
             var writeCommand = new WriteCommand(DeviceAddress, new[] {register.RegisterAddress});
             // ReSharper disable once UnusedVariable
-            var returnValue = Gateway.Execute(new DataToDevice(new DeviceFactory().GetDevice(writeCommand).GetDevicePayload()));
+            var returnValue = Gateway.Execute(writeCommand);
         }
 
         public void SelectRegisterForReadingWithAutoIncrement(Register register)
         {
             var writeCommand = new WriteCommand(DeviceAddress, new[] {(byte) (register.RegisterAddress | 0x80)});
             // ReSharper disable once UnusedVariable
-            var returnValue = Gateway.Execute(new DataToDevice(new DeviceFactory().GetDevice(writeCommand).GetDevicePayload()));
+            var returnValue = Gateway.Execute(writeCommand);
         }
 
     }

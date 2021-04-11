@@ -1,9 +1,10 @@
-﻿using BoosterPumpLibrary.Commands;
-using BoosterPumpLibrary.Contracts;
+﻿using eu.iamia.NCD.API;
+using eu.iamia.NCD.DeviceCommunication.Contract;
+using eu.iamia.NCD.Serial;
 using Modules;
-using NCD_API_SerialConverter.NcdApiProtocol;
 using NSubstitute;
 using Xunit;
+
 // ReSharper disable InconsistentNaming
 
 namespace ModulesTest
@@ -11,18 +12,18 @@ namespace ModulesTest
     public class TCA9546MultiplexerModuleShould
     {
         private readonly TCA9546MultiplexerModule _Sut;
-        private readonly ISerialConverter _FakeSerialPort;
+        private readonly IGateway _FakeSerialPort;
 
         public TCA9546MultiplexerModuleShould()
         {
-            _FakeSerialPort = Substitute.For<ISerialConverter>();
+            _FakeSerialPort = Substitute.For<IGateway>();
             _Sut = new TCA9546MultiplexerModule(_FakeSerialPort);
         }
 
         [Fact]
         public void SendSequenceWhenCallingSelectOpenChannels()
         {
-            IDataFromDevice returnValue = new DataFromDevice { Header = 0xAA, ByteCount = 0x01, Payload = new byte[] { 0x55 }, Checksum = 0x00 };
+            IDataFromDevice returnValue = new DataFromDevice ( 0xAA,  0x01,  new byte[] { 0x55 },  0x00 );
             _FakeSerialPort.Execute(Arg.Any<WriteCommand>()).Returns(returnValue);
 
             _Sut.SelectOpenChannels(MultiplexerChannels.Channel1 | MultiplexerChannels.Channel3);

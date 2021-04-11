@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
-using eu.iamia.NCD.Serial.Contract;
+using eu.iamia.NCD.DeviceCommunication.Contract;
+using System.Collections.Immutable;
 
 namespace eu.iamia.NCD.Serial
 {
@@ -15,25 +15,27 @@ namespace eu.iamia.NCD.Serial
 
         public byte ByteCount { get;  }
 
-        public ReadOnlyCollection<byte> Payload { get; }
+        private readonly ImmutableList<byte> PayloadField;
+
+        public IImmutableList<byte> Payload => PayloadField;
 
         public bool IsValid => CheckConsistency;
 
         public byte Checksum { get;  }
 
-        public DataFromDevice(byte header, byte byteCount, ReadOnlyCollection<byte> payload, byte checksum)
+        public DataFromDevice(byte header, byte byteCount, IEnumerable<byte> payload, byte checksum)
         {
             Header = header;
             ByteCount = byteCount;
-            Payload = payload;
+            PayloadField = ImmutableList<byte>.Empty.AddRange(payload);
             Checksum = checksum;
         }
 
         public DataFromDevice(IEnumerable<byte> payload)
         {
             Header = 0xAA;
-            Payload = new ReadOnlyCollection<byte>(payload.ToList());
-            ByteCount = (byte)Payload.Count;
+            PayloadField = ImmutableList<byte>.Empty.AddRange(payload);
+            ByteCount = (byte)PayloadField.Count;
             Checksum = CalculatedChecksum;
         }
 
@@ -41,12 +43,12 @@ namespace eu.iamia.NCD.Serial
         {
             get
             {
-                if (ByteCount != Payload.Count)
+                if (ByteCount != PayloadField.Count)
                 {
                     return byte.MinValue;
                 }
                 var checksum = Header + ByteCount;
-                checksum = Payload.Aggregate(checksum, (current1, current) => current1 + current) & 0xff;
+                checksum = PayloadField.Aggregate(checksum, (current1, current) => current1 + current) & 0xff;
 
                 return (byte)checksum;
             }
@@ -56,8 +58,8 @@ namespace eu.iamia.NCD.Serial
         {
             get
             {
-                if (null == Payload) { return false; }
-                if (ByteCount != Payload.Count) { return false; }
+                if (null == PayloadField) { return false; }
+                if (ByteCount != PayloadField.Count) { return false; }
                 return CalculatedChecksum == Checksum;
             }
         }
@@ -66,9 +68,9 @@ namespace eu.iamia.NCD.Serial
         {
             yield return Header;
             yield return ByteCount;
-            if (null != Payload)
+            if (null != PayloadField)
             {
-                foreach (var current in Payload)
+                foreach (var current in PayloadField)
                 {
                     yield return current;
                 }

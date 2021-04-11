@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
-using eu.iamia.NCD.API.Contract;
+using eu.iamia.NCD.DeviceCommunication.Contract;
 
 namespace eu.iamia.NCD.API
 {
-    public class WriteCommand : CommandBase, INcdApiCommand
+    public class WriteCommand : CommandBase, ICommandWrite
     {
         public IEnumerable<byte> Payload { get; set; }
 

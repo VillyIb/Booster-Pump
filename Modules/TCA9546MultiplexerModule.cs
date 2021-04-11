@@ -4,6 +4,7 @@ using System.Linq;
 using BoosterPumpLibrary.Contracts;
 using BoosterPumpLibrary.ModuleBase;
 using BoosterPumpLibrary.Settings;
+using eu.iamia.NCD.DeviceCommunication.Contract;
 
 namespace Modules
 {
@@ -33,7 +34,7 @@ namespace Modules
 
         protected override IEnumerable<RegisterBase> Registers => new List<RegisterBase> { Setting0X00 };
 
-        public TCA9546MultiplexerModule(ISerialConverter serialPort) : base(serialPort)
+        public TCA9546MultiplexerModule(IGateway gateway) : base(gateway)
         { }
 
         /// <summary>

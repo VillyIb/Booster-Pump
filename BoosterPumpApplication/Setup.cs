@@ -1,11 +1,12 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using BoosterPumpLibrary.Contracts;
-using NCD_API_SerialConverter;
-using NCD_API_SerialConverter.Contracts;
 using BoosterPumpConfiguration;
 using BoosterPumpLibrary.Logger;
 using System.Diagnostics.CodeAnalysis;
+using eu.iamia.NCD.DeviceCommunication.Contract;
+using eu.iamia.NCD.Serial;
+using eu.iamia.ReliableSerialPort;
 using Modules;
 
 namespace BoosterPumpApplication
@@ -32,9 +33,8 @@ namespace BoosterPumpApplication
 
             services.AddOptions();
 
-            services.AddSingleton(typeof(ISerialConverter), typeof(SerialConverter));
-            services.AddSingleton(typeof(SerialConverter), typeof(SerialConverter));
-            services.AddSingleton(typeof(INcdApiSerialPort), typeof(SerialPortDecorator));
+            services.AddSingleton(typeof(IGateway), typeof(SerialGateway));
+            services.AddSingleton(typeof(ISerialPortDecorator), typeof(SerialPortDecorator));
             services.AddSingleton(typeof(IOutputFileHandler), typeof(OutputFileHandler));
             services.AddSingleton(typeof(IBufferedLogWriter), typeof(BufferedLogWriterV2));
 

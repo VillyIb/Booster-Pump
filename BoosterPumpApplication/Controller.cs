@@ -5,13 +5,12 @@ using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.DependencyInjection;
 
-using NCD_API_SerialConverter;
-using NCD_API_SerialConverter.NcdApiProtocol.SerialConverterCommands;
 using Modules;
 using eu.iamia.Util;
 using BoosterPumpLibrary.Logger;
 using BoosterPumpLibrary.Contracts;
 using BoosterPumpConfiguration;
+using eu.iamia.NCD.DeviceCommunication.Contract;
 
 namespace BoosterPumpApplication
 {
@@ -20,18 +19,18 @@ namespace BoosterPumpApplication
     {
         public MeasurementSettings MeasurementSettings { get; }
 
-        public ISerialConverter SerialConverter { get; }
+        public IGateway Gateway { get; }
 
         public ControllerSettings ControllerSettings { get; }
 
         public Controller(
             IOptions<MeasurementSettings> measurementSettings,
             IOptions<ControllerSettings> controllerSettings,
-            ISerialConverter serialConverter
+            IGateway gateway
         )
         {
             MeasurementSettings = measurementSettings.Value;
-            SerialConverter = serialConverter;
+            Gateway = gateway;
             ControllerSettings = controllerSettings.Value;
         }
 
@@ -87,7 +86,7 @@ namespace BoosterPumpApplication
         private void CheckSerialConverter()
         {
             var ncdCommand = new ConverterScan();
-            var dataFromDevice = ((SerialConverter)SerialConverter).Execute(ncdCommand);
+            var dataFromDevice = ((SerialConverter)Gateway).Execute(ncdCommand);
             if (!dataFromDevice.IsValid)
             {
                 throw new ApplicationException(dataFromDevice.ToString());
@@ -202,7 +201,7 @@ namespace BoosterPumpApplication
                 catch (ApplicationException)
                 {
                     var ncdCommand = new ConverterTest2Way();
-                    var result = ((SerialConverter)SerialConverter).Execute(ncdCommand);
+                    var result = ((SerialConverter)Gateway).Execute(ncdCommand);
 
                     Console.WriteLine($"Reset serial converter, {result}");
                 }

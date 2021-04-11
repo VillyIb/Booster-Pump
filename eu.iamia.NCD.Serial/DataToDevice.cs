@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using eu.iamia.NCD.Serial.Contract;
 
 namespace eu.iamia.NCD.Serial
 {
+    [Obsolete]
     public class DataToDevice : IDataToDevice
     {
         public byte Header => 0xAA;

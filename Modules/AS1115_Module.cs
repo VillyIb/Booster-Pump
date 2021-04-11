@@ -1,6 +1,7 @@
 ﻿using BoosterPumpLibrary.Contracts;
 using System;
 using System.Collections.Generic;
+using eu.iamia.NCD.DeviceCommunication.Contract;
 
 namespace Modules
 {
@@ -93,7 +94,7 @@ namespace Modules
 
         public override byte DefaultAddress => 0x00;
 
-        public As1115Module(ISerialConverter serialPort) : base(serialPort)
+        public As1115Module(IGateway gateway) : base(gateway)
         { }
 
         protected override IEnumerable<RegisterBase> Registers => new[] {

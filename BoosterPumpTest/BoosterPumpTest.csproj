@@ -30,7 +30,6 @@
     <ProjectReference Include="..\BoosterPumpLibrary\BoosterPumpLibrary.csproj" />
     <ProjectReference Include="..\eu.iamia.Util\eu.iamia.Util.csproj" />
     <ProjectReference Include="..\Modules\Modules.csproj" />
-    <ProjectReference Include="..\NCD_API_SerialConverter\NCD_API_SerialConverter.csproj" />
   </ItemGroup>
 
 </Project>

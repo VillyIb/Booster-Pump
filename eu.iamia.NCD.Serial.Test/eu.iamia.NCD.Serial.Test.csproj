@@ -21,7 +21,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\eu.iamia.I2CContract\eu.iamia.NCD.Serial.Contract.csproj" />
     <ProjectReference Include="..\eu.iamia.NCD.Serial\eu.iamia.NCD.Serial.csproj" />
   </ItemGroup>
 

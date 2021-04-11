@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using BoosterPumpLibrary.Contracts;
 using BoosterPumpLibrary.ModuleBase;
 using BoosterPumpLibrary.Settings;
 using eu.iamia.NCD.API;
-using eu.iamia.NCD.Serial;
-using eu.iamia.NCD.Serial.Contract;
+using eu.iamia.NCD.DeviceCommunication.Contract;
 
 namespace Modules
 {
@@ -15,10 +13,10 @@ namespace Modules
     {
         public override byte DefaultAddress => 0x78;
 
-        [Obsolete]
-        public AMS5812_0150_D_B_Module(ISerialConverter serialPort) : base(serialPort)
-        { }
-
+        /// <summary>
+        /// Pressure module
+        /// </summary>
+        /// <param name="gateway"></param>
         public AMS5812_0150_D_B_Module(IGateway gateway) : base(gateway)
         { }
 
@@ -45,8 +43,7 @@ namespace Modules
         public void ReadFromDevice()
         {
             var command = new ReadCommand(DeviceAddress, 4);
-            //var response = SerialPort.Execute(command);
-            var response = Gateway.Execute(new DataToDevice(new DeviceFactory().GetDevice(command).GetDevicePayload()));
+            var response = Gateway.Execute(command);
             if (!response.IsValid) { return; }
 
             var measuredPressure = response.Payload[0] << 8 | response.Payload[1];

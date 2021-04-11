@@ -2,7 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using eu.iamia.NCD.Serial.Contract;
+using eu.iamia.NCD.API;
+using eu.iamia.NCD.DeviceCommunication.Contract;
 using eu.iamia.ReliableSerialPort;
 using NSubstitute;
 using Xunit;
@@ -17,7 +18,7 @@ namespace eu.iamia.NCD.Serial.Test
         private void Init()
         {
             FakeSerialPortDecorator = Substitute.For<ISerialPortDecorator>();
-            Sut = new Gateway(FakeSerialPortDecorator);
+            Sut = new SerialGateway(FakeSerialPortDecorator);
         }
 
         [Fact]
@@ -32,7 +33,7 @@ namespace eu.iamia.NCD.Serial.Test
         {
             Init();
 
-            var command = new DataToDevice(new List<byte> { 0xFE, 0x21 });
+            var command = new ReadCommand(0xf1, 1);
 
             Sut.Execute(command); // calls 
             Sut.Execute(command); // calls 
@@ -46,7 +47,7 @@ namespace eu.iamia.NCD.Serial.Test
         {
             Init();
 
-            var command = new DataToDevice(new List<byte> { 0xFE, 0x21 });
+            var command = new ReadCommand(0xf1, 1);
 
             Sut.Execute(command); // calls 
             Sut.Execute(command); // calls 
@@ -59,9 +60,11 @@ namespace eu.iamia.NCD.Serial.Test
         {
             Init();
 
-            var command = new DataToDevice(new List<byte> { 0xFE, 0x21 });
+            var command = new ReadCommand(0xf1, 1);
+
             Sut.Execute(command);
-            ((Gateway)Sut).Dispose();
+            
+            ((SerialGateway)Sut).Dispose();
             FakeSerialPortDecorator.Received(1).Dispose();
         }
 
@@ -72,12 +75,12 @@ namespace eu.iamia.NCD.Serial.Test
             var overflow = new List<byte> {0x99, 0xFF};
             List<byte> fakeResponse = new DataFromDevice(expectedResponse).ApiEncodedData().ToList();
                 fakeResponse.AddRange( overflow);
-            var command = new DataToDevice(new List<byte> { 0xFE, 0x21 });
+            var command = new ReadCommand(0xf1, 1);
 
 
             FakeSerialPortDecorator fakeSerialPortDecorator = Substitute.ForPartsOf<FakeSerialPortDecorator>();
             fakeSerialPortDecorator.GetResponse().Returns(fakeResponse);
-            Sut = new Gateway(fakeSerialPortDecorator);
+            Sut = new SerialGateway(fakeSerialPortDecorator);
 
             IDataFromDevice response = Sut.Execute(command);
             Assert.Equal(expectedResponse, response.Payload);

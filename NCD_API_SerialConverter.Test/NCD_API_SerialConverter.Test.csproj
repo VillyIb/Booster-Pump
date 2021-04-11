@@ -19,11 +19,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\eu.iamia.I2CContract\eu.iamia.NCD.Serial.Contract.csproj" />
     <ProjectReference Include="..\eu.iamia.NCD.API.Contract\eu.iamia.NCD.API.Contract.csproj" />
     <ProjectReference Include="..\eu.iamia.NCD.API\eu.iamia.NCD.API.csproj" />
     <ProjectReference Include="..\eu.iamia.NCD.Serial\eu.iamia.NCD.Serial.csproj" />
-    <ProjectReference Include="..\NCD_API_SerialConverter\NCD_API_SerialConverter.csproj" />
   </ItemGroup>
 
 </Project>

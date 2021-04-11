@@ -5,6 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Commands\CommandBase.cs" />
+    <Compile Remove="Commands\ReadCommand.cs" />
+    <Compile Remove="Commands\WriteCommand.cs" />
+    <Compile Remove="Commands\WriteReadCommand.cs" />
+    <Compile Remove="Contracts\ISerialConverter.cs" />
     <Compile Remove="Logger\BufferedLogWriter.cs" />
     <Compile Remove="ModuleBase\BaseModule.cs" />
     <Compile Remove="ModuleBase\Register.cs" />
@@ -16,11 +21,14 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BoosterPumpConfiguration\BoosterPumpConfiguration.csproj" />
-    <ProjectReference Include="..\eu.iamia.I2CContract\eu.iamia.NCD.Serial.Contract.csproj" />
     <ProjectReference Include="..\eu.iamia.NCD.API.Contract\eu.iamia.NCD.API.Contract.csproj" />
     <ProjectReference Include="..\eu.iamia.NCD.API\eu.iamia.NCD.API.csproj" />
     <ProjectReference Include="..\eu.iamia.NCD.Serial\eu.iamia.NCD.Serial.csproj" />
     <ProjectReference Include="..\eu.iamia.Util\eu.iamia.Util.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Commands\" />
   </ItemGroup>
 
 </Project>

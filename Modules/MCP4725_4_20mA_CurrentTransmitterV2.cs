@@ -2,6 +2,8 @@
 using BoosterPumpLibrary.Settings;
 using System;
 using System.Collections.Generic;
+using eu.iamia.NCD.DeviceCommunication.Contract;
+
 // ReSharper disable CommentTypo
 // ReSharper disable StringLiteralTypo
 
@@ -43,7 +45,7 @@ namespace Modules
             SetSpeedPersistent(0.50f);
         }
 
-        public MCP4725_4_20mA_CurrentTransmitterV2(ISerialConverter serialPort) : base(serialPort)
+        public MCP4725_4_20mA_CurrentTransmitterV2(IGateway gateway) : base(gateway)
         { }
 
         public void SetNormalPower()

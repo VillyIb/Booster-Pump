@@ -1,6 +1,4 @@
 ﻿using System;
-using BoosterPumpConfiguration;
-using NCD_API_SerialConverter;
 
 namespace TestSerialConverterForMemoryLeak
 {

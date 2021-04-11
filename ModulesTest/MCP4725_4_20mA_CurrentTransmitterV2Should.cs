@@ -1,7 +1,8 @@
 ﻿using BoosterPumpLibrary.Contracts;
+using eu.iamia.NCD.API;
+using eu.iamia.NCD.DeviceCommunication.Contract;
 using NSubstitute;
 using Xunit;
-using BoosterPumpLibrary.Commands;
 using Modules;
 // ReSharper disable InconsistentNaming
 // ReSharper disable CommentTypo
@@ -11,11 +12,11 @@ namespace ModulesTest
     public class MCP4725_4_20mA_CurrentTransmitterV2Should
     {
         private readonly MCP4725_4_20mA_CurrentTransmitterV2 Sut;
-        private readonly ISerialConverter FakeSerialPort;
+        private readonly IGateway FakeSerialPort;
 
         public MCP4725_4_20mA_CurrentTransmitterV2Should()
         {
-            FakeSerialPort = Substitute.For<ISerialConverter>();
+            FakeSerialPort = Substitute.For<IGateway>();
             Sut = new MCP4725_4_20mA_CurrentTransmitterV2(FakeSerialPort);
         }
 

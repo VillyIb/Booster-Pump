@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Threading;
-using BoosterPumpConfiguration;
-using NCD_API_SerialConverter;
 
 namespace TestSerialConverterForMemoryLeak
 {

@@ -5,9 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using eu.iamia.NCD.API;
-using eu.iamia.NCD.API.Contract;
-using eu.iamia.NCD.Serial;
-using eu.iamia.NCD.Serial.Contract;
+using eu.iamia.NCD.DeviceCommunication.Contract;
 
 // ReSharper disable InconsistentNaming
 
@@ -61,9 +59,6 @@ namespace Modules
 
         protected override IEnumerable<RegisterBase> Registers => new List<RegisterBase> { Settings0X20, Settings0X10 };
 
-        public LPS25HB_BarometerModule(ISerialConverter serialPort) : base(serialPort)
-        { }
-
         public LPS25HB_BarometerModule(IGateway gateway) : base(gateway)
         { }
 
@@ -77,14 +72,14 @@ namespace Modules
 
             SelectRegisterForReadingWithAutoIncrement(Reading0X28);
             var readCommand = new ReadCommand(DeviceAddress, 5);
-            var returnValue = Gateway.Execute(new DataToDevice(new DeviceFactory().GetDevice(readCommand).GetDevicePayload()));
+            var returnValue = Gateway.Execute(readCommand);
         }
 
         public void ReadDevice()
         {
             SelectRegisterForReadingWithAutoIncrement(Reading0X28);
             var readCommand = new ReadCommand(DeviceAddress, (byte) Reading0X28.Size);
-            var readings = Gateway.Execute(new DataToDevice(new DeviceFactory().GetDevice(readCommand).GetDevicePayload()));
+            var readings = Gateway.Execute(readCommand);
 
             //var readings = SerialPort.Execute(readCommand);
             if (!readings.IsValid) { return; }

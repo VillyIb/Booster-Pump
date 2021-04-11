@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Text;
+using eu.iamia.NCD.DeviceCommunication.Contract;
 
 namespace eu.iamia.NCD.API
 {
     // see:https://ncd.io/serial-to-i2c-conversion/
 
-    public abstract class CommandBase
+    public abstract class CommandBase : ICommand
     {
         // TODO NOT virtual - set to readonly
         public virtual byte DeviceAddress { get; set; }
