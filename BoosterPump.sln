@@ -41,8 +41,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eu.iamia.NCD.DeviceCommunic
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eu.iamia.NCD.Direct", "eu.iamia.NCD.Direct\eu.iamia.NCD.Direct.csproj", "{125B940A-BFD8-40C5-A611-DB637AFB1A3D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NCD_API_SerialConverter", "NCD_API_SerialConverter\NCD_API_SerialConverter.csproj", "{349EA461-5673-46B8-9C5D-A5FB4FBF7475}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -125,10 +123,6 @@ Global
 		{125B940A-BFD8-40C5-A611-DB637AFB1A3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{125B940A-BFD8-40C5-A611-DB637AFB1A3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{125B940A-BFD8-40C5-A611-DB637AFB1A3D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{349EA461-5673-46B8-9C5D-A5FB4FBF7475}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{349EA461-5673-46B8-9C5D-A5FB4FBF7475}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{349EA461-5673-46B8-9C5D-A5FB4FBF7475}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{349EA461-5673-46B8-9C5D-A5FB4FBF7475}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

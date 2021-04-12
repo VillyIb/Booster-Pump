@@ -42,7 +42,7 @@ namespace Modules
 
         public void ReadFromDevice()
         {
-            var command = new ReadCommand(DeviceAddress, 4);
+            var command = new CommandRead(DeviceAddress, 4);
             var response = Gateway.Execute(command);
             if (!response.IsValid) { return; }
 

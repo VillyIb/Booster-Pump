@@ -26,13 +26,13 @@ namespace ModulesTest
         public void SendReadSequenceCallingReadFromDevice()
         {
             //IDataFromDevice fakeReturnValue = new DataFromDevice { Header = 0xAA, ByteCount = 0x04, Payload = new byte[] { 0x3F, 0xEB, 0x36, 0xE2 }, Checksum = 0xF0 };
-            //_FakeGateway.Execute(Arg.Any<ReadCommand>()).Returns(fakeReturnValue);
+            //_FakeGateway.Execute(Arg.Any<CommandRead>()).Returns(fakeReturnValue);
 
-            //_FakeGateway.Execute(new ReadCommand(00, 0));
+            //_FakeGateway.Execute(new CommandRead(00, 0));
 
             _Sut.ReadFromDevice();
 
-            _FakeGateway.Received().Execute(Arg.Is<ReadCommand>(c => c.I2CDataAsHex == "78 04 "));
+            _FakeGateway.Received().Execute(Arg.Is<CommandRead>(c => c.I2CDataAsHex == "78 04 "));
 
             Assert.Equal(-1.66f, _Sut.Pressure);
             Assert.Equal(20.21f, _Sut.Temperature);

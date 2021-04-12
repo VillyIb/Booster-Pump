@@ -24,7 +24,7 @@ namespace ModulesTest
         public void SendSequenceWhenCallingInit()
         {
             Sut.Init();
-            FakeSerialPort.Received().Execute(Arg.Is<WriteCommand>(c => c.I2CDataAsHex == "60 00 60 80 00 "));
+            FakeSerialPort.Received().Execute(Arg.Is<CommandWrite>(c => c.I2CDataAsHex == "60 00 60 80 00 "));
         }
 
         [Fact]
@@ -35,14 +35,14 @@ namespace ModulesTest
 
             Sut.SetSpeed(speedPct);
             // expected 010x_x00x, 1010_1010, 0101_xxxx => 40 AA 50
-            FakeSerialPort.Received().Execute(Arg.Is<WriteCommand>(c => c.I2CDataAsHex == "60 00 40 AA 50 "));
+            FakeSerialPort.Received().Execute(Arg.Is<CommandWrite>(c => c.I2CDataAsHex == "60 00 40 AA 50 "));
         }
 
         [Fact]
         public void SendSequenceWhenPowerDown()
         {
             Sut.SetPowerDown();
-            FakeSerialPort.Received().Execute(Arg.Is<WriteCommand>(c => c.I2CDataAsHex == "60 00 02 00 00 "));
+            FakeSerialPort.Received().Execute(Arg.Is<CommandWrite>(c => c.I2CDataAsHex == "60 00 02 00 00 "));
         }
 
         [Fact]
@@ -53,7 +53,7 @@ namespace ModulesTest
 
             Sut.SetSpeedPersistent(speedPct);
             // expected 011x_x00x, 1010_1010, 0101_xxxx => 60 AA 50
-            FakeSerialPort.Received().Execute(Arg.Is<WriteCommand>(c => c.I2CDataAsHex == "60 00 60 AA 50 "));
+            FakeSerialPort.Received().Execute(Arg.Is<CommandWrite>(c => c.I2CDataAsHex == "60 00 60 AA 50 "));
         }
 
         [Fact]

@@ -5,9 +5,6 @@ using Microsoft.Extensions.DependencyInjection;
 using BoosterPumpApplication;
 using BoosterPumpLibrary.Logger;
 using eu.iamia.Configuration;
-using NCD_API_SerialConverter;
-using NCD_API_SerialConverter.Contracts;
-using NCD_API_SerialConverter.NcdApiProtocol.SerialConverterCommands;
 
 namespace BoosterPumpApplication1
 {

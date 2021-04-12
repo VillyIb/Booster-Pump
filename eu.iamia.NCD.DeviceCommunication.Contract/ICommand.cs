@@ -4,38 +4,37 @@ namespace eu.iamia.NCD.DeviceCommunication.Contract
 {
     public interface ICommand
     {
-        byte DeviceAddress { get; set; }
-
         IEnumerable<byte> I2C_Data();
     }
 
-    public interface ICommandRead : ICommand
+
+    public interface ICommandDevice : ICommand
+    {
+        byte DeviceAddress { get; }
+    }
+
+    public interface ICommandRead : ICommandDevice
     { }
 
-    public interface ICommandWrite : ICommand
+    public interface ICommandWrite : ICommandDevice
     { }
 
-    public interface ICommandWriteRead : ICommand
+    public interface ICommandWriteRead : ICommandDevice
     { }
 
-    public interface ICommandConverter : ICommand
+
+    public interface ICommandControllerBusScan : ICommand
     { }
 
-    public interface ICommandBusScan : ICommandConverter
+    public interface ICommandControllerStop : ICommand
     { }
 
-    public interface ICommandStop : ICommandConverter
+    public interface ICommandControllerReboot : ICommand
     { }
 
-    public interface ICommandReboot : ICommandConverter
+    public interface ICommandControllerHardReboot : ICommand
     { }
 
-    public interface ICommandHardReboot : ICommandConverter
-    { }
-
-    public interface ICommandTest2WayCommunication : ICommandConverter
-    { }
-
-    public interface ICommandTestStop : ICommandConverter
+    public interface ICommandControllerTest2WayCommunication : ICommand
     { }
 }

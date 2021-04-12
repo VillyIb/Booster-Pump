@@ -33,7 +33,7 @@ namespace eu.iamia.NCD.Serial.Test
         {
             Init();
 
-            var command = new ReadCommand(0xf1, 1);
+            var command = new CommandRead(0xf1, 1);
 
             Sut.Execute(command); // calls 
             Sut.Execute(command); // calls 
@@ -47,7 +47,7 @@ namespace eu.iamia.NCD.Serial.Test
         {
             Init();
 
-            var command = new ReadCommand(0xf1, 1);
+            var command = new CommandRead(0xf1, 1);
 
             Sut.Execute(command); // calls 
             Sut.Execute(command); // calls 
@@ -60,7 +60,7 @@ namespace eu.iamia.NCD.Serial.Test
         {
             Init();
 
-            var command = new ReadCommand(0xf1, 1);
+            var command = new CommandRead(0xf1, 1);
 
             Sut.Execute(command);
             
@@ -75,7 +75,7 @@ namespace eu.iamia.NCD.Serial.Test
             var overflow = new List<byte> {0x99, 0xFF};
             List<byte> fakeResponse = new DataFromDevice(expectedResponse).ApiEncodedData().ToList();
                 fakeResponse.AddRange( overflow);
-            var command = new ReadCommand(0xf1, 1);
+            var command = new CommandRead(0xf1, 1);
 
 
             FakeSerialPortDecorator fakeSerialPortDecorator = Substitute.ForPartsOf<FakeSerialPortDecorator>();

@@ -11,13 +11,13 @@ namespace BoosterPumpLibrary.ModuleBase
 {
     public abstract partial class BaseModuleV2
     {
-        public class ModuleEnumerator : IEnumerator<WriteCommand?>
+        public class ModuleEnumerator : IEnumerator<CommandWrite?>
         {
             private readonly byte DeviceAddress;
 
             private List<RegisterBase> SelectedRegisters { get; }
 
-            public WriteCommand? Current { get; set; }
+            public CommandWrite? Current { get; set; }
 
             object? IEnumerator.Current => Current;
 
@@ -57,7 +57,7 @@ namespace BoosterPumpLibrary.ModuleBase
                     currentRegisterAddress = current.RegisterAddress;
                 }
 
-                var writeCommand = new WriteCommand(DeviceAddress, currentCommand);
+                var writeCommand = new CommandWrite(DeviceAddress, currentCommand);
 
                 Current = writeCommand;
 

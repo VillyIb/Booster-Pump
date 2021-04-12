@@ -24,10 +24,10 @@ namespace ModulesTest
         public void SendSequenceWhenCallingSelectOpenChannels()
         {
             IDataFromDevice returnValue = new DataFromDevice ( 0xAA,  0x01,  new byte[] { 0x55 },  0x00 );
-            _FakeSerialPort.Execute(Arg.Any<WriteCommand>()).Returns(returnValue);
+            _FakeSerialPort.Execute(Arg.Any<CommandWrite>()).Returns(returnValue);
 
             _Sut.SelectOpenChannels(MultiplexerChannels.Channel1 | MultiplexerChannels.Channel3);
-            _FakeSerialPort.Received().Execute(Arg.Is<WriteCommand>(cmd => cmd.I2CDataAsHex == "70 00 0A "));
+            _FakeSerialPort.Received().Execute(Arg.Is<CommandWrite>(cmd => cmd.I2CDataAsHex == "70 00 0A "));
         }
     }
 }

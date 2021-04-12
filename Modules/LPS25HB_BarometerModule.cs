@@ -71,14 +71,14 @@ namespace Modules
             Send();
 
             SelectRegisterForReadingWithAutoIncrement(Reading0X28);
-            var readCommand = new ReadCommand(DeviceAddress, 5);
+            var readCommand = new CommandRead(DeviceAddress, 5);
             var returnValue = Gateway.Execute(readCommand);
         }
 
         public void ReadDevice()
         {
             SelectRegisterForReadingWithAutoIncrement(Reading0X28);
-            var readCommand = new ReadCommand(DeviceAddress, (byte) Reading0X28.Size);
+            var readCommand = new CommandRead(DeviceAddress, (byte) Reading0X28.Size);
             var readings = Gateway.Execute(readCommand);
 
             //var readings = SerialPort.Execute(readCommand);

@@ -8,9 +8,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Modules;
 using eu.iamia.Util;
 using BoosterPumpLibrary.Logger;
-using BoosterPumpLibrary.Contracts;
 using BoosterPumpConfiguration;
 using eu.iamia.NCD.DeviceCommunication.Contract;
+using eu.iamia.NCD.API;
 
 namespace BoosterPumpApplication
 {
@@ -85,8 +85,8 @@ namespace BoosterPumpApplication
 
         private void CheckSerialConverter()
         {
-            var ncdCommand = new ConverterScan();
-            var dataFromDevice = ((SerialConverter)Gateway).Execute(ncdCommand);
+            var command = new CommandControllerControllerBusSCan();
+            var dataFromDevice = Gateway.Execute(command);
             if (!dataFromDevice.IsValid)
             {
                 throw new ApplicationException(dataFromDevice.ToString());
@@ -200,8 +200,8 @@ namespace BoosterPumpApplication
                 }
                 catch (ApplicationException)
                 {
-                    var ncdCommand = new ConverterTest2Way();
-                    var result = ((SerialConverter)Gateway).Execute(ncdCommand);
+                    var command = new CommandControllerControllerTest2WayCommunication();
+                    var result = Gateway.Execute(command);
 
                     Console.WriteLine($"Reset serial converter, {result}");
                 }

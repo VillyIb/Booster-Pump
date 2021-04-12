@@ -56,7 +56,7 @@ namespace eu.iamia.NCD.Serial
     {
         public override byte SerialCommand => 0xFE;
 
-        public DeviceConverterCommand(ICommandConverter command) : base(command)
+        public DeviceConverterCommand(ICommand command) : base(command)
         { }
     }
 
@@ -64,7 +64,7 @@ namespace eu.iamia.NCD.Serial
     {
         public override byte SerialCommand => 0xC1;
 
-        public DeviceBusScan(ICommandConverter command) : base(command)
+        public DeviceBusScan(ICommand command) : base(command)
         { }
     }
     
@@ -89,12 +89,10 @@ namespace eu.iamia.NCD.Serial
         public DeviceCommand GetDevice(ICommandWrite command) => new DeviceWrite(command);
         public DeviceCommand GetDevice(ICommandWriteRead command) => new DeviceWriteRead(command);
 
-        public DeviceCommand GetDevice(ICommandBusScan command) => new DeviceBusScan(command);
-
-        public DeviceCommand GetDevice(ICommandHardReboot command) => new DeviceConverterCommand(command);
-        public DeviceCommand GetDevice(ICommandReboot command) => new DeviceConverterCommand(command);
-        public DeviceCommand GetDevice(ICommandTest2WayCommunication command) => new DeviceConverterCommand(command);
-        public DeviceCommand GetDevice(ICommandHardReboot command) => new DeviceConverterCommand(command);
+        public DeviceCommand GetDevice(ICommandControllerBusScan command) => new DeviceBusScan(command);
+        public DeviceCommand GetDevice(ICommandControllerHardReboot command) => new DeviceConverterCommand(command);
+        public DeviceCommand GetDevice(ICommandControllerReboot command) => new DeviceConverterCommand(command);
+        public DeviceCommand GetDevice(ICommandControllerStop command) => new DeviceConverterCommand(command);
 
     }
 }

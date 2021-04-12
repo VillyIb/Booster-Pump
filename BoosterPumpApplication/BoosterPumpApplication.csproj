@@ -15,6 +15,8 @@
     <ProjectReference Include="..\BoosterPumpConfiguration\BoosterPumpConfiguration.csproj" />
     <ProjectReference Include="..\BoosterPumpLibrary\BoosterPumpLibrary.csproj" />
     <ProjectReference Include="..\eu.iamia.Configuration\eu.iamia.Configuration.csproj" />
+    <ProjectReference Include="..\eu.iamia.NCD.API.Contract\eu.iamia.NCD.API.Contract.csproj" />
+    <ProjectReference Include="..\eu.iamia.NCD.API\eu.iamia.NCD.API.csproj" />
     <ProjectReference Include="..\Modules\Modules.csproj" />
   </ItemGroup>
 

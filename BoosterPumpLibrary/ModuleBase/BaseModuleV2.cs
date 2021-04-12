@@ -69,8 +69,8 @@ namespace BoosterPumpLibrary.ModuleBase
             //var retryCount = 0;
             //while (enumerator.MoveNext())
             //{
-            //    var command = enumerator.Current;
-            //    var fromDevice = SerialPort.Execute(command);
+            //    var commandController = enumerator.Current;
+            //    var fromDevice = SerialPort.Execute(commandController);
 
             //    // ReSharper disable once ConditionIsAlwaysTrueOrFalse
             //    if (retryCount > 0 && (fromDevice.Payload.Length != 1 || fromDevice.Payload[0] != 55))
@@ -100,28 +100,28 @@ namespace BoosterPumpLibrary.ModuleBase
 
         public void SelectRegisterForReadingOld(Register register)
         {
-            //var writeCommand = new WriteCommand(DeviceAddress, new[] {register.RegisterAddress});
+            //var writeCommand = new CommandWrite(DeviceAddress, new[] {register.RegisterAddress});
             //// ReSharper disable once UnusedVariable
             //var returnValue = SerialPort.Execute(writeCommand);
         }
 
         public void SelectRegisterForReadingWithAutoIncrementOld(Register register)
         {
-            //var writeCommand = new WriteCommand(DeviceAddress, new[] {(byte) (register.RegisterAddress | 0x80)});
+            //var writeCommand = new CommandWrite(DeviceAddress, new[] {(byte) (register.RegisterAddress | 0x80)});
             //// ReSharper disable once UnusedVariable
             //var returnValue = SerialPort.Execute(writeCommand);
         }
 
         public void SelectRegisterForReading(Register register)
         {
-            var writeCommand = new WriteCommand(DeviceAddress, new[] {register.RegisterAddress});
+            var writeCommand = new CommandWrite(DeviceAddress, new[] {register.RegisterAddress});
             // ReSharper disable once UnusedVariable
             var returnValue = Gateway.Execute(writeCommand);
         }
 
         public void SelectRegisterForReadingWithAutoIncrement(Register register)
         {
-            var writeCommand = new WriteCommand(DeviceAddress, new[] {(byte) (register.RegisterAddress | 0x80)});
+            var writeCommand = new CommandWrite(DeviceAddress, new[] {(byte) (register.RegisterAddress | 0x80)});
             // ReSharper disable once UnusedVariable
             var returnValue = Gateway.Execute(writeCommand);
         }

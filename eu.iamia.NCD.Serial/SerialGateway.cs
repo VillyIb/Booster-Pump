@@ -105,14 +105,14 @@ namespace eu.iamia.NCD.Serial
             return ResultReady.WaitOne(ReadTimeout);
         }
 
-        //public IDataFromDevice Execute(IDataToDevice command)
+        //public IDataFromDevice Execute(IDataToDevice commandController)
         //{
         //    var timer = EasyStopwatch.StartMs();
         //    try
         //    {
         //        Init();
 
-        //        var ncdFrame = new DataToDevice(command.Payload);
+        //        var ncdFrame = new DataToDevice(commandController.Payload);
         //        SerialPort.Write(ncdFrame.BytesToTransmit());
 
         //        return WaitForResultToBeReady()
