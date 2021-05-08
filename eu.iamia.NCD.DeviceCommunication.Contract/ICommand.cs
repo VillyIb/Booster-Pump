@@ -2,6 +2,9 @@
 
 namespace eu.iamia.NCD.DeviceCommunication.Contract
 {
+    /// <summary>
+    /// Raw I2C Command Request.
+    /// </summary>
     public interface ICommand
     {
         IEnumerable<byte> I2C_Data();
