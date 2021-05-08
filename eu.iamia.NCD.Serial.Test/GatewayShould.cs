@@ -10,6 +10,7 @@ using Xunit;
 
 namespace eu.iamia.NCD.Serial.Test
 {
+    [ExcludeFromCodeCoverage]
     public class GatewayShould
     {
         private ISerialPortDecorator FakeSerialPortDecorator;

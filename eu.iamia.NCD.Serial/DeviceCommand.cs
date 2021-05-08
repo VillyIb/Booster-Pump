@@ -7,6 +7,7 @@ using eu.iamia.NCD.DeviceCommunication.Contract;
 namespace eu.iamia.NCD.Serial
 {
 
+    // TODO Not DeviceCommand -> ...GatewayCommand
     public abstract class DeviceCommand
     {
         public ICommand Command { get; }
@@ -79,6 +80,12 @@ namespace eu.iamia.NCD.Serial
                 ICommandRead _ => new DeviceRead(command),
                 ICommandWrite _ => new DeviceWrite(command),
                 ICommandWriteRead _ => new DeviceWriteRead(command),
+
+                ICommandControllerBusScan _ => new DeviceBusScan(command),
+                ICommandControllerHardReboot _ => new DeviceConverterCommand(command),
+                ICommandControllerReboot _ => new DeviceConverterCommand(command),
+                ICommandControllerStop _ => new DeviceConverterCommand(command),
+
                 _ => null
             };
         }

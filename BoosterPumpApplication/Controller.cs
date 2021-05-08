@@ -19,14 +19,14 @@ namespace BoosterPumpApplication
     {
         public MeasurementSettings MeasurementSettings { get; }
 
-        public IGateway Gateway { get; }
+        public ISerialGateway Gateway { get; }
 
         public ControllerSettings ControllerSettings { get; }
 
         public Controller(
             IOptions<MeasurementSettings> measurementSettings,
             IOptions<ControllerSettings> controllerSettings,
-            IGateway gateway
+            ISerialGateway gateway
         )
         {
             MeasurementSettings = measurementSettings.Value;

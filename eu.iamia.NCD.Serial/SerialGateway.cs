@@ -7,7 +7,7 @@ using eu.iamia.NCD.DeviceCommunication.Contract;
 
 namespace eu.iamia.NCD.Serial
 {
-    public class SerialGateway : IGateway, IDisposable
+    public class SerialGateway : ISerialGateway, IDisposable
     {
         private static TimeSpan ReadTimeout => TimeSpan.FromSeconds(5);
 
@@ -131,7 +131,7 @@ namespace eu.iamia.NCD.Serial
             ResultReady?.Dispose();
         }
 
-        public IDataFromDevice Execute(ICommand command)
+        protected IDataFromDevice Execute(ICommand command)
         {
             var timer = EasyStopwatch.StartMs();
             try
@@ -150,6 +150,16 @@ namespace eu.iamia.NCD.Serial
             {
                 Console.WriteLine($"Execute took: {timer.Stop()} ms");
             }
+        }
+
+        public IDataFromDevice Execute(IDeviceCommand command)
+        {
+            return Execute((ICommand)command);
+        }
+
+        public IDataFromDevice Execute(IControllerCommand command)
+        {
+            return Execute((ICommand)command);
         }
     }
 

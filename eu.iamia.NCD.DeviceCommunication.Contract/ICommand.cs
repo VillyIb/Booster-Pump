@@ -2,6 +2,9 @@
 
 namespace eu.iamia.NCD.DeviceCommunication.Contract
 {
+    /// <summary>
+    /// Raw I2C Command Request.
+    /// </summary>
     public interface ICommand
     {
         IEnumerable<byte> I2C_Data();
@@ -13,28 +16,38 @@ namespace eu.iamia.NCD.DeviceCommunication.Contract
         byte DeviceAddress { get; }
     }
 
-    public interface ICommandRead : ICommandDevice
+    // Device commands - actually this might all be serial converter commands - see NCD API...
+
+    public interface IDeviceCommand : ICommand
     { }
 
-    public interface ICommandWrite : ICommandDevice
+    public interface ICommandRead : IDeviceCommand
     { }
 
-    public interface ICommandWriteRead : ICommandDevice
+    public interface ICommandWrite : IDeviceCommand
     { }
 
-
-    public interface ICommandControllerBusScan : ICommand
+    public interface ICommandWriteRead : IDeviceCommand
     { }
 
-    public interface ICommandControllerStop : ICommand
+    // Controller commands - might not be relevant for non serial port -> USB -> I2C_Controller.
+
+    public interface IControllerCommand : ICommand
     { }
 
-    public interface ICommandControllerReboot : ICommand
+    // TODO is this a Controller- or a Gateway(bus) Command ? it might be relevant on a DirectGateway.
+    public interface ICommandControllerBusScan : IControllerCommand
     { }
 
-    public interface ICommandControllerHardReboot : ICommand
+    public interface ICommandControllerStop : IControllerCommand
     { }
 
-    public interface ICommandControllerTest2WayCommunication : ICommand
+    public interface ICommandControllerReboot : IControllerCommand
+    { }
+
+    public interface ICommandControllerHardReboot : IControllerCommand
+    { }
+
+    public interface ICommandControllerTest2WayCommunication : IControllerCommand
     { }
 }

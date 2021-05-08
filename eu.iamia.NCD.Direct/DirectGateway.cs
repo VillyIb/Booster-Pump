@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using eu.iamia.NCD.DeviceCommunication.Contract;
 
 namespace eu.iamia.NCD.Direct
 {
-    public class DirectGateway : IGateway
+    public class DirectGateway : IDirectGateway
     {
-        public IDataFromDevice Execute(ICommand command)
+        public IDataFromDevice Execute(IDeviceCommand command)
         {
             throw new NotImplementedException();
         }
