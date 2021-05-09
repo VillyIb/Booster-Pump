@@ -1,5 +1,4 @@
-﻿using BoosterPumpLibrary.Contracts;
-using BoosterPumpLibrary.ModuleBase;
+﻿using BoosterPumpLibrary.ModuleBase;
 using BoosterPumpLibrary.Settings;
 using System;
 using System.Collections.Generic;
@@ -17,8 +16,9 @@ namespace Modules
         // Technical note regarding calculating values.
         // see: https://www.st.com/resource/en/technical_note/dm00242307-how-to-interpret-pressure-and-temperature-readings-in-the-lps25hb-pressure-sensor-stmicroelectronics.pdf
 
-        public override byte DefaultAddress => 0x5C;
+        public static byte DefaultAddressValue => 0x5C;
 
+        public override byte DefaultAddress => DefaultAddressValue;
 
         private readonly Register Settings0X10 = new Register(0X10, "RES_CONF", 1);
 

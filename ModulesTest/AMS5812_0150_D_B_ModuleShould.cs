@@ -1,11 +1,9 @@
-﻿//using BoosterPumpLibrary.Commands;
-//using BoosterPumpLibrary.Contracts;
+﻿using System.Collections.Generic;
 using eu.iamia.NCD.DeviceCommunication.Contract;
 using NSubstitute;
 using Xunit;
 using Modules;
-//using IDataFromDevice = BoosterPumpLibrary.Contracts.IDataFromDevice;
-using eu.iamia.NCD.API;
+using eu.iamia.NCD.Serial;
 
 // ReSharper disable InconsistentNaming
 
@@ -25,14 +23,15 @@ namespace ModulesTest
         [Fact]
         public void SendReadSequenceCallingReadFromDevice()
         {
-            //IDataFromDevice fakeReturnValue = new DataFromDevice { Header = 0xAA, ByteCount = 0x04, Payload = new byte[] { 0x3F, 0xEB, 0x36, 0xE2 }, Checksum = 0xF0 };
-            //_FakeGateway.Execute(Arg.Any<CommandRead>()).Returns(fakeReturnValue);
+            var expectedPayloadAsHex = new NcdApiProtocol(new byte[] { DeviceRead.SerialCommandValue, _Sut.DefaultAddress, _Sut.LengthRequested }).PayloadAsHex;
 
-            //_FakeGateway.Execute(new CommandRead(00, 0));
+            var fakeReturnValue = new NcdApiProtocol(new List<byte> { 0x3F, 0xEB, 0x36, 0xE2 }); // Defines Pressure and Temperature.
+            _FakeGateway.Execute(Arg.Is<NcdApiProtocol>(cmd => cmd.PayloadAsHex == expectedPayloadAsHex)).Returns(fakeReturnValue);
 
             _Sut.ReadFromDevice();
 
-            _FakeGateway.Received().Execute(Arg.Is<CommandRead>(c => c.I2CDataAsHex == "78 04 "));
+            _FakeGateway.Received().Execute(Arg.Any<INcdApiProtocol>());
+            _FakeGateway.Received().Execute(Arg.Is<NcdApiProtocol>(cmd => cmd.PayloadAsHex == "BF 78 04 "));
 
             Assert.Equal(-1.66f, _Sut.Pressure);
             Assert.Equal(20.21f, _Sut.Temperature);

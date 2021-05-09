@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using BoosterPumpLibrary.Contracts;
 using BoosterPumpLibrary.Settings;
 using eu.iamia.NCD.DeviceCommunication.Contract;
 using eu.iamia.NCD.API;
-using eu.iamia.NCD.Serial;
 
 // ReSharper disable UnusedMember.Global
 
@@ -16,6 +14,8 @@ namespace BoosterPumpLibrary.ModuleBase
         public Guid Id { get; }
 
         public abstract byte DefaultAddress { get; }
+
+        public virtual byte LengthRequested => 0;
 
         public ByteWrapper AddressIncrement { get; protected set; }
 

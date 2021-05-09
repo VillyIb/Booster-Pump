@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
+using eu.iamia.NCD.API.Contract;
 using eu.iamia.ReliableSerialPort;
 using eu.iamia.Util;
 using eu.iamia.NCD.DeviceCommunication.Contract;
@@ -131,6 +132,7 @@ namespace eu.iamia.NCD.Serial
             ResultReady?.Dispose();
         }
 
+        [Obsolete("Use: INcdApiProtocol Execute(INcdApiProtocol i2cCommand)")]
         public IDataFromDevice Execute(ICommand command)
         {
             var timer = EasyStopwatch.StartMs();
@@ -140,6 +142,26 @@ namespace eu.iamia.NCD.Serial
 
                 var device = new DeviceFactory().GetDevice(command);
                 SerialPort.Write(device.GetDevicePayload());
+
+                return WaitForResultToBeReady()
+                        ? new DataFromDevice(Header, ByteCount, Payload, Checksum)
+                        : null
+                    ;
+            }
+            finally
+            {
+                Console.WriteLine($"Execute took: {timer.Stop()} ms");
+            }
+        }
+
+        public INcdApiProtocol Execute(INcdApiProtocol i2CCommand)
+        {
+            var timer = EasyStopwatch.StartMs();
+            try
+            {
+                Init();
+
+                SerialPort.Write(i2CCommand.GetApiEncodedData());
 
                 return WaitForResultToBeReady()
                         ? new DataFromDevice(Header, ByteCount, Payload, Checksum)

@@ -11,6 +11,7 @@ using BoosterPumpLibrary.Logger;
 using BoosterPumpConfiguration;
 using eu.iamia.NCD.DeviceCommunication.Contract;
 using eu.iamia.NCD.API;
+using eu.iamia.NCD.Serial;
 
 namespace BoosterPumpApplication
 {
@@ -23,6 +24,8 @@ namespace BoosterPumpApplication
 
         public ControllerSettings ControllerSettings { get; }
 
+        private DeviceFactory DeviceFactory { get; }
+
         public Controller(
             IOptions<MeasurementSettings> measurementSettings,
             IOptions<ControllerSettings> controllerSettings,
@@ -32,6 +35,7 @@ namespace BoosterPumpApplication
             MeasurementSettings = measurementSettings.Value;
             Gateway = gateway;
             ControllerSettings = controllerSettings.Value;
+            DeviceFactory = new DeviceFactory();
         }
 
         private Stopwatch Stopwatch;
@@ -86,7 +90,9 @@ namespace BoosterPumpApplication
         private void CheckSerialConverter()
         {
             var command = new CommandControllerControllerBusSCan();
-            var dataFromDevice = Gateway.Execute(command);
+            var i2CCommand = DeviceFactory.GetI2CCommand(command);
+            var dataFromDevice = Gateway.Execute(i2CCommand);
+
             if (!dataFromDevice.IsValid)
             {
                 throw new ApplicationException(dataFromDevice.ToString());
@@ -201,9 +207,10 @@ namespace BoosterPumpApplication
                 catch (ApplicationException)
                 {
                     var command = new CommandControllerControllerTest2WayCommunication();
-                    var result = Gateway.Execute(command);
+                    var i2CCommand = DeviceFactory.GetI2CCommand(command );
+                    var dataFromDevice = Gateway.Execute(i2CCommand);
 
-                    Console.WriteLine($"Reset serial converter, {result}");
+                    Console.WriteLine($"Reset serial converter, {dataFromDevice}");
                 }
             }
             catch (Exception ex)

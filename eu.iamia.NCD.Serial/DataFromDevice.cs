@@ -17,25 +17,11 @@ namespace eu.iamia.NCD.Serial
         public DataFromDevice(IEnumerable<byte> payload) : base(payload)
         { }
 
-        public IEnumerable<byte> ApiEncodedData()
-        {
-            yield return Header;
-            yield return ByteCount;
-            if (null != Payload)
-            {
-                foreach (var current in Payload)
-                {
-                    yield return current;
-                }
-            }
-            yield return Checksum;
-        }
-
         public override string ToString()
         {
             var result = new StringBuilder();
 
-            foreach (var current in ApiEncodedData())
+            foreach (var current in GetApiEncodedData())
             {
                 result.AppendFormat($"{current:X2} ");
             }

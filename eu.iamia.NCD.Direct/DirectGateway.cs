@@ -11,5 +11,10 @@ namespace eu.iamia.NCD.Direct
         {
             throw new NotImplementedException();
         }
+
+        public INcdApiProtocol Execute(INcdApiProtocol i2CCommand)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

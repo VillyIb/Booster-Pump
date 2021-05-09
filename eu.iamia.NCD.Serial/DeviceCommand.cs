@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using eu.iamia.NCD.API;
-using eu.iamia.NCD.API.Contract;
 using eu.iamia.NCD.DeviceCommunication.Contract;
 
 namespace eu.iamia.NCD.Serial
 {
+    // TODO rename to ...Factory...
 
     public abstract class DeviceCommand
     {
         public ICommand Command { get; }
 
-        public abstract byte SerialCommand { get; }
+        protected abstract byte SerialCommand { get; }
 
         protected DeviceCommand(ICommand command)
         {
@@ -30,44 +29,74 @@ namespace eu.iamia.NCD.Serial
 
     public class DeviceRead : DeviceCommand
     {
-        public override byte SerialCommand => 0xBF;
+        public static byte SerialCommandValue => 0xBF;
 
-        public DeviceRead(ICommand command) : base(command)
+        protected override byte SerialCommand => SerialCommandValue;
+
+        internal DeviceRead(ICommand command) : base(command)
         { }
     }
 
     public class DeviceWrite : DeviceCommand
     {
-        public override byte SerialCommand => 0xBE;
+        public static byte SerialCommandValue => 0xBE;
 
-        public DeviceWrite(ICommand command) : base(command)
+        protected override byte SerialCommand => SerialCommandValue;
+
+        internal DeviceWrite(ICommand command) : base(command)
         { }
     }
 
     public class DeviceWriteRead : DeviceCommand
     {
-        public override byte SerialCommand => 0xC0;
+        public static byte SerialCommandValue => 0xC0;
 
-        public DeviceWriteRead(ICommand command) : base(command)
+        protected override byte SerialCommand => SerialCommandValue;
+
+        internal DeviceWriteRead(ICommand command) : base(command)
         { }
     }
 
-    public class DeviceConverterCommand : DeviceCommand
+    public class DeviceBusScan : DeviceCommand
     {
-        public override byte SerialCommand => 0xFE;
+        public static byte SerialCommandValue => 0xC1;
 
-        public DeviceConverterCommand(ICommand command) : base(command)
+        protected override byte SerialCommand => SerialCommandValue;
+
+        internal DeviceBusScan(ICommand command) : base(command)
         { }
     }
 
-    public class DeviceBusScan : DeviceConverterCommand
+    public class DeviceStopCommand : DeviceCommand
     {
-        public override byte SerialCommand => 0xC1;
+        public static byte SerialCommandValue => 0xFE;
 
-        public DeviceBusScan(ICommand command) : base(command)
+        protected override byte SerialCommand => SerialCommandValue;
+
+        internal DeviceStopCommand(ICommand command) : base(command)
         { }
     }
-    
+
+    public class DeviceConverterHardRebootCommand : DeviceCommand
+    {
+        public static byte SerialCommandValue => 0xFE;
+
+        protected override byte SerialCommand => SerialCommandValue;
+
+        internal DeviceConverterHardRebootCommand(ICommand command) : base(command)
+        { }
+    }
+
+    public class DeviceConverterRebootCommand : DeviceCommand
+    {
+        public static byte SerialCommandValue => 0xFE;
+
+        protected override byte SerialCommand => SerialCommandValue;
+
+        internal DeviceConverterRebootCommand(ICommand command) : base(command)
+        { }
+    }
+
     public class DeviceFactory
     {
         public DeviceCommand GetDevice(ICommand command)
@@ -79,20 +108,17 @@ namespace eu.iamia.NCD.Serial
                 ICommandRead _ => new DeviceRead(command),
                 ICommandWrite _ => new DeviceWrite(command),
                 ICommandWriteRead _ => new DeviceWriteRead(command),
+                ICommandControllerBusScan _ => new DeviceBusScan(command),
+                ICommandControllerHardReboot _ => new DeviceConverterHardRebootCommand(command),
+                ICommandControllerReboot _ => new DeviceConverterRebootCommand(command),
+                ICommandControllerStop _ => new DeviceStopCommand(command),
                 _ => null
             };
         }
 
-
-
-        public DeviceCommand GetDevice(ICommandRead command) => new DeviceRead(command);
-        public DeviceCommand GetDevice(ICommandWrite command) => new DeviceWrite(command);
-        public DeviceCommand GetDevice(ICommandWriteRead command) => new DeviceWriteRead(command);
-
-        public DeviceCommand GetDevice(ICommandControllerBusScan command) => new DeviceBusScan(command);
-        public DeviceCommand GetDevice(ICommandControllerHardReboot command) => new DeviceConverterCommand(command);
-        public DeviceCommand GetDevice(ICommandControllerReboot command) => new DeviceConverterCommand(command);
-        public DeviceCommand GetDevice(ICommandControllerStop command) => new DeviceConverterCommand(command);
-
+        public INcdApiProtocol GetI2CCommand(ICommand command)
+        {
+            return new NcdApiProtocol(GetDevice(command).GetDevicePayload());
+        }
     }
 }

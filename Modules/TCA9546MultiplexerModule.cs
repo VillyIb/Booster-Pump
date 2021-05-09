@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using BoosterPumpLibrary.Contracts;
 using BoosterPumpLibrary.ModuleBase;
 using BoosterPumpLibrary.Settings;
 using eu.iamia.NCD.DeviceCommunication.Contract;
@@ -26,7 +25,9 @@ namespace Modules
     {
         // See: https://media.ncd.io/sites/2/20170721134413/tca9546a.pdf
 
-        public override byte DefaultAddress => 0x70;
+        public static byte DefaultAddressValue => 0x70;
+
+        public override byte DefaultAddress => DefaultAddressValue;
 
         private readonly Register Setting0X00 = new Register(0x00, "Open channels", 1);
 

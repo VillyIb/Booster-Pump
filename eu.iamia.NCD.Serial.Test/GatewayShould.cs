@@ -13,12 +13,14 @@ namespace eu.iamia.NCD.Serial.Test
     public class GatewayShould
     {
         private ISerialPortDecorator FakeSerialPortDecorator;
+        private DeviceFactory DeviceFactory;
         private IGateway Sut;
 
         private void Init()
         {
             FakeSerialPortDecorator = Substitute.For<ISerialPortDecorator>();
             Sut = new SerialGateway(FakeSerialPortDecorator);
+            DeviceFactory = new DeviceFactory();
         }
 
         [Fact]
@@ -35,8 +37,9 @@ namespace eu.iamia.NCD.Serial.Test
 
             var command = new CommandRead(0xf1, 1);
 
-            Sut.Execute(command); // calls 
-            Sut.Execute(command); // calls 
+            var i2CCommand = DeviceFactory.GetI2CCommand(command);
+            Sut.Execute(i2CCommand);
+            Sut.Execute(i2CCommand);
 
             FakeSerialPortDecorator.Received(1).Open();
             FakeSerialPortDecorator.Received(2).Write(Arg.Any<IEnumerable<byte>>());
@@ -49,8 +52,9 @@ namespace eu.iamia.NCD.Serial.Test
 
             var command = new CommandRead(0xf1, 1);
 
-            Sut.Execute(command); // calls 
-            Sut.Execute(command); // calls 
+            var i2CCommand = DeviceFactory.GetI2CCommand(command);
+            Sut.Execute(i2CCommand);
+            Sut.Execute(i2CCommand);
 
             FakeSerialPortDecorator.Received(2).Write(Arg.Any<IEnumerable<byte>>());
         }
@@ -62,8 +66,9 @@ namespace eu.iamia.NCD.Serial.Test
 
             var command = new CommandRead(0xf1, 1);
 
-            Sut.Execute(command);
-            
+            var i2CCommand = DeviceFactory.GetI2CCommand(command);
+            Sut.Execute(i2CCommand);
+
             ((SerialGateway)Sut).Dispose();
             FakeSerialPortDecorator.Received(1).Dispose();
         }
@@ -71,9 +76,11 @@ namespace eu.iamia.NCD.Serial.Test
         [Fact]
         public void ReceiveResponseFromExecute()
         {
+            Init();
+
             var expectedResponse = new List<byte> { 0x55, 0x56 };
             var overflow = new List<byte> {0x99, 0xFF};
-            List<byte> fakeResponse = new DataFromDevice(expectedResponse).ApiEncodedData().ToList();
+            List<byte> fakeResponse = new DataFromDevice(expectedResponse).GetApiEncodedData().ToList();
                 fakeResponse.AddRange( overflow);
             var command = new CommandRead(0xf1, 1);
 
@@ -82,7 +89,9 @@ namespace eu.iamia.NCD.Serial.Test
             fakeSerialPortDecorator.GetResponse().Returns(fakeResponse);
             Sut = new SerialGateway(fakeSerialPortDecorator);
 
-            IDataFromDevice response = Sut.Execute(command);
+            var i2CCommand = DeviceFactory.GetI2CCommand(command);
+            var response = Sut.Execute(i2CCommand);
+
             Assert.Equal(expectedResponse, response.Payload);
             Assert.True(response.IsValid);
         }

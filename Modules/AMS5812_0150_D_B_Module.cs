@@ -4,6 +4,7 @@ using BoosterPumpLibrary.ModuleBase;
 using BoosterPumpLibrary.Settings;
 using eu.iamia.NCD.API;
 using eu.iamia.NCD.DeviceCommunication.Contract;
+using eu.iamia.NCD.Serial;
 
 namespace Modules
 {
@@ -11,7 +12,11 @@ namespace Modules
     // ReSharper disable once InconsistentNaming
     public class AMS5812_0150_D_B_Module : BaseModuleV2
     {
-        public override byte DefaultAddress => 0x78;
+        public static byte DefaultAddressValue => 0x78;
+
+        public override byte DefaultAddress => DefaultAddressValue;
+
+        public override byte LengthRequested => 0x04;
 
         /// <summary>
         /// Pressure module
@@ -42,8 +47,9 @@ namespace Modules
 
         public void ReadFromDevice()
         {
-            var command = new CommandRead(DeviceAddress, 4);
-            var response = Gateway.Execute(command);
+            var command = new CommandRead(DeviceAddress, LengthRequested);
+            var i2CCommand = new DeviceFactory().GetI2CCommand(command);
+            var response = Gateway.Execute(i2CCommand);
             if (!response.IsValid) { return; }
 
             var measuredPressure = response.Payload[0] << 8 | response.Payload[1];

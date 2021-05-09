@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Text;
+using eu.iamia.NCD.DeviceCommunication.Contract;
 
 namespace eu.iamia.NCD.Serial
 {
@@ -16,7 +18,7 @@ namespace eu.iamia.NCD.Serial
 
         public byte Checksum { get; }
 
-        public byte CalculatedChecksum
+        private byte CalculatedChecksum
         {
             get
             {
@@ -60,5 +62,45 @@ namespace eu.iamia.NCD.Serial
             Checksum = CalculatedChecksum;
         }
 
+        public IEnumerable<byte> GetApiEncodedData()
+        {
+            yield return Header;
+            yield return ByteCount;
+            if (null != Payload)
+            {
+                foreach (var current in Payload)
+                {
+                    yield return current;
+                }
+            }
+            yield return Checksum;
+        }
+
+        public string PayloadAsHex
+        {
+            get
+            {
+                var result = new StringBuilder();
+
+                foreach (var current in Payload)
+                {
+                    result.AppendFormat($"{current:X2} ");
+                }
+
+                return result.ToString();
+            }
+        }
+
+        public override string ToString()
+        {
+            var result = new StringBuilder();
+
+            foreach (var current in GetApiEncodedData())
+            {
+                result.AppendFormat($"{current:X2} ");
+            }
+
+            return result.ToString();
+        }
     }
 }

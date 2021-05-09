@@ -1,5 +1,4 @@
-﻿using BoosterPumpLibrary.Contracts;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using eu.iamia.NCD.DeviceCommunication.Contract;
 
@@ -92,7 +91,9 @@ namespace Modules
         /// </summary>
         private BitSetting Digit2Intensity => Setting0X11.GetOrCreateSubRegister(4, 0, "Digit 2 intensity");
 
-        public override byte DefaultAddress => 0x00;
+        public static byte DefaultAddressValue => 0x00;
+
+        public override byte DefaultAddress => DefaultAddressValue;
 
         public As1115Module(IGateway gateway) : base(gateway)
         { }

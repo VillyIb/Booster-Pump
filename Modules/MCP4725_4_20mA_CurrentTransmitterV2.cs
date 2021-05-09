@@ -1,5 +1,4 @@
-﻿using BoosterPumpLibrary.Contracts;
-using BoosterPumpLibrary.Settings;
+﻿using BoosterPumpLibrary.Settings;
 using System;
 using System.Collections.Generic;
 using eu.iamia.NCD.DeviceCommunication.Contract;
@@ -15,7 +14,9 @@ namespace Modules
         // Product, see: https://store.ncd.io/product/1-channel-4-20ma-current-loop-transmitter-i2c-mini-module/
         // DataSheet see: https://media.ncd.io/sites/2/20170721135048/MCP4725.pdf
 
-        public override byte DefaultAddress => 0x60; // optional 0x61
+        public static byte DefaultAddressValue => 0x60; // Optional 0x61
+
+        public override byte DefaultAddress => DefaultAddressValue;
 
         private readonly Register Setting = new Register(0, "Settings", 3);
 
