@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using eu.iamia.NCD.API;
-using eu.iamia.NCD.Bridge;
+﻿using eu.iamia.NCD.Bridge;
 using eu.iamia.NCD.DeviceCommunication.Contract;
 using eu.iamia.NCD.Serial;
 using Modules;
@@ -19,7 +17,7 @@ namespace ModulesTest
         public LPS25HB_BarometerModuleShould()
         {
             _FakeGateway = Substitute.For<IGateway>();
-            Sut = new LPS25HB_BarometerModule(_FakeGateway, new ApiToSerialBridge(_FakeGateway));
+            Sut = new LPS25HB_BarometerModule(new ApiToSerialBridge(_FakeGateway));
             }
 
         [Fact]

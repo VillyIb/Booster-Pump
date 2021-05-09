@@ -22,7 +22,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BoosterPumpLibrary\BoosterPumpLibrary.csproj" />
-    <ProjectReference Include="..\eu.iamia.NCD.API.Contract\eu.iamia.NCD.API.Contract.csproj" />
     <ProjectReference Include="..\eu.iamia.NCD.DeviceCommunication.Contract\eu.iamia.NCD.DeviceCommunication.Contract.csproj" />
     <ProjectReference Include="..\Modules\Modules.csproj" />
   </ItemGroup>

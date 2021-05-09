@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using eu.iamia.NCD.API;
-using eu.iamia.NCD.Bridge;
 using eu.iamia.NCD.DeviceCommunication.Contract;
 
 // ReSharper disable InconsistentNaming
@@ -60,7 +59,7 @@ namespace Modules
 
         protected override IEnumerable<RegisterBase> Registers => new List<RegisterBase> { Settings0X20, Settings0X10 };
 
-        public LPS25HB_BarometerModule(IGateway gateway, IBridge apiToSerialBridge) : base(gateway, apiToSerialBridge)
+        public LPS25HB_BarometerModule(IBridge apiToSerialBridge) : base(apiToSerialBridge)
         { }
 
         public virtual void Init()

@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using eu.iamia.NCD.API.Contract;
 using eu.iamia.NCD.DeviceCommunication.Contract;
 

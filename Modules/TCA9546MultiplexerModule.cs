@@ -35,7 +35,7 @@ namespace Modules
 
         protected override IEnumerable<RegisterBase> Registers => new List<RegisterBase> { Setting0X00 };
 
-        public TCA9546MultiplexerModule(IGateway gateway, IBridge apiToSerialBridge) : base(gateway, apiToSerialBridge)
+        public TCA9546MultiplexerModule(IBridge apiToSerialBridge) : base(apiToSerialBridge)
         { }
 
         /// <summary>

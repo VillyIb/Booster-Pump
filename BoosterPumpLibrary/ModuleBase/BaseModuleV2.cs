@@ -22,24 +22,9 @@ namespace BoosterPumpLibrary.ModuleBase
 
         public byte DeviceAddress => DefaultAddress + (AddressIncrement ?? new ByteWrapper(0));
 
-        //[Obsolete]
-        //protected ISerialConverter SerialPort { get; }
-
-        //[Obsolete(message:"Use BaseModule(IGateway)")]
-        //protected BaseModuleV2(ISerialConverter serialPort)
-        //{
-        //    //SerialPort = serialPort;
-        //    AddressIncrement = null;
-        //    Id = Guid.NewGuid();
-        //    Console.WriteLine($"{this.GetType().Name}: {Id}");
-        //}
-
-        protected IGateway Gateway { get; }
-
-        protected BaseModuleV2(IGateway gateway, IBridge apiToSerialBridge)
+        protected BaseModuleV2(IBridge apiToSerialBridge)
         {
             ApiToSerialBridge = apiToSerialBridge;
-            Gateway = gateway;
             AddressIncrement = null;
             Id = Guid.NewGuid();
             Console.WriteLine($"{this.GetType().Name}: {Id}");
@@ -116,14 +101,14 @@ namespace BoosterPumpLibrary.ModuleBase
 
         public void SelectRegisterForReading(Register register)
         {
-            var writeCommand = new CommandWrite(DeviceAddress, new[] {register.RegisterAddress});
+            var writeCommand = new CommandWrite(DeviceAddress, new[] { register.RegisterAddress });
             // ReSharper disable once UnusedVariable
             var returnValue = ApiToSerialBridge.Execute(writeCommand);
         }
 
         public void SelectRegisterForReadingWithAutoIncrement(Register register)
         {
-            var writeCommand = new CommandWrite(DeviceAddress, new[] {(byte) (register.RegisterAddress | 0x80)});
+            var writeCommand = new CommandWrite(DeviceAddress, new[] { (byte)(register.RegisterAddress | 0x80) });
             // ReSharper disable once UnusedVariable
             var returnValue = ApiToSerialBridge.Execute(writeCommand);
         }

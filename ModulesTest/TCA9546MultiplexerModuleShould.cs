@@ -1,6 +1,4 @@
-﻿using eu.iamia.NCD.API;
-using eu.iamia.NCD.API.Contract;
-using eu.iamia.NCD.Bridge;
+﻿using eu.iamia.NCD.Bridge;
 using eu.iamia.NCD.DeviceCommunication.Contract;
 using eu.iamia.NCD.Serial;
 using Modules;
@@ -19,7 +17,7 @@ namespace ModulesTest
         public TCA9546MultiplexerModuleShould()
         {
             _FakeSerialPort = Substitute.For<IGateway>();
-            _Sut = new TCA9546MultiplexerModule(_FakeSerialPort, new ApiToSerialBridge(_FakeSerialPort));
+            _Sut = new TCA9546MultiplexerModule(new ApiToSerialBridge(_FakeSerialPort));
         }
 
         [Fact]

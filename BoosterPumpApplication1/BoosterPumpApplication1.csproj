@@ -23,16 +23,12 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.1" />
-    <PackageReference Include="System.Configuration.ConfigurationManager" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\BoosterPumpApplication\BoosterPumpApplication.csproj" />
-    <ProjectReference Include="..\BoosterPumpConfiguration\BoosterPumpConfiguration.csproj" />
     <ProjectReference Include="..\BoosterPumpLibrary\BoosterPumpLibrary.csproj" />
     <ProjectReference Include="..\eu.iamia.Configuration\eu.iamia.Configuration.csproj" />
-    <ProjectReference Include="..\eu.iamia.NCD.API\eu.iamia.NCD.API.csproj" />
-    <ProjectReference Include="..\Modules\Modules.csproj" />
   </ItemGroup>
 
 </Project>

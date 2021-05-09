@@ -1,5 +1,4 @@
-﻿using System;
-using eu.iamia.NCD.API.Contract;
+﻿using eu.iamia.NCD.API.Contract;
 
 namespace eu.iamia.NCD.DeviceCommunication.Contract
 {

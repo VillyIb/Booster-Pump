@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using BoosterPumpLibrary.Contracts;
 using BoosterPumpConfiguration;
 using BoosterPumpLibrary.Logger;
 using System.Diagnostics.CodeAnalysis;

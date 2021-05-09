@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using BoosterPumpLibrary.ModuleBase;
 using BoosterPumpLibrary.Settings;
 using eu.iamia.NCD.API;
-using eu.iamia.NCD.Bridge;
 using eu.iamia.NCD.DeviceCommunication.Contract;
-using eu.iamia.NCD.Serial;
 
 namespace Modules
 {
@@ -27,7 +25,7 @@ namespace Modules
         /// </summary>
         /// <param name="gateway"></param>
         /// <param name="apiToSerialBridge"></param>
-        public AMS5812_0150_D_B_Module(IGateway gateway, IBridge apiToSerialBridge) : base(gateway, apiToSerialBridge)
+        public AMS5812_0150_D_B_Module(IBridge apiToSerialBridge) : base(apiToSerialBridge)
         {
             ApiToSerialBridge = apiToSerialBridge;
         }

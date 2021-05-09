@@ -1,6 +1,4 @@
-﻿using BoosterPumpLibrary.Contracts;
-using eu.iamia.NCD.API;
-using eu.iamia.NCD.Bridge;
+﻿using eu.iamia.NCD.Bridge;
 using eu.iamia.NCD.DeviceCommunication.Contract;
 using eu.iamia.NCD.Serial;
 using NSubstitute;
@@ -19,7 +17,7 @@ namespace ModulesTest
         public MCP4725_4_20mA_CurrentTransmitterV2Should()
         {
             FakeSerialPort = Substitute.For<IGateway>();
-            Sut = new MCP4725_4_20mA_CurrentTransmitterV2(FakeSerialPort, new ApiToSerialBridge(FakeSerialPort));
+            Sut = new MCP4725_4_20mA_CurrentTransmitterV2(new ApiToSerialBridge(FakeSerialPort));
         }
 
         [Fact]

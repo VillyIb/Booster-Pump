@@ -95,7 +95,7 @@ namespace Modules
 
         public override byte DefaultAddress => DefaultAddressValue;
 
-        public As1115Module(IGateway gateway, IBridge apiToSerialBridge) : base(gateway, apiToSerialBridge)
+        public As1115Module(IBridge apiToSerialBridge) : base(apiToSerialBridge)
         { }
 
         protected override IEnumerable<RegisterBase> Registers => new[] {
