@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Text;
 using eu.iamia.NCD.DeviceCommunication.Contract;
@@ -120,31 +121,41 @@ namespace eu.iamia.NCD.API
 
     public class CommandControllerControllerBusSCan : CommandController, ICommandControllerBusScan
     {
-        public CommandControllerControllerBusSCan() : base(new byte[] { 0x00 })
+        public static byte[] PayloadValue = new byte[] {0x00};
+
+        public CommandControllerControllerBusSCan() : base( PayloadValue )
         { }
     }
 
     public class CommandControllerControllerStop : CommandController, ICommandControllerStop
     {
-        public CommandControllerControllerStop() : base(new byte[] { 0x21, 0xBB })
+        public static byte[] PayloadValue = new byte[] { 0x21, 0xBB };
+
+        public CommandControllerControllerStop() : base(PayloadValue)
         { }
     }
 
     public class CommandControllerControllerReboot : CommandController, ICommandControllerReboot
     {
-        public CommandControllerControllerReboot() : base(new byte[] { 0x21, 0xBC })
+        public static byte[] PayloadValue = new byte[] { 0x21, 0xBC };
+        
+        public CommandControllerControllerReboot() : base(PayloadValue)
         { }
     }
 
     public class CommandControllerControllerHardReboot : CommandController, ICommandControllerHardReboot
     {
-        public CommandControllerControllerHardReboot() : base(new byte[] { 0x21, 0xBD })
+        public static byte[] PayloadValue = new byte[] { 0x21, 0xBD };
+        
+        public CommandControllerControllerHardReboot() : base(PayloadValue )
         { }
     }
 
     public class CommandControllerControllerTest2WayCommunication : CommandController, ICommandControllerTest2WayCommunication
     {
-        public CommandControllerControllerTest2WayCommunication() : base(new byte[] { 0x21 })
+        public static byte[] PayloadValue = new byte[] { 0x21 };
+        
+        public CommandControllerControllerTest2WayCommunication() : base(PayloadValue)
         { }
     }
 
