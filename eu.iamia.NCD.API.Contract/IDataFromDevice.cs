@@ -1,14 +1,12 @@
 ﻿// ReSharper disable UnusedMemberInSuper.Global
 
-using System;
 using System.Collections.Immutable;
 
-namespace eu.iamia.NCD.DeviceCommunication.Contract
+namespace eu.iamia.NCD.API.Contract
 {
     /// <summary>
     /// Raw I2C Command Response.
     /// </summary>
-    [Obsolete("Use: INcdApiProtocol")]
     public interface IDataFromDevice
     {
         /// <summary>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
+using eu.iamia.NCD.API.Contract;
 using eu.iamia.ReliableSerialPort;
 using eu.iamia.Util;
 using eu.iamia.NCD.DeviceCommunication.Contract;

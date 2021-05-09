@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Text;
+using eu.iamia.NCD.API.Contract;
 using eu.iamia.NCD.DeviceCommunication.Contract;
 
 namespace eu.iamia.NCD.API

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using eu.iamia.NCD.DeviceCommunication.Contract;
+using eu.iamia.NCD.API.Contract;
 
 namespace eu.iamia.NCD.Serial
 {
@@ -10,7 +10,6 @@ namespace eu.iamia.NCD.Serial
     /// </summary>
     public class DataFromDevice : NcdApiProtocol, IDataFromDevice
     {
-        [Obsolete("Use: NcdApiProtocol")]
         public DataFromDevice(byte header, byte byteCount, IEnumerable<byte> payload, byte checksum)
             : base(header, byteCount, payload, checksum)
         { }

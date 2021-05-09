@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace eu.iamia.NCD.DeviceCommunication.Contract
+namespace eu.iamia.NCD.API.Contract
 {
     /// <summary>
     /// Raw I2C Command Request.
