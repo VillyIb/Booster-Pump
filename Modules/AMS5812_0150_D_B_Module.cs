@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using BoosterPumpLibrary.ModuleBase;
 using BoosterPumpLibrary.Settings;
 using eu.iamia.NCD.API;
+using eu.iamia.NCD.Bridge;
 using eu.iamia.NCD.DeviceCommunication.Contract;
 using eu.iamia.NCD.Serial;
 
@@ -12,6 +13,9 @@ namespace Modules
     // ReSharper disable once InconsistentNaming
     public class AMS5812_0150_D_B_Module : BaseModuleV2
     {
+        // TODO move property to base class.
+        private readonly IBridge ApiToSerialBridge;
+
         public static byte DefaultAddressValue => 0x78;
 
         public override byte DefaultAddress => DefaultAddressValue;
@@ -22,8 +26,11 @@ namespace Modules
         /// Pressure module
         /// </summary>
         /// <param name="gateway"></param>
-        public AMS5812_0150_D_B_Module(IGateway gateway) : base(gateway)
-        { }
+        /// <param name="apiToSerialBridge"></param>
+        public AMS5812_0150_D_B_Module(IGateway gateway, IBridge apiToSerialBridge) : base(gateway, apiToSerialBridge)
+        {
+            ApiToSerialBridge = apiToSerialBridge;
+        }
 
         public float Pressure { get; protected set; }
 
@@ -48,8 +55,9 @@ namespace Modules
         public void ReadFromDevice()
         {
             var command = new CommandRead(DeviceAddress, LengthRequested);
-            var i2CCommand = new DeviceFactory().GetI2CCommand(command);
-            var response = Gateway.Execute(i2CCommand);
+
+            var response =  ApiToSerialBridge.Execute(command);
+
             if (!response.IsValid) { return; }
 
             var measuredPressure = response.Payload[0] << 8 | response.Payload[1];

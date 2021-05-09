@@ -11,6 +11,7 @@ namespace BoosterPumpLibrary.ModuleBase
 {
     public abstract partial class BaseModuleV2
     {
+        protected readonly IBridge ApiToSerialBridge;
         public Guid Id { get; }
 
         public abstract byte DefaultAddress { get; }
@@ -35,8 +36,9 @@ namespace BoosterPumpLibrary.ModuleBase
 
         protected IGateway Gateway { get; }
 
-        protected BaseModuleV2(IGateway gateway)
+        protected BaseModuleV2(IGateway gateway, IBridge apiToSerialBridge)
         {
+            ApiToSerialBridge = apiToSerialBridge;
             Gateway = gateway;
             AddressIncrement = null;
             Id = Guid.NewGuid();
@@ -87,7 +89,7 @@ namespace BoosterPumpLibrary.ModuleBase
             var retryCount = 0;
             while (enumerator.MoveNext() && enumerator.Current != null)
             {
-                var fromDevice = Gateway.Execute(enumerator.Current);
+                var fromDevice = ApiToSerialBridge.Execute(enumerator.Current);
 
                 // ReSharper disable once ConditionIsAlwaysTrueOrFalse
                 if (retryCount > 0 && (fromDevice.Payload.Count() != 1 || fromDevice.Payload[0] != 55))
@@ -116,14 +118,14 @@ namespace BoosterPumpLibrary.ModuleBase
         {
             var writeCommand = new CommandWrite(DeviceAddress, new[] {register.RegisterAddress});
             // ReSharper disable once UnusedVariable
-            var returnValue = Gateway.Execute(writeCommand);
+            var returnValue = ApiToSerialBridge.Execute(writeCommand);
         }
 
         public void SelectRegisterForReadingWithAutoIncrement(Register register)
         {
             var writeCommand = new CommandWrite(DeviceAddress, new[] {(byte) (register.RegisterAddress | 0x80)});
             // ReSharper disable once UnusedVariable
-            var returnValue = Gateway.Execute(writeCommand);
+            var returnValue = ApiToSerialBridge.Execute(writeCommand);
         }
 
     }

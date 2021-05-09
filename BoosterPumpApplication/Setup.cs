@@ -4,6 +4,7 @@ using BoosterPumpLibrary.Contracts;
 using BoosterPumpConfiguration;
 using BoosterPumpLibrary.Logger;
 using System.Diagnostics.CodeAnalysis;
+using eu.iamia.NCD.Bridge;
 using eu.iamia.NCD.DeviceCommunication.Contract;
 using eu.iamia.NCD.Serial;
 using eu.iamia.ReliableSerialPort;
@@ -32,6 +33,8 @@ namespace BoosterPumpApplication
             services.Configure<AlarmSettings>(Configuration.GetSection(AlarmSettings.Name));
 
             services.AddOptions();
+
+            services.AddSingleton(typeof(IBridge), typeof(ApiToSerialBridge));
 
             services.AddSingleton(typeof(IGateway), typeof(SerialGateway));
             services.AddSingleton(typeof(ISerialPortDecorator), typeof(SerialPortDecorator));

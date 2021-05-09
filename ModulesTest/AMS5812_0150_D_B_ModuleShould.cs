@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
+using eu.iamia.NCD.API;
+using eu.iamia.NCD.Bridge;
 using eu.iamia.NCD.DeviceCommunication.Contract;
 using NSubstitute;
 using Xunit;
 using Modules;
-using eu.iamia.NCD.Serial;
+using NcdApiProtocol = eu.iamia.NCD.Serial.NcdApiProtocol;
 
 // ReSharper disable InconsistentNaming
 
@@ -17,7 +19,7 @@ namespace ModulesTest
         public AMS5812_0150_D_B_ModuleShould()
         {
             _FakeGateway = Substitute.For<IGateway>();
-            _Sut = new AMS5812_0150_D_B_Module(_FakeGateway);
+            _Sut = new AMS5812_0150_D_B_Module(_FakeGateway, new ApiToSerialBridge(_FakeGateway));
         }
 
         [Fact]

@@ -18,6 +18,7 @@ namespace BoosterPumpApplication
     [ExcludeFromCodeCoverage]
     public class Controller : IController
     {
+        private readonly IBridge ApiToSerialBridge;
         public MeasurementSettings MeasurementSettings { get; }
 
         public IGateway Gateway { get; }
@@ -29,13 +30,16 @@ namespace BoosterPumpApplication
         public Controller(
             IOptions<MeasurementSettings> measurementSettings,
             IOptions<ControllerSettings> controllerSettings,
-            IGateway gateway
+            IGateway gateway,
+            IBridge apiToSerialBridge
         )
         {
+            ApiToSerialBridge = apiToSerialBridge;
             MeasurementSettings = measurementSettings.Value;
             Gateway = gateway;
             ControllerSettings = controllerSettings.Value;
             DeviceFactory = new DeviceFactory();
+
         }
 
         private Stopwatch Stopwatch;
@@ -90,8 +94,7 @@ namespace BoosterPumpApplication
         private void CheckSerialConverter()
         {
             var command = new CommandControllerControllerBusSCan();
-            var i2CCommand = DeviceFactory.GetI2CCommand(command);
-            var dataFromDevice = Gateway.Execute(i2CCommand);
+            var dataFromDevice = ApiToSerialBridge.Execute(command);
 
             if (!dataFromDevice.IsValid)
             {
@@ -207,8 +210,8 @@ namespace BoosterPumpApplication
                 catch (ApplicationException)
                 {
                     var command = new CommandControllerControllerTest2WayCommunication();
-                    var i2CCommand = DeviceFactory.GetI2CCommand(command );
-                    var dataFromDevice = Gateway.Execute(i2CCommand);
+                    
+                    var dataFromDevice = ApiToSerialBridge.Execute(command);
 
                     Console.WriteLine($"Reset serial converter, {dataFromDevice}");
                 }

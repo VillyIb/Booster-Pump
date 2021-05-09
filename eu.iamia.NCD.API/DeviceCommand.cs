@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using eu.iamia.NCD.API.Contract;
 using eu.iamia.NCD.DeviceCommunication.Contract;
 
-namespace eu.iamia.NCD.Serial
+namespace eu.iamia.NCD.API
 {
     // TODO rename to ...Factory...
 
@@ -34,7 +33,7 @@ namespace eu.iamia.NCD.Serial
 
         protected override byte SerialCommand => SerialCommandValue;
 
-        internal DeviceRead(ICommand command) : base(command)
+        public DeviceRead(ICommand command) : base(command)
         { }
     }
 
@@ -44,7 +43,7 @@ namespace eu.iamia.NCD.Serial
 
         protected override byte SerialCommand => SerialCommandValue;
 
-        internal DeviceWrite(ICommand command) : base(command)
+        public DeviceWrite(ICommand command) : base(command)
         { }
     }
 
@@ -54,7 +53,7 @@ namespace eu.iamia.NCD.Serial
 
         protected override byte SerialCommand => SerialCommandValue;
 
-        internal DeviceWriteRead(ICommand command) : base(command)
+        public DeviceWriteRead(ICommand command) : base(command)
         { }
     }
 
@@ -64,7 +63,7 @@ namespace eu.iamia.NCD.Serial
 
         protected override byte SerialCommand => SerialCommandValue;
 
-        internal DeviceBusScan(ICommand command) : base(command)
+        public DeviceBusScan(ICommand command) : base(command)
         { }
     }
 
@@ -74,7 +73,7 @@ namespace eu.iamia.NCD.Serial
 
         protected override byte SerialCommand => SerialCommandValue;
 
-        internal DeviceStopCommand(ICommand command) : base(command)
+        public DeviceStopCommand(ICommand command) : base(command)
         { }
     }
 
@@ -84,7 +83,7 @@ namespace eu.iamia.NCD.Serial
 
         protected override byte SerialCommand => SerialCommandValue;
 
-        internal DeviceConverterHardRebootCommand(ICommand command) : base(command)
+        public DeviceConverterHardRebootCommand(ICommand command) : base(command)
         { }
     }
 
@@ -94,32 +93,14 @@ namespace eu.iamia.NCD.Serial
 
         protected override byte SerialCommand => SerialCommandValue;
 
-        internal DeviceConverterRebootCommand(ICommand command) : base(command)
+        public DeviceConverterRebootCommand(ICommand command) : base(command)
         { }
     }
 
     public class DeviceFactory
     {
-        public DeviceCommand GetDevice(ICommand command)
-        {
+       
 
-            // TODO handle serial device commands.
-            return command switch
-            {
-                ICommandRead _ => new DeviceRead(command),
-                ICommandWrite _ => new DeviceWrite(command),
-                ICommandWriteRead _ => new DeviceWriteRead(command),
-                ICommandControllerBusScan _ => new DeviceBusScan(command),
-                ICommandControllerHardReboot _ => new DeviceConverterHardRebootCommand(command),
-                ICommandControllerReboot _ => new DeviceConverterRebootCommand(command),
-                ICommandControllerStop _ => new DeviceStopCommand(command),
-                _ => null
-            };
-        }
-
-        public INcdApiProtocol GetI2CCommand(ICommand command)
-        {
-            return new NcdApiProtocol(GetDevice(command).GetDevicePayload());
-        }
+       
     }
 }

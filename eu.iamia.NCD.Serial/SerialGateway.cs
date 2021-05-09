@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
+using eu.iamia.NCD.API;
 using eu.iamia.NCD.API.Contract;
 using eu.iamia.ReliableSerialPort;
 using eu.iamia.Util;
@@ -132,27 +133,27 @@ namespace eu.iamia.NCD.Serial
             ResultReady?.Dispose();
         }
 
-        [Obsolete("Use: INcdApiProtocol Execute(INcdApiProtocol i2cCommand)")]
-        public IDataFromDevice Execute(ICommand command)
-        {
-            var timer = EasyStopwatch.StartMs();
-            try
-            {
-                Init();
+        //[Obsolete("Use: INcdApiProtocol Execute(INcdApiProtocol i2cCommand)")]
+        //public IDataFromDevice Execute(ICommand command)
+        //{
+        //    var timer = EasyStopwatch.StartMs();
+        //    try
+        //    {
+        //        Init();
 
-                var device = new DeviceFactory().GetDevice(command);
-                SerialPort.Write(device.GetDevicePayload());
+        //        var device = new DeviceFactory().GetDevice(command);
+        //        SerialPort.Write(device.GetDevicePayload());
 
-                return WaitForResultToBeReady()
-                        ? new DataFromDevice(Header, ByteCount, Payload, Checksum)
-                        : null
-                    ;
-            }
-            finally
-            {
-                Console.WriteLine($"Execute took: {timer.Stop()} ms");
-            }
-        }
+        //        return WaitForResultToBeReady()
+        //                ? new DataFromDevice(Header, ByteCount, Payload, Checksum)
+        //                : null
+        //            ;
+        //    }
+        //    finally
+        //    {
+        //        Console.WriteLine($"Execute took: {timer.Stop()} ms");
+        //    }
+        //}
 
         public INcdApiProtocol Execute(INcdApiProtocol i2CCommand)
         {
@@ -164,7 +165,7 @@ namespace eu.iamia.NCD.Serial
                 SerialPort.Write(i2CCommand.GetApiEncodedData());
 
                 return WaitForResultToBeReady()
-                        ? new DataFromDevice(Header, ByteCount, Payload, Checksum)
+                        ? new NcdApiProtocol(Header, ByteCount, Payload, Checksum)
                         : null
                     ;
             }

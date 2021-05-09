@@ -1,5 +1,6 @@
 ﻿using eu.iamia.NCD.API;
 using eu.iamia.NCD.API.Contract;
+using eu.iamia.NCD.Bridge;
 using eu.iamia.NCD.DeviceCommunication.Contract;
 using eu.iamia.NCD.Serial;
 using Modules;
@@ -18,17 +19,17 @@ namespace ModulesTest
         public TCA9546MultiplexerModuleShould()
         {
             _FakeSerialPort = Substitute.For<IGateway>();
-            _Sut = new TCA9546MultiplexerModule(_FakeSerialPort);
+            _Sut = new TCA9546MultiplexerModule(_FakeSerialPort, new ApiToSerialBridge(_FakeSerialPort));
         }
 
         [Fact]
         public void SendSequenceWhenCallingSelectOpenChannels()
         {
-            IDataFromDevice returnValue = new DataFromDevice ( 0xAA,  0x01,  new byte[] { 0x55 },  0x00 );
-            _FakeSerialPort.Execute(Arg.Any<CommandWrite>()).Returns(returnValue);
+            INcdApiProtocol returnValue = new NcdApiProtocol( 0xAA,  0x01,  new byte[] { 0x55 },  0x00 );
+            _FakeSerialPort.Execute(Arg.Any<NcdApiProtocol>()).Returns(returnValue);
 
             _Sut.SelectOpenChannels(MultiplexerChannels.Channel1 | MultiplexerChannels.Channel3);
-            _FakeSerialPort.Received().Execute(Arg.Is<CommandWrite>(cmd => cmd.I2CDataAsHex == "70 00 0A "));
+            _FakeSerialPort.Received().Execute(Arg.Is<NcdApiProtocol>(cmd => cmd.PayloadAsHex== "70 00 0A "));
         }
     }
 }

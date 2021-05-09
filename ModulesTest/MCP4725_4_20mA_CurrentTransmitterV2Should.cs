@@ -1,6 +1,8 @@
 ﻿using BoosterPumpLibrary.Contracts;
 using eu.iamia.NCD.API;
+using eu.iamia.NCD.Bridge;
 using eu.iamia.NCD.DeviceCommunication.Contract;
+using eu.iamia.NCD.Serial;
 using NSubstitute;
 using Xunit;
 using Modules;
@@ -17,14 +19,14 @@ namespace ModulesTest
         public MCP4725_4_20mA_CurrentTransmitterV2Should()
         {
             FakeSerialPort = Substitute.For<IGateway>();
-            Sut = new MCP4725_4_20mA_CurrentTransmitterV2(FakeSerialPort);
+            Sut = new MCP4725_4_20mA_CurrentTransmitterV2(FakeSerialPort, new ApiToSerialBridge(FakeSerialPort));
         }
 
         [Fact]
         public void SendSequenceWhenCallingInit()
         {
             Sut.Init();
-            FakeSerialPort.Received().Execute(Arg.Is<CommandWrite>(c => c.I2CDataAsHex == "60 00 60 80 00 "));
+            FakeSerialPort.Received().Execute(Arg.Is<NcdApiProtocol>(c => c.PayloadAsHex == "60 00 60 80 00 "));
         }
 
         [Fact]
@@ -35,14 +37,14 @@ namespace ModulesTest
 
             Sut.SetSpeed(speedPct);
             // expected 010x_x00x, 1010_1010, 0101_xxxx => 40 AA 50
-            FakeSerialPort.Received().Execute(Arg.Is<CommandWrite>(c => c.I2CDataAsHex == "60 00 40 AA 50 "));
+            FakeSerialPort.Received().Execute(Arg.Is<NcdApiProtocol>(c => c.PayloadAsHex == "60 00 40 AA 50 "));
         }
 
         [Fact]
         public void SendSequenceWhenPowerDown()
         {
             Sut.SetPowerDown();
-            FakeSerialPort.Received().Execute(Arg.Is<CommandWrite>(c => c.I2CDataAsHex == "60 00 02 00 00 "));
+            FakeSerialPort.Received().Execute(Arg.Is<NcdApiProtocol>(c => c.PayloadAsHex == "60 00 02 00 00 "));
         }
 
         [Fact]
@@ -53,7 +55,7 @@ namespace ModulesTest
 
             Sut.SetSpeedPersistent(speedPct);
             // expected 011x_x00x, 1010_1010, 0101_xxxx => 60 AA 50
-            FakeSerialPort.Received().Execute(Arg.Is<CommandWrite>(c => c.I2CDataAsHex == "60 00 60 AA 50 "));
+            FakeSerialPort.Received().Execute(Arg.Is<NcdApiProtocol>(c => c.PayloadAsHex == "60 00 60 AA 50 "));
         }
 
         [Fact]

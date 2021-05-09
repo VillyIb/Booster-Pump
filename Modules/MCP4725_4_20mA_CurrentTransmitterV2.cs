@@ -46,7 +46,7 @@ namespace Modules
             SetSpeedPersistent(0.50f);
         }
 
-        public MCP4725_4_20mA_CurrentTransmitterV2(IGateway gateway) : base(gateway)
+        public MCP4725_4_20mA_CurrentTransmitterV2(IGateway gateway, IBridge apiToSerialBridge) : base(gateway, apiToSerialBridge)
         { }
 
         public void SetNormalPower()
