@@ -22,7 +22,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BoosterPumpLibrary\BoosterPumpLibrary.csproj" />
-    <ProjectReference Include="..\eu.iamia.NCD.DeviceCommunication.Contract\eu.iamia.NCD.DeviceCommunication.Contract.csproj" />
+    <ProjectReference Include="..\eu.iamia.NCD.DeviceCommunication.Contract\eu.iamia.NCD.Serial.Contract.csproj" />
     <ProjectReference Include="..\Modules\Modules.csproj" />
   </ItemGroup>
 

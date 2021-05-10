@@ -37,11 +37,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eu.iamia.NCD.API", "eu.iami
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eu.iamia.NCD.API.Contract", "eu.iamia.NCD.API.Contract\eu.iamia.NCD.API.Contract.csproj", "{4F4E336A-BC2A-4B63-A7A9-B5258A8BABED}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eu.iamia.NCD.DeviceCommunication.Contract", "eu.iamia.NCD.DeviceCommunication.Contract\eu.iamia.NCD.DeviceCommunication.Contract.csproj", "{EC8808F7-FE3E-43E1-88EC-9BCB33C44147}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eu.iamia.NCD.Serial.Contract", "eu.iamia.NCD.DeviceCommunication.Contract\eu.iamia.NCD.Serial.Contract.csproj", "{EC8808F7-FE3E-43E1-88EC-9BCB33C44147}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eu.iamia.NCD.Direct", "eu.iamia.NCD.Direct\eu.iamia.NCD.Direct.csproj", "{125B940A-BFD8-40C5-A611-DB637AFB1A3D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eu.iamia.NCD.Bridge", "eu.iamia.NCD.Bridge\eu.iamia.NCD.Bridge.csproj", "{DB6BDE2A-2DDD-448D-9AF9-45AFAED465C7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eu.iamia.NCD.Bridge", "eu.iamia.NCD.Bridge\eu.iamia.NCD.Bridge.csproj", "{DB6BDE2A-2DDD-448D-9AF9-45AFAED465C7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
