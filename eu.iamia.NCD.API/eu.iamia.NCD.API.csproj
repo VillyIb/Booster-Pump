@@ -9,7 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\eu.iamia.NCD.DeviceCommunication.Contract\eu.iamia.NCD.DeviceCommunication.Contract.csproj" />
+    <ProjectReference Include="..\eu.iamia.NCD.DeviceCommunication.Contract\eu.iamia.NCD.Serial.Contract.csproj" />
   </ItemGroup>
 
 </Project>
