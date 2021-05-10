@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using eu.iamia.NCD.API;
+using eu.iamia.NCD.API.Contract;
 using eu.iamia.NCD.Bridge;
 using eu.iamia.NCD.DeviceCommunication.Contract;
 using eu.iamia.ReliableSerialPort;

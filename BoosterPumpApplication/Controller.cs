@@ -11,6 +11,7 @@ using BoosterPumpLibrary.Logger;
 using BoosterPumpConfiguration;
 using eu.iamia.NCD.DeviceCommunication.Contract;
 using eu.iamia.NCD.API;
+using eu.iamia.NCD.API.Contract;
 
 namespace BoosterPumpApplication
 {

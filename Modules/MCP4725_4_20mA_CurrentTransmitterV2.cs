@@ -1,6 +1,7 @@
 ﻿using BoosterPumpLibrary.Settings;
 using System;
 using System.Collections.Generic;
+using eu.iamia.NCD.API.Contract;
 using eu.iamia.NCD.DeviceCommunication.Contract;
 
 // ReSharper disable CommentTypo

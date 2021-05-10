@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using BoosterPumpLibrary.ModuleBase;
 using BoosterPumpLibrary.Settings;
+using eu.iamia.NCD.API.Contract;
 using eu.iamia.NCD.DeviceCommunication.Contract;
 
 namespace Modules

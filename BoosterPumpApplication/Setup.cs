@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using BoosterPumpConfiguration;
 using BoosterPumpLibrary.Logger;
 using System.Diagnostics.CodeAnalysis;
+using eu.iamia.NCD.API.Contract;
 using eu.iamia.NCD.Bridge;
 using eu.iamia.NCD.DeviceCommunication.Contract;
 using eu.iamia.NCD.Serial;
