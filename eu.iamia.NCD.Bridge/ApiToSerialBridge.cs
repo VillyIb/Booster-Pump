@@ -1,14 +1,15 @@
-﻿using eu.iamia.NCD.API;
+﻿using System;
+using eu.iamia.NCD.API;
 using eu.iamia.NCD.API.Contract;
-using eu.iamia.NCD.DeviceCommunication.Contract;
 using eu.iamia.NCD.Serial;
+using eu.iamia.NCD.Serial.Contract;
 
 namespace eu.iamia.NCD.Bridge
 {
     /// <summary>
     /// Translates ICommand to 
     /// </summary>
-    // todo implement IDisposeable
+    // todo implement IDisposable
     public class ApiToSerialBridge : IBridge
     {
         private readonly IGateway Gateway;
@@ -24,13 +25,13 @@ namespace eu.iamia.NCD.Bridge
             // TODO handle serial device commands.
             return command switch
             {
-                ICommandRead _ => new DeviceRead(command),
-                ICommandWrite _ => new DeviceWrite(command),
-                ICommandWriteRead _ => new DeviceWriteRead(command),
-                ICommandControllerBusScan _ => new DeviceBusScan(command),
-                ICommandControllerHardReboot _ => new DeviceConverterHardRebootCommand(command),
-                ICommandControllerReboot _ => new DeviceConverterRebootCommand(command),
-                ICommandControllerStop _ => new DeviceStopCommand(command),
+                ICommandRead => new DeviceRead(command),
+                ICommandWrite => new DeviceWrite(command),
+                ICommandWriteRead => new DeviceWriteRead(command),
+                ICommandControllerBusScan => new DeviceBusScan(command),
+                ICommandControllerHardReboot => new DeviceConverterHardRebootCommand(command),
+                ICommandControllerReboot => new DeviceConverterRebootCommand(command),
+                ICommandControllerStop => new DeviceStopCommand(command),
                 _ => null
             };
         }

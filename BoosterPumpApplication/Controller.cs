@@ -9,9 +9,9 @@ using Modules;
 using eu.iamia.Util;
 using BoosterPumpLibrary.Logger;
 using BoosterPumpConfiguration;
-using eu.iamia.NCD.DeviceCommunication.Contract;
 using eu.iamia.NCD.API;
 using eu.iamia.NCD.API.Contract;
+using eu.iamia.NCD.Serial.Contract;
 
 namespace BoosterPumpApplication
 {

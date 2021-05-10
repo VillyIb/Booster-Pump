@@ -1,4 +1,4 @@
-﻿namespace eu.iamia.NCD.DeviceCommunication.Contract
+﻿namespace eu.iamia.NCD.Serial.Contract
 {
     public interface IGateway
     {

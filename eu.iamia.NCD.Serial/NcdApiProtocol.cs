@@ -2,7 +2,7 @@
 using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
-using eu.iamia.NCD.DeviceCommunication.Contract;
+using eu.iamia.NCD.Serial.Contract;
 
 namespace eu.iamia.NCD.Serial
 {

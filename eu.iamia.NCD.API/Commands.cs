@@ -120,7 +120,7 @@ namespace eu.iamia.NCD.API
 
     public class CommandControllerControllerBusSCan : CommandController, ICommandControllerBusScan
     {
-        public static byte[] PayloadValue = new byte[] {0x00};
+        public static byte[] PayloadValue = {0x00};
 
         public CommandControllerControllerBusSCan() : base( PayloadValue )
         { }
@@ -128,7 +128,7 @@ namespace eu.iamia.NCD.API
 
     public class CommandControllerControllerStop : CommandController, ICommandControllerStop
     {
-        public static byte[] PayloadValue = new byte[] { 0x21, 0xBB };
+        public static byte[] PayloadValue = { 0x21, 0xBB };
 
         public CommandControllerControllerStop() : base(PayloadValue)
         { }
@@ -136,7 +136,7 @@ namespace eu.iamia.NCD.API
 
     public class CommandControllerControllerReboot : CommandController, ICommandControllerReboot
     {
-        public static byte[] PayloadValue = new byte[] { 0x21, 0xBC };
+        public static byte[] PayloadValue = { 0x21, 0xBC };
         
         public CommandControllerControllerReboot() : base(PayloadValue)
         { }
@@ -144,7 +144,7 @@ namespace eu.iamia.NCD.API
 
     public class CommandControllerControllerHardReboot : CommandController, ICommandControllerHardReboot
     {
-        public static byte[] PayloadValue = new byte[] { 0x21, 0xBD };
+        public static byte[] PayloadValue = { 0x21, 0xBD };
         
         public CommandControllerControllerHardReboot() : base(PayloadValue )
         { }
@@ -152,7 +152,7 @@ namespace eu.iamia.NCD.API
 
     public class CommandControllerControllerTest2WayCommunication : CommandController, ICommandControllerTest2WayCommunication
     {
-        public static byte[] PayloadValue = new byte[] { 0x21 };
+        public static byte[] PayloadValue = { 0x21 };
         
         public CommandControllerControllerTest2WayCommunication() : base(PayloadValue)
         { }

@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using eu.iamia.NCD.API;
 using eu.iamia.NCD.API.Contract;
-using eu.iamia.NCD.DeviceCommunication.Contract;
 
 // ReSharper disable InconsistentNaming
 

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using BoosterPumpLibrary.Settings;
-using eu.iamia.NCD.DeviceCommunication.Contract;
 using eu.iamia.NCD.API;
 using eu.iamia.NCD.API.Contract;
 

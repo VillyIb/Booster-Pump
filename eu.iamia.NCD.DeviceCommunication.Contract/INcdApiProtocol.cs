@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Immutable;
 
-namespace eu.iamia.NCD.DeviceCommunication.Contract
+namespace eu.iamia.NCD.Serial.Contract
 {
     /// <summary>
     /// NCD API Format: {Header, ByteCount, Payload, Checksum}

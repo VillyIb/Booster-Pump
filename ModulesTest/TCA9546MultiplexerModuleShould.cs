@@ -1,6 +1,6 @@
 ﻿using eu.iamia.NCD.Bridge;
-using eu.iamia.NCD.DeviceCommunication.Contract;
 using eu.iamia.NCD.Serial;
+using eu.iamia.NCD.Serial.Contract;
 using Modules;
 using NSubstitute;
 using Xunit;
