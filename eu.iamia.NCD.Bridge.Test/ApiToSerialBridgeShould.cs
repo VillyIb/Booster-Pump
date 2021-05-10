@@ -2,22 +2,24 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using eu.iamia.NCD.Bridge;
+using eu.iamia.NCD.API;
+using eu.iamia.NCD.API.Contract;
+using eu.iamia.NCD.Serial;
 using eu.iamia.ReliableSerialPort;
 using NSubstitute;
 using Xunit;
 
-namespace eu.iamia.NCD.Serial.Test
+namespace eu.iamia.NCD.Bridge.Test
 {
-    public class GatewayShould
+    public class ApiToSerialBridgeShould
     {
-        private SerialGateway Sut;
         private ISerialPortDecorator FakeSerialPortDecorator;
+        private IBridge Sut;
 
         private void Init()
         {
             FakeSerialPortDecorator = Substitute.For<ISerialPortDecorator>();
-            Sut = new SerialGateway(FakeSerialPortDecorator);
+            Sut = new ApiToSerialBridge( new SerialGateway(FakeSerialPortDecorator));
         }
 
         [Fact]
@@ -32,10 +34,10 @@ namespace eu.iamia.NCD.Serial.Test
         {
             Init();
 
-            var i2CCommand = new NcdApiProtocol(Array.Empty<byte>());
+            var command = new CommandRead(0xf1, 1);
 
-            Sut.Execute(i2CCommand);
-            Sut.Execute(i2CCommand);
+            Sut.Execute(command);
+            Sut.Execute(command);
 
             FakeSerialPortDecorator.Received(1).Open();
             FakeSerialPortDecorator.Received(2).Write(Arg.Any<IEnumerable<byte>>());
@@ -46,10 +48,10 @@ namespace eu.iamia.NCD.Serial.Test
         {
             Init();
 
-            var i2CCommand = new NcdApiProtocol(0xf1, 1, new byte[] { 0x00 }, 0);
+            var command = new CommandRead(0xf1, 1);
 
-            Sut.Execute(i2CCommand);
-            Sut.Execute(i2CCommand);
+            Sut.Execute(command);
+            Sut.Execute(command);
 
             FakeSerialPortDecorator.Received(2).Write(Arg.Any<IEnumerable<byte>>());
         }
@@ -59,9 +61,9 @@ namespace eu.iamia.NCD.Serial.Test
         {
             Init();
 
-            var i2CCommand = new NcdApiProtocol(0xf1, 1, new byte[] { 0x00 }, 0);
+            var command = new CommandRead(0xf1, 1);
 
-            Sut.Execute(i2CCommand);
+            Sut.Execute(command);
 
             Sut.Dispose();
             FakeSerialPortDecorator.Received(1).Dispose();
@@ -73,27 +75,20 @@ namespace eu.iamia.NCD.Serial.Test
             Init();
 
             var expectedResponse = new List<byte> { 0x55, 0x56 };
-            var overflow = new List<byte> { 0x99, 0xFF };
-            List<byte> fakeResponse = new NcdApiProtocol(expectedResponse).GetApiEncodedData().ToList();
-            fakeResponse.AddRange(overflow);
-            var i2CCommand = new NcdApiProtocol(new byte[] { 0x00 });
+            var overflow = new List<byte> {0x99, 0xFF};
+            List<byte> fakeResponse = new DataFromDevice(expectedResponse).GetApiEncodedData().ToList();
+            fakeResponse.AddRange( overflow);
+            var command = new CommandRead(0xf1, 1);
 
 
             FakeSerialPortDecorator fakeSerialPortDecorator = Substitute.ForPartsOf<FakeSerialPortDecorator>();
             fakeSerialPortDecorator.GetResponse().Returns(fakeResponse);
+            Sut = new ApiToSerialBridge(new SerialGateway(fakeSerialPortDecorator));
 
-            var response = Sut.Execute(i2CCommand);
+            var response = Sut.Execute(command);
 
             Assert.Equal(expectedResponse, response.Payload);
             Assert.True(response.IsValid);
-        }
-
-        [Fact]
-        public void x()
-        {
-            Init();
-
-            Sut.Dispose();
         }
     }
 

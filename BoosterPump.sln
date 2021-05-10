@@ -41,6 +41,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eu.iamia.NCD.Serial.Contrac
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eu.iamia.NCD.Bridge", "eu.iamia.NCD.Bridge\eu.iamia.NCD.Bridge.csproj", "{DB6BDE2A-2DDD-448D-9AF9-45AFAED465C7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eu.iamia.NCD.Bridge.Test", "eu.iamia.NCD.Bridge.Test\eu.iamia.NCD.Bridge.Test.csproj", "{52D3EABC-9457-471D-84BA-798CB9461E0B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -123,6 +125,10 @@ Global
 		{DB6BDE2A-2DDD-448D-9AF9-45AFAED465C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DB6BDE2A-2DDD-448D-9AF9-45AFAED465C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DB6BDE2A-2DDD-448D-9AF9-45AFAED465C7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{52D3EABC-9457-471D-84BA-798CB9461E0B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{52D3EABC-9457-471D-84BA-798CB9461E0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{52D3EABC-9457-471D-84BA-798CB9461E0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{52D3EABC-9457-471D-84BA-798CB9461E0B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

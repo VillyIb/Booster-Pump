@@ -1,6 +1,8 @@
-﻿namespace eu.iamia.NCD.Serial.Contract
+﻿using System;
+
+namespace eu.iamia.NCD.Serial.Contract
 {
-    public interface IGateway
+    public interface IGateway : IDisposable
     {
         public INcdApiProtocol Execute(INcdApiProtocol i2CCommand);
     }

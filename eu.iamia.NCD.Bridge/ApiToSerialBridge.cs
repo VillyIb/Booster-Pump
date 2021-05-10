@@ -48,8 +48,18 @@ namespace eu.iamia.NCD.Bridge
             var i2CCommand = new NcdApiProtocol(dc.GetDevicePayload());
 
             var i2CResponse = Gateway.Execute(i2CCommand);
+            if (i2CResponse is null)
+            {
+                return null;
+
+            }
 
             return new DataFromDevice(i2CResponse.Header, i2CResponse.ByteCount, i2CResponse.Payload, i2CResponse.Checksum);
+        }
+
+        public void Dispose()
+        {
+            Gateway.Dispose();
         }
     }
 }

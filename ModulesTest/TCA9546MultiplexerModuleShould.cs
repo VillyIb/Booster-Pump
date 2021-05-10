@@ -27,7 +27,7 @@ namespace ModulesTest
             _FakeSerialPort.Execute(Arg.Any<NcdApiProtocol>()).Returns(returnValue);
 
             _Sut.SelectOpenChannels(MultiplexerChannels.Channel1 | MultiplexerChannels.Channel3);
-            _FakeSerialPort.Received().Execute(Arg.Is<NcdApiProtocol>(cmd => cmd.PayloadAsHex== "70 00 0A "));
+            _FakeSerialPort.Received().Execute(Arg.Is<NcdApiProtocol>(cmd => cmd.PayloadAsHex== "BE 70 00 0A "));
         }
     }
 }
