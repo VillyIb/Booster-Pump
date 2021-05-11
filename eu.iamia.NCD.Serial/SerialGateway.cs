@@ -73,9 +73,6 @@ namespace eu.iamia.NCD.Serial
 
                     case NcdState.Overflow:
                         break;
-
-                    default:
-                        break;
                 }
             }
         }
