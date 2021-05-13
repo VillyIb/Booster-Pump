@@ -1,7 +1,5 @@
-﻿using System;
-using eu.iamia.NCD.API;
+﻿using eu.iamia.NCD.API;
 using eu.iamia.NCD.API.Contract;
-using eu.iamia.NCD.Serial;
 using eu.iamia.NCD.Serial.Contract;
 using eu.iamia.NCD.Shared;
 
@@ -10,7 +8,6 @@ namespace eu.iamia.NCD.Bridge
     /// <summary>
     /// Translates ICommand to 
     /// </summary>
-    // todo implement IDisposable
     public class ApiToSerialBridge : IBridge
     {
         private readonly IGateway Gateway;
@@ -30,18 +27,17 @@ namespace eu.iamia.NCD.Bridge
                 ICommandWrite => new DeviceWrite(command),
                 ICommandWriteRead => new DeviceWriteRead(command),
                 ICommandControllerBusScan => new DeviceBusScan(command),
-                ICommandControllerHardReboot => new DeviceConverterHardRebootCommand(command),
-                ICommandControllerReboot => new DeviceConverterRebootCommand(command),
-                ICommandControllerStop => new DeviceStopCommand(command),
+                ICommandControllerHardReboot => new DeviceConverterCommand(command),
+                ICommandControllerReboot => new DeviceConverterCommand(command),
+                ICommandControllerStop => new DeviceConverterCommand(command),
                 _ => null
             };
         }
 
-        public INcdApiProtocol GetI2CCommand(ICommand command)
+        internal INcdApiProtocol GetI2CCommand(ICommand command)
         {
             return new NcdApiProtocol(GetDevice(command).GetDevicePayload());
         }
-
 
         public IDataFromDevice Execute(ICommand command)
         {
@@ -60,7 +56,7 @@ namespace eu.iamia.NCD.Bridge
 
         public void Dispose()
         {
-            Gateway.Dispose();
+            Gateway?.Dispose();
         }
     }
 }

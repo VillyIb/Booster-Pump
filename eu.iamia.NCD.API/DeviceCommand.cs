@@ -66,40 +66,13 @@ namespace eu.iamia.NCD.API
         { }
     }
 
-    public class DeviceStopCommand : DeviceCommand
+    public class DeviceConverterCommand : DeviceCommand
     {
         public static byte SerialCommandValue => 0xFE;
 
         protected override byte SerialCommand => SerialCommandValue;
 
-        public DeviceStopCommand(ICommand command) : base(command)
+        public DeviceConverterCommand(ICommand command) : base(command)
         { }
-    }
-
-    public class DeviceConverterHardRebootCommand : DeviceCommand
-    {
-        public static byte SerialCommandValue => 0xFE;
-
-        protected override byte SerialCommand => SerialCommandValue;
-
-        public DeviceConverterHardRebootCommand(ICommand command) : base(command)
-        { }
-    }
-
-    public class DeviceConverterRebootCommand : DeviceCommand
-    {
-        public static byte SerialCommandValue => 0xFE;
-
-        protected override byte SerialCommand => SerialCommandValue;
-
-        public DeviceConverterRebootCommand(ICommand command) : base(command)
-        { }
-    }
-
-    public class DeviceFactory
-    {
-       
-
-       
     }
 }
