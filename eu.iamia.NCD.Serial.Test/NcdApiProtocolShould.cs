@@ -55,7 +55,7 @@ namespace eu.iamia.NCD.Serial.Test
         }
 
         [Fact]
-        public void Ctor_WhenLegalPayload_ShouldThrowException()
+        public void Ctor_WhenLegalPayload_ShouldNotThrowException()
         {
             var largePayload = Enumerable.Repeat<byte>(0x01, 255).ToList();
             // ReSharper disable ObjectCreationAsStatement

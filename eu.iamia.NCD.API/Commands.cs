@@ -1,6 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Linq;
 using System.Text;
+using EnsureThat;
 using eu.iamia.NCD.API.Contract;
 
 namespace eu.iamia.NCD.API
@@ -56,12 +59,14 @@ namespace eu.iamia.NCD.API
 
     public class CommandWrite : CommandDevice, ICommandWrite
     {
-        public IEnumerable<byte> Payload { get; set; }
+        public List<byte> Payload { get; set; }
 
         public CommandWrite(byte deviceAddress, IEnumerable<byte> payload)
             : base(deviceAddress)
         {
-            Payload = payload;
+            Ensure.That(payload,nameof(payload)).IsNotNull();
+            Payload = payload.ToList();
+            Ensure.That(Payload, nameof(payload)).SizeIs(Math.Min(255, Payload.Count));
         }
 
         public override IEnumerable<byte> I2C_Data()
@@ -104,7 +109,7 @@ namespace eu.iamia.NCD.API
     {
         private IImmutableList<byte> Payload { get; }
 
-        protected CommandController(IEnumerable<byte> payload) : base()
+        protected CommandController(IEnumerable<byte> payload)
         {
             Payload = ImmutableList<byte>.Empty.AddRange(payload);
         }

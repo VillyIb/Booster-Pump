@@ -1,19 +1,16 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="ConverterCommandBase.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Ensure.That" Version="10.1.0" />
+    <PackageReference Include="xunit" Version="2.4.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\eu.iamia.NCD.API.Contract\eu.iamia.NCD.API.Contract.csproj" />
+    <ProjectReference Include="..\eu.iamia.NCD.API\eu.iamia.NCD.API.csproj" />
   </ItemGroup>
 
 </Project>

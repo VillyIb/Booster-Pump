@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
+using EnsureThat;
 using eu.iamia.NCD.API.Contract;
 
 namespace eu.iamia.NCD.API
@@ -12,9 +14,9 @@ namespace eu.iamia.NCD.API
 
         public byte ByteCount { get; }
 
-        private readonly ImmutableList<byte> PayloadField;
+        private readonly List<byte> PayloadField;
 
-        public IImmutableList<byte> Payload => PayloadField;
+        public IImmutableList<byte> Payload => ImmutableList<byte>.Empty.AddRange(PayloadField);
 
         public byte Checksum { get; }
 
@@ -57,16 +59,17 @@ namespace eu.iamia.NCD.API
 
         public NcdApiProtocolX(byte header, byte byteCount, IEnumerable<byte> payload, byte checksum)
         {
+            EnsureArg.IsNotNull(payload, nameof(payload));
+            PayloadField = payload.ToList();
+            Ensure.That(PayloadField, nameof(payload)).SizeIs(Math.Min(255, PayloadField.Count));
+
             Header = header;
             ByteCount = byteCount;
-            PayloadField = ImmutableList<byte>.Empty.AddRange(payload);
             Checksum = checksum;
         }
 
-        public NcdApiProtocolX(IEnumerable<byte> payload)
+        public NcdApiProtocolX(IEnumerable<byte> payload) : this(0xAA, 0, payload, 0)
         {
-            Header = 0xAA;
-            PayloadField = ImmutableList<byte>.Empty.AddRange(payload);
             ByteCount = (byte)PayloadField.Count;
             Checksum = CalculatedChecksum;
         }

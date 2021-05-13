@@ -26,7 +26,8 @@ namespace eu.iamia.NCD.Bridge.Test
         public void ImplementsIGateway()
         {
             Init();
-            Assert.False(Sut is null);
+            // ReSharper disable once RedundantCast
+            Assert.NotNull(Sut as IBridge);
         }
 
         [Fact]
