@@ -23,7 +23,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BoosterPumpApplication1", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eu.iamia.Util", "eu.iamia.Util\eu.iamia.Util.csproj", "{2DE4BB7A-B5E7-472B-A6F7-F69CB1D52C11}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eu.iamia.Util.Test", "eu.iamia.Util.Test\eu.iamia.Util.Test.csproj", "{56DBE9C5-3624-462E-A07A-DF6EE71AFA53}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eu.iamia.Util.UnitTest", "eu.iamia.Util.Test\eu.iamia.Util.UnitTest.csproj", "{56DBE9C5-3624-462E-A07A-DF6EE71AFA53}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eu.iamia.ReliableSerialPort.SystemTest", "eu.iamia.I2CSerial.SystemTest\eu.iamia.ReliableSerialPort.SystemTest.csproj", "{44616F2D-64D1-4884-B22D-4FE5534117B0}"
 EndProject
@@ -31,7 +31,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eu.iamia.ReliableSerialPort
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eu.iamia.NCD.Serial", "eu.iamia.NCD.Serial\eu.iamia.NCD.Serial.csproj", "{AF7425EF-F955-44A4-8889-9279770BA858}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eu.iamia.NCD.Serial.Test", "eu.iamia.NCD.Serial.Test\eu.iamia.NCD.Serial.Test.csproj", "{AC5E10B0-D19E-4243-9C9D-3B36CD9BC435}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eu.iamia.NCD.Serial.UnitTest", "eu.iamia.NCD.Serial.Test\eu.iamia.NCD.Serial.UnitTest.csproj", "{AC5E10B0-D19E-4243-9C9D-3B36CD9BC435}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eu.iamia.NCD.API", "eu.iamia.NCD.API\eu.iamia.NCD.API.csproj", "{5365C3BB-FE6A-4E47-9184-4C7FDC6A763C}"
 EndProject
@@ -41,13 +41,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eu.iamia.NCD.Serial.Contrac
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eu.iamia.NCD.Bridge", "eu.iamia.NCD.Bridge\eu.iamia.NCD.Bridge.csproj", "{DB6BDE2A-2DDD-448D-9AF9-45AFAED465C7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eu.iamia.NCD.Bridge.Test", "eu.iamia.NCD.Bridge.Test\eu.iamia.NCD.Bridge.Test.csproj", "{52D3EABC-9457-471D-84BA-798CB9461E0B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eu.iamia.NCD.Bridge.UnitTest", "eu.iamia.NCD.Bridge.Test\eu.iamia.NCD.Bridge.UnitTest.csproj", "{52D3EABC-9457-471D-84BA-798CB9461E0B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eu.iamia.NCD.API.Test", "eu.iamia.NCD.API.Test\eu.iamia.NCD.API.Test.csproj", "{B5ACC06D-BBBF-41CB-BAEF-6766F231EDD7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eu.iamia.NCD.API.UnitTest", "eu.iamia.NCD.API.Test\eu.iamia.NCD.API.UnitTest.csproj", "{B5ACC06D-BBBF-41CB-BAEF-6766F231EDD7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eu.iamia.NCD.Shared", "eu.iamia.NCD.Shared\eu.iamia.NCD.Shared.csproj", "{1EB19417-9D32-40D1-BC68-0FFA4F24E3B7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eu.iamia.NCD.Shared", "eu.iamia.NCD.Shared\eu.iamia.NCD.Shared.csproj", "{1EB19417-9D32-40D1-BC68-0FFA4F24E3B7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eu.iamia.NCD.Shared.Test", "eu.iamia.NCD.Shared.Test\eu.iamia.NCD.Shared.Test.csproj", "{39AF78E1-2CA3-48F2-A6CC-C23F66F9C15E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eu.iamia.NCD.Shared.UnitTest", "eu.iamia.NCD.Shared.Test\eu.iamia.NCD.Shared.UnitTest.csproj", "{39AF78E1-2CA3-48F2-A6CC-C23F66F9C15E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
