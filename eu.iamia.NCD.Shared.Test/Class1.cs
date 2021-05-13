@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace eu.iamia.NCD.Shared.Test
+﻿namespace eu.iamia.NCD.Shared.UnitTest
 {
     public class Class1
     {

@@ -8,7 +8,7 @@ using eu.iamia.ReliableSerialPort;
 using NSubstitute;
 using Xunit;
 
-namespace eu.iamia.NCD.Serial.Test
+namespace eu.iamia.NCD.Serial.UnitTest
 {
     public class GatewayShould
     {

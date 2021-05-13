@@ -1,7 +1,7 @@
 using System;
 using Xunit;
 
-namespace eu.iamia.Util.Test
+namespace eu.iamia.Util.UnitTest
 {
     public class SystemDateTimeShould
     {

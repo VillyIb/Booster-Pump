@@ -1,7 +1,7 @@
 ﻿using eu.iamia.NCD.API.Contract;
 using Xunit;
 
-namespace eu.iamia.NCD.API.Test
+namespace eu.iamia.NCD.API.UnitTest
 {
     public class DataFromDeviceShould
     {

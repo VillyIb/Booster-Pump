@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using eu.iamia.NCD.API.Contract;
 
-namespace eu.iamia.NCD.API
+namespace eu.iamia.NCD.Bridge
 {
     // TODO rename to ...Factory...
 

@@ -9,7 +9,7 @@ using eu.iamia.ReliableSerialPort;
 using NSubstitute;
 using Xunit;
 
-namespace eu.iamia.NCD.Bridge.Test
+namespace eu.iamia.NCD.Bridge.UnitTest
 {
     public class ApiToSerialBridgeShould
     {

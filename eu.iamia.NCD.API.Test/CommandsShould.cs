@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Linq;
-using Xunit;
 using eu.iamia.NCD.API.Contract;
+using Xunit;
+
 // ReSharper disable InconsistentNaming
 
-namespace eu.iamia.NCD.API.Test
+namespace eu.iamia.NCD.API.UnitTest
 {
     public class CommandsShould
     {
