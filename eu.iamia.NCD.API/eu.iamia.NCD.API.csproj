@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\eu.iamia.NCD.API.Contract\eu.iamia.NCD.API.Contract.csproj" />
+    <ProjectReference Include="..\eu.iamia.NCD.Shared\eu.iamia.NCD.Shared.csproj" />
   </ItemGroup>
 
 </Project>

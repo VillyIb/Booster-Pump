@@ -1,4 +1,5 @@
 ﻿using System;
+using eu.iamia.NCD.Shared;
 
 namespace eu.iamia.NCD.Serial.Contract
 {
