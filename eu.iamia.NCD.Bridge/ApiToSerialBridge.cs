@@ -3,6 +3,7 @@ using eu.iamia.NCD.API;
 using eu.iamia.NCD.API.Contract;
 using eu.iamia.NCD.Serial;
 using eu.iamia.NCD.Serial.Contract;
+using eu.iamia.NCD.Shared;
 
 namespace eu.iamia.NCD.Bridge
 {

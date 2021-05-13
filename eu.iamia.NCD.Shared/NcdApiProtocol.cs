@@ -5,9 +5,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using EnsureThat;
-using eu.iamia.NCD.Serial.Contract;
 
-namespace eu.iamia.NCD.Serial
+namespace eu.iamia.NCD.Shared
 {
     public class NcdApiProtocol : INcdApiProtocol
     {

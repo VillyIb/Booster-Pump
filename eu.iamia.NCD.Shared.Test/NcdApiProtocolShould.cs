@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using eu.iamia.NCD.Serial.Contract;
 using Xunit;
 
-namespace eu.iamia.NCD.Serial.Test
+namespace eu.iamia.NCD.Shared.Test
 {
     public class NcdApiProtocolShould
     {

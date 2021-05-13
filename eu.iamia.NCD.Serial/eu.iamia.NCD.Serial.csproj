@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\eu.iamia.NCD.DeviceCommunication.Contract\eu.iamia.NCD.Serial.Contract.csproj" />
+    <ProjectReference Include="..\eu.iamia.NCD.Shared\eu.iamia.NCD.Shared.csproj" />
     <ProjectReference Include="..\eu.iamia.ReliableSerialPort\eu.iamia.ReliableSerialPort.csproj" />
     <ProjectReference Include="..\eu.iamia.Util\eu.iamia.Util.csproj" />
   </ItemGroup>

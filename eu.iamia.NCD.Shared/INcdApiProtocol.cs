@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Immutable;
 
-namespace eu.iamia.NCD.Serial.Contract
+namespace eu.iamia.NCD.Shared
 {
     /// <summary>
     /// NCD API Format: {Header, ByteCount, Payload, Checksum}
