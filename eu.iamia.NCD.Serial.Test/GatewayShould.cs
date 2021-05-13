@@ -21,7 +21,7 @@ namespace eu.iamia.NCD.Serial.Test
         }
 
         [Fact]
-        public void ImplementsIGateway()
+        public void Class_ShouldImplementIGateway()
         {
             Init();
             // ReSharper disable once RedundantCast
@@ -29,7 +29,7 @@ namespace eu.iamia.NCD.Serial.Test
         }
 
         [Fact]
-        public void CallsOpenUponFirstExecute()
+        public void Execute_WhenCalled_ShouldCallOpenOnce()
         {
             Init();
 
@@ -43,7 +43,7 @@ namespace eu.iamia.NCD.Serial.Test
         }
 
         [Fact]
-        public void CallsWriteForEachExecute()
+        public void Execute_ForEachCall_ShouldCallWrite()
         {
             Init();
 
@@ -56,7 +56,7 @@ namespace eu.iamia.NCD.Serial.Test
         }
 
         [Fact]
-        public void CallsDisposeUponDispose()
+        public void Dispose_WhenCalled_ShouldDisposeSerialPortDecorator()
         {
             Init();
 
@@ -68,8 +68,8 @@ namespace eu.iamia.NCD.Serial.Test
             FakeSerialPortDecorator.Received(1).Dispose();
         }
 
-        [Fact(Skip = "disabled temporary")]
-        public void ReceiveResponseFromExecute()
+        [Fact]
+        public void Execute_WhenCalled_ShouldReceiveValidResponse()
         {
             Init();
 

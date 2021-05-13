@@ -1,7 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
+using EnsureThat;
 using eu.iamia.NCD.Serial.Contract;
 
 namespace eu.iamia.NCD.Serial
@@ -12,9 +15,9 @@ namespace eu.iamia.NCD.Serial
 
         public byte ByteCount { get; }
 
-        private readonly ImmutableList<byte> PayloadField;
+        private readonly IList<byte> PayloadField;
 
-        public IImmutableList<byte> Payload => PayloadField;
+        public IImmutableList<byte> Payload => ImmutableList<byte>.Empty.AddRange(PayloadField);
 
         public byte Checksum { get; }
 
@@ -22,13 +25,8 @@ namespace eu.iamia.NCD.Serial
         {
             get
             {
-                if (ByteCount != PayloadField.Count)
-                {
-                    return byte.MinValue;
-                }
                 var checksum = Header + ByteCount;
                 checksum = PayloadField.Aggregate(checksum, (current1, current) => current1 + current) & 0xff;
-
                 return (byte)checksum;
             }
         }
@@ -37,7 +35,7 @@ namespace eu.iamia.NCD.Serial
         {
             get
             {
-                if (null == PayloadField) { return false; }
+                if (PayloadField is null) { return false; }
                 if (ByteCount != PayloadField.Count) { return false; }
                 return CalculatedChecksum == Checksum;
             }
@@ -46,18 +44,21 @@ namespace eu.iamia.NCD.Serial
         public bool IsValid => CheckConsistency;
 
 
-        public NcdApiProtocol(byte header, byte byteCount, IEnumerable<byte> payload, byte checksum)
+        //private static Ens
+
+        public NcdApiProtocol(byte header, byte byteCount, [NotNull] IEnumerable<byte> payload, byte checksum)
         {
+            EnsureArg.IsNotNull(payload, nameof(payload));
+            PayloadField = payload.ToList();
+            Ensure.That(PayloadField, nameof(payload)).SizeIs(Math.Min(255, PayloadField.Count));
+
             Header = header;
             ByteCount = byteCount;
-            PayloadField = ImmutableList<byte>.Empty.AddRange(payload);
             Checksum = checksum;
         }
 
-        public NcdApiProtocol(IEnumerable<byte> payload)
+        public NcdApiProtocol([NotNull] IEnumerable<byte> payload) : this(0xAA, 0, payload, 0)
         {
-            Header = 0xAA;
-            PayloadField = ImmutableList<byte>.Empty.AddRange(payload);
             ByteCount = (byte)PayloadField.Count;
             Checksum = CalculatedChecksum;
         }
