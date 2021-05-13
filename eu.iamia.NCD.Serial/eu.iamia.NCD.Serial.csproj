@@ -9,6 +9,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Ensure.That" Version="10.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\eu.iamia.NCD.DeviceCommunication.Contract\eu.iamia.NCD.Serial.Contract.csproj" />
     <ProjectReference Include="..\eu.iamia.ReliableSerialPort\eu.iamia.ReliableSerialPort.csproj" />
     <ProjectReference Include="..\eu.iamia.Util\eu.iamia.Util.csproj" />

@@ -4,8 +4,4 @@
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\eu.iamia.NCD.API.Contract\eu.iamia.NCD.API.Contract.csproj" />
-  </ItemGroup>
-
 </Project>

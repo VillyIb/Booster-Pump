@@ -7,7 +7,7 @@ using eu.iamia.Util;
 
 namespace eu.iamia.NCD.Serial
 {
-    public class SerialGateway : IGateway, IDisposable
+    public class SerialGateway : IGateway
     {
         private static TimeSpan ReadTimeout => TimeSpan.FromSeconds(5);
 
@@ -18,7 +18,7 @@ namespace eu.iamia.NCD.Serial
             SerialPort = serialPort;
         }
 
-        private readonly AutoResetEvent ResultReady = new AutoResetEvent(false);
+        private readonly AutoResetEvent ResultReady = new(false);
 
         private NcdState State;
 
