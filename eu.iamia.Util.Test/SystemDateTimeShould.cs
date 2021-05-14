@@ -3,7 +3,7 @@ using Xunit;
 
 namespace eu.iamia.Util.UnitTest
 {
-    public class SystemDateTimeShould
+    public class SystemDateTimeShouldWhenStopped
     {
         private DateTime Initial;
 
@@ -16,7 +16,7 @@ namespace eu.iamia.Util.UnitTest
         [Theory]
         [InlineData(00)]
         [InlineData(23)]
-        public void UtcNowReturnInitial(int hour)
+        public void UtcNow_ReturnInitial(int hour)
         {
             Init(hour);
             Assert.Equal(Initial, SystemDateTime.UtcNow);
@@ -25,7 +25,7 @@ namespace eu.iamia.Util.UnitTest
         [Theory]
         [InlineData(00)]
         [InlineData(23)]
-        public void TodayReturnsInitialDate(int hour)
+        public void Today_ReturnsInitialDate(int hour)
         {
             Init(hour);
             Assert.Equal(Initial.ToLocalTime().Date, SystemDateTime.Today);
@@ -34,7 +34,7 @@ namespace eu.iamia.Util.UnitTest
         [Theory]
         [InlineData(00)]
         [InlineData(23)]
-        public void TomorrowReturnsInitialDatePlusOne(int hour)
+        public void Tomorrow_ReturnInitialDatePlusOne(int hour)
         {
             Init(hour);
             Assert.Equal(Initial.AddDays(1).ToLocalTime().Date, SystemDateTime.Tomorrow);
@@ -43,7 +43,7 @@ namespace eu.iamia.Util.UnitTest
         [Theory]
         [InlineData(00)]
         [InlineData(23)]
-        public void YesterdayReturnsInitialDateMinusOne(int hour)
+        public void Yesterday_ReturnInitialDateMinusOne(int hour)
         {
             Init(hour);
             Assert.Equal(Initial.AddDays(-1).ToLocalTime().Date, SystemDateTime.Yesterday);
@@ -52,7 +52,7 @@ namespace eu.iamia.Util.UnitTest
         [Theory]
         [InlineData(00)]
         [InlineData(23)]
-        public void NowReturnsInitial(int hour)
+        public void Now_ReturnInitial(int hour)
         {
             Init(hour);
             Assert.Equal(Initial.ToLocalTime(), SystemDateTime.Now);
