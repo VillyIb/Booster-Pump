@@ -1,3 +1,3 @@
 ﻿using System.Runtime.CompilerServices;
 
-[assembly: InternalsVisibleTo("eu.iamia.NCD.Bridge.Test")]
+[assembly: InternalsVisibleTo("eu.iamia.NCD.Bridge.UnitTest")]

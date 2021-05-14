@@ -79,15 +79,20 @@ namespace eu.iamia.NCD.API
         }
     }
 
-    public class CommandWriteRead : CommandWrite, ICommandWriteRead
+    public class CommandWriteRead : CommandDevice, ICommandWriteRead
     {
+        public List<byte> Payload { get; set; }
+
         public byte LengthRequested { get; set; }
 
         public byte Delay { get; set; }
 
         public CommandWriteRead(byte deviceAddress, IEnumerable<byte> payload, byte lengthRequested, byte delay = 0x16)
-            : base(deviceAddress, payload)
+            : base(deviceAddress)
         {
+            Ensure.That(payload, nameof(payload)).IsNotNull();
+            Payload = payload.ToList();
+            Ensure.That(Payload, nameof(payload)).SizeIs(Math.Min(255, Payload.Count));
             LengthRequested = lengthRequested;
             Delay = delay;
         }

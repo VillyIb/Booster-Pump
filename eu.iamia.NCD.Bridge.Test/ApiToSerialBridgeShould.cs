@@ -11,19 +11,19 @@ using Xunit;
 
 namespace eu.iamia.NCD.Bridge.UnitTest
 {
-    public class ApiToSerialBridgeShould
+    public class ApiToSerialBridgeShouldFor
     {
         private ISerialPortDecorator FakeSerialPortDecorator;
-        private IBridge Sut;
+        private ApiToSerialBridge Sut;
 
         private void Init()
         {
             FakeSerialPortDecorator = Substitute.For<ISerialPortDecorator>();
-            Sut = new ApiToSerialBridge( new SerialGateway(FakeSerialPortDecorator));
+            Sut = new ApiToSerialBridge(new SerialGateway(FakeSerialPortDecorator));
         }
 
         [Fact]
-        public void ImplementsIGateway()
+        public void Class_ImplementIGateway()
         {
             Init();
             // ReSharper disable once RedundantCast
@@ -31,7 +31,65 @@ namespace eu.iamia.NCD.Bridge.UnitTest
         }
 
         [Fact]
-        public void CallsOpenUponFirstExecute()
+        public void Ctor_WhenCalledWithNull_ThrowException()
+        {
+            Assert.Throws<ArgumentNullException>(() => new ApiToSerialBridge(null));
+        }
+
+        private static readonly IList<byte> DefaultPayload = new List<byte> { 0x55 };
+        private static readonly byte DefaultDeviceAddress = 0x01;
+        private static readonly byte DefaultReadLength = 0x07;
+
+        public static IEnumerable<object[]> TestData =>
+            new List<object[]>
+            {
+                new object[] { new CommandWrite(DefaultDeviceAddress, DefaultPayload), 0xBE, },
+                new object[] { new CommandRead(DefaultDeviceAddress, DefaultReadLength), 0xBF},
+                new object[] { new CommandWriteRead(DefaultDeviceAddress,DefaultPayload,DefaultReadLength), 0xC0},
+                new object[] { new CommandControllerControllerBusSCan(), 0xC1},
+                new object[] { new CommandControllerControllerHardReboot(), 0xFE},
+                new object[] { new CommandControllerControllerReboot(), 0xFE},
+                new object[] { new CommandControllerControllerStop(), 0xFE},
+                new object[] { new CommandControllerControllerTest2WayCommunication(), 0xFE},
+            };
+
+        [Theory]
+        [MemberData(nameof(TestData))]
+        public void GetI2CommandCode_WhenCalled_ReturnValidCode(ICommand command, byte expectedI2CommandCode)
+        {
+            Init();
+            var actual = Sut.GetI2CCommandCode(command);
+            Assert.Equal((I2CCommandCode)expectedI2CommandCode, actual);
+        }
+
+        [ExcludeFromCodeCoverage]
+        private class NotValidCommand : ICommand
+        {
+            public IEnumerable<byte> I2C_Data()
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        [Fact]
+        public void GetI2CommandCode_WhenCalledWithNotValidCommand_ThrowException()
+        {
+            Init();
+            Assert.Throws<ArgumentOutOfRangeException>(() => Sut.GetI2CCommandCode(new NotValidCommand()));
+        }
+
+        [Theory]
+        [MemberData(nameof(TestData))]
+        public void GetI2Command_WhenCalled_ReturnValidCode(ICommand command, byte expectedI2CommandCode)
+        {
+            Init();
+            var actual = Sut.GetI2CCommand(command);
+            var actualCommandCode = actual.Payload.First();
+            Assert.Equal(expectedI2CommandCode, actualCommandCode);
+        }
+
+        [Fact]
+        public void Execute_WhenCalled_MultipleTimes_CalleSerialPortOpen_Once()
         {
             Init();
 
@@ -41,11 +99,10 @@ namespace eu.iamia.NCD.Bridge.UnitTest
             Sut.Execute(command);
 
             FakeSerialPortDecorator.Received(1).Open();
-            FakeSerialPortDecorator.Received(2).Write(Arg.Any<IEnumerable<byte>>());
         }
 
         [Fact]
-        public void CallsWriteForEachExecute()
+        public void Execute_ForEachCall_CallSerialPortWrite()
         {
             Init();
 
@@ -58,7 +115,7 @@ namespace eu.iamia.NCD.Bridge.UnitTest
         }
 
         [Fact]
-        public void CallsDisposeUponDispose()
+        public void Dispose_WhenCalled_CallDisposeOnSerialPort()
         {
             Init();
 
@@ -70,15 +127,15 @@ namespace eu.iamia.NCD.Bridge.UnitTest
             FakeSerialPortDecorator.Received(1).Dispose();
         }
 
-        [Fact(Skip="temporary")]
-        public void ReceiveResponseFromExecute()
+        [Fact]
+        public void Execute_WhenCalled_ReturnValidResponse()
         {
             Init();
 
             var expectedResponse = new List<byte> { 0x55, 0x56 };
-            var overflow = new List<byte> {0x99, 0xFF};
+            var overflow = new List<byte> { 0x99, 0xFF };
             List<byte> fakeResponse = new DataFromDevice(expectedResponse).GetApiEncodedData().ToList();
-            fakeResponse.AddRange( overflow);
+            fakeResponse.AddRange(overflow);
             var command = new CommandRead(0xf1, 1);
 
 
