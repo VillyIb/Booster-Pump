@@ -1,4 +1,4 @@
-﻿namespace eu.iamia.NCD.Bridge
+﻿namespace eu.iamia.NCD.Shared
 {
     public enum I2CCommandCode : byte
     {
