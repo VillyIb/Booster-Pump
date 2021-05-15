@@ -1,6 +1,6 @@
 ﻿using eu.iamia.NCD.Bridge;
-using eu.iamia.NCD.Serial;
 using eu.iamia.NCD.Serial.Contract;
+using eu.iamia.NCD.Shared;
 using Modules;
 using NSubstitute;
 using Xunit;
@@ -21,13 +21,14 @@ namespace ModulesTest
         }
 
         [Fact]
-        public void SendSequenceWhenCallingSelectOpenChannels()
+        public void SelectOpenChannels_OnSerialPort_CallExecute_WithByteSequence()
         {
-            INcdApiProtocol returnValue = new NcdApiProtocol( 0xAA,  0x01,  new byte[] { 0x55 },  0x00 );
-            _FakeSerialPort.Execute(Arg.Any<NcdApiProtocol>()).Returns(returnValue);
+            //INcdApiProtocol returnValue = new NcdApiProtocol(0xAA, 0x01, new byte[] {0x55}, 0x00);
+            //_FakeSerialPort.Execute(Arg.Any<NcdApiProtocol>()).Returns(returnValue);
 
             _Sut.SelectOpenChannels(MultiplexerChannels.Channel1 | MultiplexerChannels.Channel3);
-            _FakeSerialPort.Received().Execute(Arg.Is<NcdApiProtocol>(cmd => cmd.PayloadAsHex== "BE 70 00 0A "));
+
+            _FakeSerialPort.Received().Execute(Arg.Is<NcdApiProtocol>(cmd => cmd.PayloadAsHex == "BE 70 00 0A "));
         }
     }
 }

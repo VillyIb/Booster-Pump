@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
-using eu.iamia.NCD.API;
 using eu.iamia.NCD.Bridge;
-using eu.iamia.NCD.Serial;
 using eu.iamia.NCD.Serial.Contract;
+using eu.iamia.NCD.Shared;
 using NSubstitute;
 using Xunit;
 using Modules;
@@ -23,9 +22,9 @@ namespace ModulesTest
         }
 
         [Fact]
-        public void SendReadSequenceCallingReadFromDevice()
+        public void ReadFromDevice_CallExecute_WithSpecificByteSequence_And_Expect_ReadingsBack()
         {
-            var expectedPayloadAsHex = new NcdApiProtocol(new[] { DeviceRead.SerialCommandValue, _Sut.DefaultAddress, _Sut.LengthRequested }).PayloadAsHex;
+            var expectedPayloadAsHex = new NcdApiProtocol(new[] { (byte)I2CCommandCode.DeviceRead, _Sut.DefaultAddress, _Sut.LengthRequested }).PayloadAsHex;
 
             var fakeReturnValue = new NcdApiProtocol(new List<byte> { 0x3F, 0xEB, 0x36, 0xE2 }); // Defines Pressure and Temperature.
             _FakeGateway.Execute(Arg.Is<NcdApiProtocol>(cmd => cmd.PayloadAsHex == expectedPayloadAsHex)).Returns(fakeReturnValue);

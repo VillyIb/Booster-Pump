@@ -11,9 +11,6 @@ namespace Modules
     // ReSharper disable once InconsistentNaming
     public class AMS5812_0150_D_B_Module : BaseModuleV2
     {
-        // TODO move property to base class.
-        private readonly IBridge ApiToSerialBridge;
-
         public static byte DefaultAddressValue => 0x78;
 
         public override byte DefaultAddress => DefaultAddressValue;
@@ -23,12 +20,21 @@ namespace Modules
         /// <summary>
         /// Pressure module
         /// </summary>
-        /// <param name="gateway"></param>
         /// <param name="apiToSerialBridge"></param>
         public AMS5812_0150_D_B_Module(IBridge apiToSerialBridge) : base(apiToSerialBridge)
-        {
-            ApiToSerialBridge = apiToSerialBridge;
-        }
+        { }
+
+        public int DevicePressureMin => 3277;
+        public int DevicePressureMax => 29491;
+
+        public virtual float OutputPressureMin => -1034f;
+        public virtual float OutputPressureMax => 1034f;
+
+        public int DeviceTempMin => 3277;
+        public int DeviceTempMax => 29491;
+
+        public virtual float OutputTempMin => -25f;
+        public virtual float OutputTempMax => 85f;
 
         public float Pressure { get; protected set; }
 
@@ -37,18 +43,6 @@ namespace Modules
         public float Temperature { get; protected set; }
 
         protected override IEnumerable<RegisterBase> Registers => new List<RegisterBase>(0);
-
-        public int DevicePressureMin = 3277;
-        public int DevicePressureMax = 29491;
-
-        public float OutputPressureMin = -1034f;
-        public float OutputPressureMax = 1034;
-
-        public int DeviceTempMin = 3277;
-        public int DeviceTempMax = 29491;
-
-        public float OutputTempMin = -25f;
-        public float OutputTempMax = 85f;
 
         public void ReadFromDevice()
         {

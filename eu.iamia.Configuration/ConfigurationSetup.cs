@@ -1,4 +1,5 @@
-﻿namespace eu.iamia.Configuration
+﻿// ReSharper disable StringLiteralTypo
+namespace eu.iamia.Configuration
 {
     using System;
     using System.Diagnostics.CodeAnalysis;

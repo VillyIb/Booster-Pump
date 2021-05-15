@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using EnsureThat;
 using eu.iamia.NCD.API.Contract;
 
 namespace Modules
@@ -23,28 +25,28 @@ namespace Modules
         /// <summary>
         /// Register 0x09..0x0C
         /// </summary>
-        private readonly Register Setting0X09 = new Register(0x09, "Settings 0x09", 1);
+        private Register Setting0X09 => new Register(0x09, "Settings 0x09", 1);
 
         /// <summary>
         /// Number: 0..7 - then numbers binary representation 0b000..0b111 switch the digits on/off.
         /// </summary>
         private BitSetting DecodeMode => Setting0X09.GetOrCreateSubRegister(3, 0, "Decode Mode");
 
-        private readonly Register Setting0X0A = new Register(0x0A, "Settings 0x0A", 1);
+        private Register Setting0X0A => new Register(0x0A, "Settings 0x0A", 1);
 
         /// <summary>
         /// 0..15
         /// </summary>
         private BitSetting GlobalIntensity => Setting0X0A.GetOrCreateSubRegister(4, 0, "Global Intensity");
 
-        private readonly Register Setting0X0B = new Register(0x0B, "Settings 0x0B", 1);
+        private Register Setting0X0B => new Register(0x0B, "Settings 0x0B", 1);
 
         /// <summary>
         /// 0: Digit 0, 1: Digit 0..1, 2:Digit 0..2
         /// </summary>
         private BitSetting ScanLimit => Setting0X0B.GetOrCreateSubRegister(3, 0, "Scan digits");
 
-        private readonly Register Setting0X0C = new Register(0x0C, "Settings 0x0C", 1);
+        private Register Setting0X0C => new Register(0x0C, "Settings 0x0C", 1);
 
         /// <summary>
         /// 0x00: Shutdown Mode, reset feature registers.
@@ -57,7 +59,7 @@ namespace Modules
         /// <summary>
         /// 0x0E..0x11
         /// </summary>
-        private readonly Register Setting0X0E = new Register(0x0E, "Settings 0x0E", 1);
+        private Register Setting0X0E => new Register(0x0E, "Settings 0x0E", 1);
 
         /// <summary>
         /// 0: BCD decoding.
@@ -72,7 +74,7 @@ namespace Modules
         /// </summary>
         private BitSetting Blink => Setting0X0E.GetOrCreateSubRegister(2, 4, "Blink settings");
 
-        private readonly Register Setting0X10 = new Register(0x10, "Settings 0x10", 1);
+        private Register Setting0X10 => new Register(0x10, "Settings 0x10", 1);
 
         /// <summary>
         /// 0..15
@@ -84,7 +86,7 @@ namespace Modules
         /// </summary>
         private BitSetting Digit1Intensity => Setting0X10.GetOrCreateSubRegister(4, 4, "Digit 1 intensity");
 
-        private readonly Register Setting0X11 = new Register(0x11, "Settings 0x11", 1);
+        private Register Setting0X11 => new Register(0x11, "Settings 0x11", 1);
 
         /// <summary>
         /// 0..15
@@ -286,6 +288,9 @@ namespace Modules
         /// <param name="value"></param>
         public void SetHexValue(byte[] value)
         {
+            Ensure.That(value, nameof(value)).IsNotNull();
+            Ensure.That(value.ToList(), nameof(value)).SizeIs(3);
+
             Digit0.Value = value[0];
             Digit1.Value = value[1];
             Digit2.Value = value[2];

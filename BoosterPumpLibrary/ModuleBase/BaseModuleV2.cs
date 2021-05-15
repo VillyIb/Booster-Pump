@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using BoosterPumpLibrary.Settings;
+using EnsureThat;
 using eu.iamia.NCD.API;
 using eu.iamia.NCD.API.Contract;
 
@@ -24,6 +25,8 @@ namespace BoosterPumpLibrary.ModuleBase
 
         protected BaseModuleV2(IBridge apiToSerialBridge)
         {
+            Ensure.That(apiToSerialBridge, nameof(apiToSerialBridge)).IsNotNull();
+
             ApiToSerialBridge = apiToSerialBridge;
             AddressIncrement = null;
             Id = Guid.NewGuid();
