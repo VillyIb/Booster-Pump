@@ -42,7 +42,7 @@ namespace Modules
 
         public float Temperature { get; protected set; }
 
-        protected override IEnumerable<RegisterBase> Registers => new List<RegisterBase>(0);
+        protected override IEnumerable<RegisterBase> Registers => new List<RegisterBase>(0); // TODO right to use '=>'
 
         public void ReadFromDevice()
         {

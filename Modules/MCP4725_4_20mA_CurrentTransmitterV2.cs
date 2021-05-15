@@ -18,7 +18,7 @@ namespace Modules
 
         public override byte DefaultAddress => DefaultAddressValue;
 
-        private Register Setting => new Register(0, "Settings", 3);
+        private readonly Register Setting = new Register(0, "Settings", 3);
 
         /// <summary>
         /// 0: normal mode, 1: 1 kOhm-, 2 100 kOmh-, 3: 500 kOhm resistor to ground.
@@ -38,6 +38,8 @@ namespace Modules
         /// </summary>
         private BitSetting Speed => Setting.GetOrCreateSubRegister(12, 4, "Speed");
 
+        public readonly Guid Id;
+
         protected override IEnumerable<RegisterBase> Registers => new[] { Setting };
 
         public virtual void Init()
@@ -47,7 +49,9 @@ namespace Modules
         }
 
         public MCP4725_4_20mA_CurrentTransmitterV2(IBridge apiToSerialBridge) : base(apiToSerialBridge)
-        { }
+        {
+            Id = Guid.NewGuid();
+        }
 
         public void SetNormalPower()
         {
@@ -97,7 +101,8 @@ namespace Modules
         public void SetSpeedPersistent(float speed)
         {
             WriteToDacAndEeprom();
-            SetSpeed((ulong)GetIntValue(speed));
+            var speedMapped = (ulong) GetIntValue(speed);
+            SetSpeed(speedMapped);
         }
 
         public float GetPctValue(int value)

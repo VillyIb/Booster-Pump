@@ -25,7 +25,10 @@ namespace ModulesTest
         public void ReturnsSequenceWhenCallingInit()
         {
             Sut.Init();
-            _FakeGateway.Received().Execute(Arg.Is<NcdApiProtocol>(c => c.PayloadAsHex == "5C 20 90 "));
+
+            var x = _FakeGateway.ReceivedCalls();
+
+            _FakeGateway.Received().Execute(Arg.Is<NcdApiProtocol>(c => c.PayloadAsHex == "BF 5C 05 "));
         }
         
         [Fact]
@@ -34,6 +37,8 @@ namespace ModulesTest
             // Returns: Pressure XL, L, H, Temperature L, H
             var fakeReturnValue = new NcdApiProtocol(0xAA, 5,  (new byte[] {0x66, 0xF6, 0x3F, 0xA0, 0xFD}),0xE7);
            _FakeGateway.Execute(Arg.Any<INcdApiProtocol>()).Returns(fakeReturnValue);
+
+           _FakeGateway.ClearReceivedCalls();
             Sut.ReadDevice();
 
             Assert.Equal(1023.4, Sut.AirPressure);

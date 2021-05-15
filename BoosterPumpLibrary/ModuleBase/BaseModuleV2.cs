@@ -45,12 +45,12 @@ namespace BoosterPumpLibrary.ModuleBase
             AddressIncrement = value;
         }
 
-        protected abstract IEnumerable<RegisterBase> Registers
-        { get; }
+        protected abstract IEnumerable<RegisterBase> Registers { get; }
 
         public ModuleEnumerator GetEnumerator()
         {
-            return new ModuleEnumerator(Registers.Where(t => t.IsDirty), DeviceAddress);
+            var registersToSend = Registers.Where(t => t.IsDirty);
+            return new ModuleEnumerator(registersToSend, DeviceAddress);
         }
 
         public void SendOld()

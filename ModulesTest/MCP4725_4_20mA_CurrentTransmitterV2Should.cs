@@ -1,5 +1,5 @@
-﻿using eu.iamia.NCD.Bridge;
-using eu.iamia.NCD.Serial;
+﻿using System.Globalization;
+using eu.iamia.NCD.Bridge;
 using eu.iamia.NCD.Serial.Contract;
 using eu.iamia.NCD.Shared;
 using NSubstitute;
@@ -25,7 +25,7 @@ namespace ModulesTest
         public void SendSequenceWhenCallingInit()
         {
             Sut.Init();
-            FakeSerialPort.Received().Execute(Arg.Is<NcdApiProtocol>(c => c.PayloadAsHex == "60 00 60 80 00 "));
+            FakeSerialPort.Received().Execute(Arg.Is<NcdApiProtocol>(c => c.PayloadAsHex == "BE 60 00 60 80 00 "));
         }
 
         [Fact]
@@ -34,16 +34,17 @@ namespace ModulesTest
             const int speedHex = 0b0000_1010_1010_0101;
             var speedPct = Sut.GetPctValue(speedHex);
 
+            FakeSerialPort.ClearReceivedCalls();
             Sut.SetSpeed(speedPct);
             // expected 010x_x00x, 1010_1010, 0101_xxxx => 40 AA 50
-            FakeSerialPort.Received().Execute(Arg.Is<NcdApiProtocol>(c => c.PayloadAsHex == "60 00 40 AA 50 "));
+            FakeSerialPort.Received().Execute(Arg.Is<NcdApiProtocol>(c => c.PayloadAsHex == "BE 60 00 40 AA 50 "));
         }
 
         [Fact]
         public void SendSequenceWhenPowerDown()
         {
             Sut.SetPowerDown();
-            FakeSerialPort.Received().Execute(Arg.Is<NcdApiProtocol>(c => c.PayloadAsHex == "60 00 02 00 00 "));
+            FakeSerialPort.Received().Execute(Arg.Is<NcdApiProtocol>(c => c.PayloadAsHex == "BE 60 00 02 00 00 "));
         }
 
         [Fact]
@@ -52,20 +53,23 @@ namespace ModulesTest
             const int speedHex = 0b0000_1010_1010_0101;
             var speedPct = Sut.GetPctValue(speedHex);
 
+            Sut.Init();
             Sut.SetSpeedPersistent(speedPct);
+
             // expected 011x_x00x, 1010_1010, 0101_xxxx => 60 AA 50
-            FakeSerialPort.Received().Execute(Arg.Is<NcdApiProtocol>(c => c.PayloadAsHex == "60 00 60 AA 50 "));
+            FakeSerialPort.Received().Execute(Arg.Is<NcdApiProtocol>(c => c.PayloadAsHex == "BE 60 00 60 AA 50 "));
         }
 
         [Fact]
         public void VerifyMapToPct()
         {
-            Assert.Equal("0.9998", Sut.GetPctValue(4095).ToString("N4"));
-            Assert.Equal("0.5000", Sut.GetPctValue(4096 / 2).ToString("N4"));
-            Assert.Equal("0.3333", Sut.GetPctValue(4096 / 3).ToString("N4"));
-            Assert.Equal("0.6665", Sut.GetPctValue(2 * 4096 / 3).ToString("N4"));
-            Assert.Equal("0.2000", Sut.GetPctValue(4096 / 5).ToString("N4"));
-            Assert.Equal("0.0000", Sut.GetPctValue(0).ToString("N4"));
+            var provider = CultureInfo.InvariantCulture;
+            Assert.Equal(0.9998f, Sut.GetPctValue(4095),4);
+            Assert.Equal(0.5000f, Sut.GetPctValue(4096 / 2), 4);
+            Assert.Equal(0.3333f, Sut.GetPctValue(4096 / 3), 4);
+            Assert.Equal(0.6665f, Sut.GetPctValue(2 * 4096 / 3), 4);
+            Assert.Equal(0.2000f, Sut.GetPctValue(4096 / 5), 4);
+            Assert.Equal(0.0000f, Sut.GetPctValue(0), 4);
         }
 
         [Fact]

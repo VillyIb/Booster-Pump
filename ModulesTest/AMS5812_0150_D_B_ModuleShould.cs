@@ -31,7 +31,6 @@ namespace ModulesTest
 
             _Sut.ReadFromDevice();
 
-            _FakeGateway.Received().Execute(Arg.Any<INcdApiProtocol>());
             _FakeGateway.Received().Execute(Arg.Is<NcdApiProtocol>(cmd => cmd.PayloadAsHex == "BF 78 04 "));
 
             Assert.Equal(-1.66f, _Sut.Pressure);
