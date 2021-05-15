@@ -48,7 +48,7 @@ namespace eu.iamia.NCD.Serial.UnitTest
         {
             Init();
 
-            var i2CCommand = new NcdApiProtocol(0xf1, 1, new byte[] { 0x00 }, 0);
+            var i2CCommand = new NcdApiProtocol(0xf1, 1, new byte[] {0x00}, 0);
 
             Sut.Execute(i2CCommand);
             Sut.Execute(i2CCommand);
@@ -61,7 +61,7 @@ namespace eu.iamia.NCD.Serial.UnitTest
         {
             Init();
 
-            var i2CCommand = new NcdApiProtocol(0xf1, 1, new byte[] { 0x00 }, 0);
+            var i2CCommand = new NcdApiProtocol(0xf1, 1, new byte[] {0x00}, 0);
 
             Sut.Execute(i2CCommand);
 
@@ -74,43 +74,45 @@ namespace eu.iamia.NCD.Serial.UnitTest
         {
             Init();
 
-            List<byte> fakeResponse = new NcdApiProtocol(new List<byte> { 0x55, 0x56 }).GetApiEncodedData().ToList();
-            fakeResponse.AddRange(new List<byte> { 0x99, 0xFF });
+            List<byte> fakeResponse = new NcdApiProtocol(new List<byte> {0x55, 0x56}).GetApiEncodedData().ToList();
+            fakeResponse.AddRange(new List<byte> {0x99, 0xFF});
 
 
             FakeSerialPortDecorator fakeSerialPortDecorator = Substitute.ForPartsOf<FakeSerialPortDecorator>();
             fakeSerialPortDecorator.GetResponse().Returns(fakeResponse);
             Sut = new SerialGateway(fakeSerialPortDecorator);
 
-            var i2CCommand = new NcdApiProtocol( Array.Empty<byte>());
+            var i2CCommand = new NcdApiProtocol(Array.Empty<byte>());
             var response = Sut.Execute(i2CCommand);
 
-            Assert.Equal(new List<byte> { 0x55, 0x56 }, response.Payload);
+            Assert.Equal(new List<byte> {0x55, 0x56}, response.Payload);
             Assert.True(response.IsValid);
         }
-
     }
 
     [ExcludeFromCodeCoverage]
     public class FakeSerialPortDecorator : ISerialPortDecorator
     {
-        public virtual IEnumerable<byte> GetResponse() => new List<byte> { 0x00 };
+        public virtual IEnumerable<byte> GetResponse() => new List<byte> {0x00};
 
         public void Dispose()
-        { }
+        {
+        }
 
         public event EventHandler<DataReceivedArgs> DataReceived;
 
         public void Close()
-        { }
+        {
+        }
 
         public void Open()
-        { }
+        {
+        }
 
         public void Write(IEnumerable<byte> byteSequence)
         {
             // Response is passed as DataReceived.
-            DataReceived?.Invoke(this, new DataReceivedArgs { Data = GetResponse().ToArray() });
+            DataReceived?.Invoke(this, new DataReceivedArgs {Data = GetResponse().ToArray()});
         }
     }
 }

@@ -20,25 +20,37 @@ namespace eu.iamia.Util
         #endregion
 
 
-        public static DateTime Now { get { return UtcNow.ToLocalTime(); } }
+        public static DateTime Now
+        {
+            get { return UtcNow.ToLocalTime(); }
+        }
 
 
         /// <summary>
         /// Return the current date according to Local Time.
         /// </summary>
-        public static DateTime Today { get { return UtcNow.ToLocalTime().Date; } }
+        public static DateTime Today
+        {
+            get { return UtcNow.ToLocalTime().Date; }
+        }
 
 
         /// <summary>
         /// Return Today+1.
         /// </summary>
-        public static DateTime Tomorrow { get { return UtcNow.ToLocalTime().Date.AddDays(1); } }
+        public static DateTime Tomorrow
+        {
+            get { return UtcNow.ToLocalTime().Date.AddDays(1); }
+        }
 
 
         /// <summary>
         /// Return Today-1
         /// </summary>
-        public static DateTime Yesterday { get { return UtcNow.ToLocalTime().Date.AddDays(-1); } }
+        public static DateTime Yesterday
+        {
+            get { return UtcNow.ToLocalTime().Date.AddDays(-1); }
+        }
 
 
         public static DateTime UtcNow
@@ -49,7 +61,7 @@ namespace eu.iamia.Util
 
                 var realDurationTicks = realDuration.Ticks;
 
-                var simulatedDurationTicks = (long)(realDurationTicks * Amplification);
+                var simulatedDurationTicks = (long) (realDurationTicks * Amplification);
 
                 var result = Initial.AddTicks(simulatedDurationTicks);
 
@@ -90,6 +102,5 @@ namespace eu.iamia.Util
         {
             Reset();
         }
-
     }
 }

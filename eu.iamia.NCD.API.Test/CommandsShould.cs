@@ -11,7 +11,7 @@ namespace eu.iamia.NCD.API.UnitTest
     {
         protected byte DefaultAddress => 0x33;
         protected byte DefaultReadLength = 0x32;
-        protected static byte[] DefaultPayload => new byte[] { 0x55 };
+        protected static byte[] DefaultPayload => new byte[] {0x55};
     }
 
     public class CommandControllerControllerBusSCanShould : CommandsShould
@@ -82,7 +82,6 @@ namespace eu.iamia.NCD.API.UnitTest
         [Fact]
         public void I2CDataAsHex_WhenOk_ReturnsOk()
         {
-
             Assert.Equal("21 BB ", Sut.I2CDataAsHex);
         }
     }
@@ -171,7 +170,8 @@ namespace eu.iamia.NCD.API.UnitTest
         public void Ctor_WhenTooLargePayload_ShouldThrowException()
         {
             var tooLargePayload = Enumerable.Repeat<byte>(0x01, 256).ToList();
-            Assert.Throws<ArgumentException>(() => new CommandWriteRead(DefaultAddress, tooLargePayload, DefaultReadLength));
+            Assert.Throws<ArgumentException>(() =>
+                new CommandWriteRead(DefaultAddress, tooLargePayload, DefaultReadLength));
         }
 
         [Fact]
@@ -190,5 +190,4 @@ namespace eu.iamia.NCD.API.UnitTest
             Assert.Equal("33 32 16 55 ", sut.I2CDataAsHex);
         }
     }
-
 }

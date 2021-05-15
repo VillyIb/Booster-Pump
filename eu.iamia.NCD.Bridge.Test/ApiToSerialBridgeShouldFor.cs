@@ -36,21 +36,21 @@ namespace eu.iamia.NCD.Bridge.UnitTest
             Assert.Throws<ArgumentNullException>(() => new ApiToSerialBridge(null));
         }
 
-        private static readonly IList<byte> DefaultPayload = new List<byte> { 0x55 };
+        private static readonly IList<byte> DefaultPayload = new List<byte> {0x55};
         private static readonly byte DefaultDeviceAddress = 0x01;
         private static readonly byte DefaultReadLength = 0x07;
 
         public static IEnumerable<object[]> TestData =>
             new List<object[]>
             {
-                new object[] { new CommandWrite(DefaultDeviceAddress, DefaultPayload), 0xBE, },
-                new object[] { new CommandRead(DefaultDeviceAddress, DefaultReadLength), 0xBF},
-                new object[] { new CommandWriteRead(DefaultDeviceAddress,DefaultPayload,DefaultReadLength), 0xC0},
-                new object[] { new CommandControllerControllerBusSCan(), 0xC1},
-                new object[] { new CommandControllerControllerHardReboot(), 0xFE},
-                new object[] { new CommandControllerControllerReboot(), 0xFE},
-                new object[] { new CommandControllerControllerStop(), 0xFE},
-                new object[] { new CommandControllerControllerTest2WayCommunication(), 0xFE},
+                new object[] {new CommandWrite(DefaultDeviceAddress, DefaultPayload), 0xBE,},
+                new object[] {new CommandRead(DefaultDeviceAddress, DefaultReadLength), 0xBF},
+                new object[] {new CommandWriteRead(DefaultDeviceAddress, DefaultPayload, DefaultReadLength), 0xC0},
+                new object[] {new CommandControllerControllerBusSCan(), 0xC1},
+                new object[] {new CommandControllerControllerHardReboot(), 0xFE},
+                new object[] {new CommandControllerControllerReboot(), 0xFE},
+                new object[] {new CommandControllerControllerStop(), 0xFE},
+                new object[] {new CommandControllerControllerTest2WayCommunication(), 0xFE},
             };
 
         [Theory]
@@ -59,7 +59,7 @@ namespace eu.iamia.NCD.Bridge.UnitTest
         {
             Init();
             var actual = Sut.GetI2CCommandCode(command);
-            Assert.Equal((I2CCommandCode)expectedI2CommandCode, actual);
+            Assert.Equal((I2CCommandCode) expectedI2CommandCode, actual);
         }
 
         [ExcludeFromCodeCoverage]
@@ -132,8 +132,8 @@ namespace eu.iamia.NCD.Bridge.UnitTest
         {
             Init();
 
-            var expectedResponse = new List<byte> { 0x55, 0x56 };
-            var overflow = new List<byte> { 0x99, 0xFF };
+            var expectedResponse = new List<byte> {0x55, 0x56};
+            var overflow = new List<byte> {0x99, 0xFF};
             List<byte> fakeResponse = new DataFromDevice(expectedResponse).GetApiEncodedData().ToList();
             fakeResponse.AddRange(overflow);
             var command = new CommandRead(0xf1, 1);
@@ -153,23 +153,26 @@ namespace eu.iamia.NCD.Bridge.UnitTest
     [ExcludeFromCodeCoverage]
     public class FakeSerialPortDecorator : ISerialPortDecorator
     {
-        public virtual IEnumerable<byte> GetResponse() => new List<byte> { 0x00 };
+        public virtual IEnumerable<byte> GetResponse() => new List<byte> {0x00};
 
         public void Dispose()
-        { }
+        {
+        }
 
         public event EventHandler<DataReceivedArgs> DataReceived;
 
         public void Close()
-        { }
+        {
+        }
 
         public void Open()
-        { }
+        {
+        }
 
         public void Write(IEnumerable<byte> byteSequence)
         {
             // Response is passed as DataReceived.
-            DataReceived?.Invoke(this, new DataReceivedArgs { Data = GetResponse().ToArray() });
+            DataReceived?.Invoke(this, new DataReceivedArgs {Data = GetResponse().ToArray()});
         }
     }
 }

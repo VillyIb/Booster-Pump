@@ -64,7 +64,7 @@ namespace eu.iamia.NCD.API
         public CommandWrite(byte deviceAddress, IEnumerable<byte> payload)
             : base(deviceAddress)
         {
-            Ensure.That(payload,nameof(payload)).IsNotNull();
+            Ensure.That(payload, nameof(payload)).IsNotNull();
             Payload = payload.ToList();
             Ensure.That(Payload, nameof(payload)).SizeIs(Math.Min(255, Payload.Count));
         }
@@ -108,7 +108,7 @@ namespace eu.iamia.NCD.API
             }
         }
     }
-    
+
 
     public abstract class CommandController : Command
     {
@@ -132,40 +132,45 @@ namespace eu.iamia.NCD.API
     {
         public static byte[] PayloadValue = {0x00};
 
-        public CommandControllerControllerBusSCan() : base( PayloadValue )
-        { }
+        public CommandControllerControllerBusSCan() : base(PayloadValue)
+        {
+        }
     }
 
     public class CommandControllerControllerStop : CommandController, ICommandControllerStop
     {
-        public static byte[] PayloadValue = { 0x21, 0xBB };
+        public static byte[] PayloadValue = {0x21, 0xBB};
 
         public CommandControllerControllerStop() : base(PayloadValue)
-        { }
+        {
+        }
     }
 
     public class CommandControllerControllerReboot : CommandController, ICommandControllerReboot
     {
-        public static byte[] PayloadValue = { 0x21, 0xBC };
-        
+        public static byte[] PayloadValue = {0x21, 0xBC};
+
         public CommandControllerControllerReboot() : base(PayloadValue)
-        { }
+        {
+        }
     }
 
     public class CommandControllerControllerHardReboot : CommandController, ICommandControllerHardReboot
     {
-        public static byte[] PayloadValue = { 0x21, 0xBD };
-        
-        public CommandControllerControllerHardReboot() : base(PayloadValue )
-        { }
+        public static byte[] PayloadValue = {0x21, 0xBD};
+
+        public CommandControllerControllerHardReboot() : base(PayloadValue)
+        {
+        }
     }
 
-    public class CommandControllerControllerTest2WayCommunication : CommandController, ICommandControllerTest2WayCommunication
+    public class CommandControllerControllerTest2WayCommunication : CommandController,
+        ICommandControllerTest2WayCommunication
     {
-        public static byte[] PayloadValue = { 0x21 };
-        
-        public CommandControllerControllerTest2WayCommunication() : base(PayloadValue)
-        { }
-    }
+        public static byte[] PayloadValue = {0x21};
 
+        public CommandControllerControllerTest2WayCommunication() : base(PayloadValue)
+        {
+        }
+    }
 }

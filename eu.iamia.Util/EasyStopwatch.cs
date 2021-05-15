@@ -25,7 +25,9 @@ namespace eu.iamia.Util
         public long Stop()
         {
             Stopwatch.Stop();
-            return ShowMicroSeconds ? 1000000L * Stopwatch.ElapsedTicks / Stopwatch.Frequency : Stopwatch.ElapsedMilliseconds;
+            return ShowMicroSeconds
+                ? 1000000L * Stopwatch.ElapsedTicks / Stopwatch.Frequency
+                : Stopwatch.ElapsedMilliseconds;
         }
 
 
@@ -40,7 +42,7 @@ namespace eu.iamia.Util
 
         public static EasyStopwatch StartMs()
         {
-            return new EasyStopwatch { ShowMicroSeconds = false };
+            return new EasyStopwatch {ShowMicroSeconds = false};
         }
 
         /// <summary>
@@ -49,8 +51,7 @@ namespace eu.iamia.Util
         /// <returns></returns>
         public static EasyStopwatch StartUs()
         {
-            return new EasyStopwatch { ShowMicroSeconds = true };
+            return new EasyStopwatch {ShowMicroSeconds = true};
         }
-
     }
 }

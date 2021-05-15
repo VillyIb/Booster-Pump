@@ -7,7 +7,7 @@ namespace eu.iamia.NCD.Shared.UnitTest
 {
     public class NcdApiProtocolShould
     {
-        private static INcdApiProtocol Sut => new NcdApiProtocol(new byte[] { 0x55 });
+        private static INcdApiProtocol Sut => new NcdApiProtocol(new byte[] {0x55});
 
         [Fact]
         public void Class_ShouldImplementINcdApiProtocolShould()
@@ -21,7 +21,7 @@ namespace eu.iamia.NCD.Shared.UnitTest
         {
             Assert.Equal(0xAA, Sut.Header);
             Assert.Equal(0x01, Sut.ByteCount);
-            Assert.Equal(new byte[] { 0x55 }, Sut.Payload);
+            Assert.Equal(new byte[] {0x55}, Sut.Payload);
             Assert.Equal(0x00, Sut.Checksum);
         }
 
@@ -34,7 +34,7 @@ namespace eu.iamia.NCD.Shared.UnitTest
         [Fact]
         public void IsValid_WhenWrong_ShouldReturnFalse()
         {
-            var sut = new NcdApiProtocol(0xAA, 0xff, new byte[] { 0x55 }, 0x00);
+            var sut = new NcdApiProtocol(0xAA, 0xff, new byte[] {0x55}, 0x00);
             Assert.False(sut.IsValid);
         }
 
@@ -66,14 +66,14 @@ namespace eu.iamia.NCD.Shared.UnitTest
         [Fact]
         public void GetApiEncodedData_WhenOk_ShouldReturnRightByteSequence()
         {
-            var expectedByteSequence = new List<byte> { 0xAA, 0x01, 0x55, 0x00 };
+            var expectedByteSequence = new List<byte> {0xAA, 0x01, 0x55, 0x00};
             Assert.Equal(expectedByteSequence, Sut.GetApiEncodedData());
         }
 
         [Fact]
         public void PayloadAsHex_WhenOk_ShouldReturnRightValue()
         {
-            Assert.Equal("55 ", ((NcdApiProtocol)Sut).PayloadAsHex);
+            Assert.Equal("55 ", ((NcdApiProtocol) Sut).PayloadAsHex);
         }
 
         [Fact]

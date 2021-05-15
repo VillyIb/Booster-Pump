@@ -49,9 +49,10 @@ namespace eu.iamia.NCD.Bridge
         {
             var i2CCommand = GetI2CCommand(command);
             var i2CResponse = Gateway.Execute(i2CCommand);
-            return i2CResponse is null 
-                ? null 
-                : new DataFromDevice(i2CResponse.Header, i2CResponse.ByteCount, i2CResponse.Payload, i2CResponse.Checksum);
+            return i2CResponse is null
+                ? null
+                : new DataFromDevice(i2CResponse.Header, i2CResponse.ByteCount, i2CResponse.Payload,
+                    i2CResponse.Checksum);
         }
 
         public void Dispose()
