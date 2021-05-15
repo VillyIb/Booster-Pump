@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using EnsureThat;
-using eu.iamia.NCD.API;
 using eu.iamia.NCD.API.Contract;
 using eu.iamia.NCD.Serial.Contract;
 using eu.iamia.NCD.Shared;
@@ -45,13 +44,13 @@ namespace eu.iamia.NCD.Bridge
             return result;
         }
 
-        public IDataFromDevice Execute(ICommand command)
+        public INcdApiProtocol Execute(ICommand command)
         {
             var i2CCommand = GetI2CCommand(command);
             var i2CResponse = Gateway.Execute(i2CCommand);
             return i2CResponse is null
                 ? null
-                : new DataFromDevice(i2CResponse.Header, i2CResponse.ByteCount, i2CResponse.Payload,
+                : new NcdApiProtocol(i2CResponse.Header, i2CResponse.ByteCount, i2CResponse.Payload,
                     i2CResponse.Checksum);
         }
 

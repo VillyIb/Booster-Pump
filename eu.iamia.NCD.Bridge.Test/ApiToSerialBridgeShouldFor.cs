@@ -5,6 +5,7 @@ using System.Linq;
 using eu.iamia.NCD.API;
 using eu.iamia.NCD.API.Contract;
 using eu.iamia.NCD.Serial;
+using eu.iamia.NCD.Shared;
 using eu.iamia.ReliableSerialPort;
 using NSubstitute;
 using Xunit;
@@ -134,7 +135,7 @@ namespace eu.iamia.NCD.Bridge.UnitTest
 
             var expectedResponse = new List<byte> {0x55, 0x56};
             var overflow = new List<byte> {0x99, 0xFF};
-            List<byte> fakeResponse = new DataFromDevice(expectedResponse).GetApiEncodedData().ToList();
+            List<byte> fakeResponse = new NcdApiProtocol(expectedResponse).GetApiEncodedData().ToList();
             fakeResponse.AddRange(overflow);
             var command = new CommandRead(0xf1, 1);
 

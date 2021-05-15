@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="DeviceCommand.cs" />
+    <ProjectReference Include="..\eu.iamia.NCD.Shared\eu.iamia.NCD.Shared.csproj" />
   </ItemGroup>
 
 </Project>

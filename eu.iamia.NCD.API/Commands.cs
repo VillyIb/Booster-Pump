@@ -109,7 +109,6 @@ namespace eu.iamia.NCD.API
         }
     }
 
-
     public abstract class CommandController : Command
     {
         private IImmutableList<byte> Payload { get; }
