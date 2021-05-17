@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Text;
 
 namespace BoosterPumpLibrary.Settings
@@ -16,10 +17,11 @@ namespace BoosterPumpLibrary.Settings
         /// </summary>
         public int Offset { get; protected set; }
 
-        internal BitSetting(int size, int offset, string description = "")
+        internal BitSetting(int size, int offset, RegisterBase parentRegister, string description = "")
         {
             Size = size;
             Offset = offset;
+            ParentRegister = parentRegister;
             Description = description;
         }
 
@@ -30,7 +32,7 @@ namespace BoosterPumpLibrary.Settings
 
         public string Description { get; protected set; }
 
-        public RegisterBase ParentRegister { get; set; }
+        private RegisterBase ParentRegister { get; set; }
 
         private void CheckRange(ulong value)
         {
@@ -69,17 +71,19 @@ namespace BoosterPumpLibrary.Settings
 
         public string MaskAsBinary()
         {
-            var value = Mask << Offset;
             var result = new StringBuilder();
-            var mask = 1UL << Size + Offset - 1;
 
-            for (var index = 0; index < 64 && mask > 0; index++)
+            var value = Mask << Offset;
+            var last = Math.Max(Size + Offset, 8);
+
+            for (var index = last-1; index >=0 ; index--)
             {
+                var mask = 01UL << index;
                 result.Append((value & mask) > 0 ? "1" : "0");
-                mask = mask >> 1;
-                if (index % 4 == 3 && mask > 0) { result.Append("_"); }
+                if (index % 4 == 0 ) { result.Append("_"); }
             }
-            return result.ToString();
+
+            return result.ToString().Substring(0, result.Length - 1);
         }
 
         public override string ToString()

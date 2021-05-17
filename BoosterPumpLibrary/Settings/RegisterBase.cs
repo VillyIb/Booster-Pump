@@ -60,10 +60,7 @@ namespace BoosterPumpLibrary.Settings
 
             if (size < 0 || offset < 0 || size + offset > max) { throw new ArgumentOutOfRangeException($"Size + offeset must be less or equal to {max}."); }
 
-            var result = new BitSetting(size, offset, description)
-            {
-                ParentRegister = this
-            };
+            var result = new BitSetting(size, offset, this, description);
             BitSettings.Add(key, result);
             return result;
         }
@@ -89,7 +86,12 @@ namespace BoosterPumpLibrary.Settings
 
             foreach(var current in BitSettings.Values)
             {
-                result.AppendFormat($"{current.Description}: {current.MaskAsBinary()}, ");
+                if (result.Length > 0)
+                {
+                    result.Append("\r\n");
+
+                }
+                result.AppendFormat($"{current.Description}: {current.MaskAsBinary()}, 0x{current.Value:X8}, ");
             }
 
             return result.ToString();

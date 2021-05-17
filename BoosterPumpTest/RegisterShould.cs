@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection.PortableExecutable;
 using BoosterPumpLibrary.Settings;
 using Xunit;
 // ReSharper disable UnusedVariable
@@ -10,7 +11,7 @@ namespace BoosterPumpTest
     {
         public Register Sut;
 
-        public BitSetting AlfaSetting;
+        public BitSetting Alfa0Setting;
         public BitSetting BravoSetting;
         public BitSetting CharlieSetting;
         public BitSetting DeltaSetting;
@@ -23,19 +24,35 @@ namespace BoosterPumpTest
         public BitSetting KiloSetting;
         public BitSetting LimaSetting;
 
+        public BitSetting Alfa1Setting;
+        public BitSetting Alfa2Setting;
+        public BitSetting Alfa3Setting;
+        public BitSetting Alfa4Setting;
+        public BitSetting Alfa5Setting;
+        public BitSetting Alfa6Setting;
+        public BitSetting Alfa7Setting;
+
         public RegisterShould()
         {
             Sut = new Register(0x00, "64 bit register", 8);
 
             // ReSharper disable once StringLiteralTypo
-            AlfaSetting = Sut.GetOrCreateSubRegister(1, 7, "Alfa"); // 0
+            Alfa0Setting = Sut.GetOrCreateSubRegister(1, 7, "Alfa0"); // 0
+            Alfa1Setting = Sut.GetOrCreateSubRegister(1, 6, "Alfa1"); // 0
+            Alfa2Setting = Sut.GetOrCreateSubRegister(1, 5, "Alfa2"); // 0
+            Alfa3Setting = Sut.GetOrCreateSubRegister(1, 4, "Alfa3"); // 0
+            Alfa4Setting = Sut.GetOrCreateSubRegister(1, 3, "Alfa4"); // 0
+            Alfa5Setting = Sut.GetOrCreateSubRegister(1, 2, "Alfa5"); // 0
+            Alfa6Setting = Sut.GetOrCreateSubRegister(1, 1, "Alfa6"); // 0
+            Alfa7Setting = Sut.GetOrCreateSubRegister(1, 0, "Alfa7"); // 0
+
             BravoSetting = Sut.GetOrCreateSubRegister(2, 6, "Bravo"); // 1..2
             CharlieSetting = Sut.GetOrCreateSubRegister(3, 5, "Charlie"); // 3..5
             DeltaSetting = Sut.GetOrCreateSubRegister(4, 4, "Delta"); // 4..7
-            EchoSetting = Sut.GetOrCreateSubRegister(5, 3);
-            FoxtrotSetting = Sut.GetOrCreateSubRegister(6, 2);
-            GolfSetting = Sut.GetOrCreateSubRegister(7, 1);
-            HotelSetting = Sut.GetOrCreateSubRegister(8, 0);
+            EchoSetting = Sut.GetOrCreateSubRegister(5, 3, "Echo ");
+            FoxtrotSetting = Sut.GetOrCreateSubRegister(6, 2, "Foxtrot");
+            GolfSetting = Sut.GetOrCreateSubRegister(7, 1, "Golf ");
+            HotelSetting = Sut.GetOrCreateSubRegister(8, 0, "Hotel");
 
             IndiaSetting = Sut.GetOrCreateSubRegister(16, 4, "India");
             JulietSetting = Sut.GetOrCreateSubRegister(24, 2, "Juliet");
@@ -46,7 +63,7 @@ namespace BoosterPumpTest
         [Fact]
         public void StoreMaxValuefor1BitsWithOffsett()
         {
-            AlfaSetting.Value = 1;
+            Alfa0Setting.Value = 1;
             Assert.Equal((ulong)0b1000_0000, Sut.Value);
         }
 
@@ -132,15 +149,13 @@ namespace BoosterPumpTest
 
         [Theory]
         [InlineData(2)]
-        //[InlineData(-1)]
         public void ThrowsExceptionWhenOutOfRangeAlfa(ulong value)
         {
-            Exception ex = Assert.Throws<ArgumentOutOfRangeException>(() => AlfaSetting.Value = value);
+            Exception ex = Assert.Throws<ArgumentOutOfRangeException>(() => Alfa0Setting.Value = value);
         }
 
         [Theory]
         [InlineData(4)]
-        //[InlineData(-1)]
         public void ThrowsExceptionWhenOutOfRangeBravo(ulong value)
         {
             Exception ex = Assert.Throws<ArgumentOutOfRangeException>(() => BravoSetting.Value = value);
@@ -148,7 +163,6 @@ namespace BoosterPumpTest
 
         [Theory]
         [InlineData(8)]
-        //[InlineData(-1)]
         public void ThrowsExceptionWhenOutOfRangeCharlie(ulong value)
         {
             Exception ex = Assert.Throws<ArgumentOutOfRangeException>(() => CharlieSetting.Value = value);
@@ -156,7 +170,6 @@ namespace BoosterPumpTest
 
         [Theory]
         [InlineData(256)]
-        //[InlineData(-1)]
         public void ThrowsExceptionWhenOutOfRangeHotel(ulong value)
         {
             Exception ex = Assert.Throws<ArgumentOutOfRangeException>(() => HotelSetting.Value = value);
@@ -164,10 +177,26 @@ namespace BoosterPumpTest
 
         [Theory]
         [InlineData(16777216)]
-        //[InlineData(-1)]
         public void ThrowsExceptionWhenOutOfRangeIndia(ulong value)
         {
             Exception ex = Assert.Throws<ArgumentOutOfRangeException>(() => IndiaSetting.Value = value);
+        }
+
+        [Fact]
+        public void GetByteValue_WhenOk_Returns()
+        {
+            Sut.Value = 0xABCD;
+            Assert.True(Sut.IsDirty);
+            Assert.Equal(new byte[] { 0, 0, 0, 0, 0, 0, 0xAB, 0xCD }, Sut.GetByteValue());
+            Assert.False(Sut.IsDirty);
+        }
+
+        [Fact]
+        public void ToString_WhenOk_Returns()
+        {
+            KiloSetting.Value = 0xFFFFFFFF;
+            var stringValue  = Sut.ToString();
+            Assert.True(stringValue.Length > 100);
         }
     }
 }
