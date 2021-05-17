@@ -19,9 +19,9 @@ namespace BoosterPumpLibrary.ModuleBase
 
         public virtual byte LengthRequested => 0;
 
-        public ByteWrapper AddressIncrement { get; protected set; }
+        public ByteExtension AddressIncrement { get; protected set; }
 
-        public byte DeviceAddress => DefaultAddress + (AddressIncrement ?? new ByteWrapper(0));
+        public byte DeviceAddress => DefaultAddress + (AddressIncrement ?? new ByteExtension(0));
 
         protected BaseModuleV2(IBridge apiToSerialBridge)
         {
