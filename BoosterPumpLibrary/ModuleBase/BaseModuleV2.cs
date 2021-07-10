@@ -17,8 +17,6 @@ namespace BoosterPumpLibrary.ModuleBase
 
         public abstract byte DefaultAddress { get; }
 
-        public virtual byte LengthRequested => 0;
-
         public ByteExtension AddressIncrement { get; protected set; }
 
         public byte DeviceAddress => DefaultAddress + (AddressIncrement ?? new ByteExtension(0));
@@ -30,7 +28,7 @@ namespace BoosterPumpLibrary.ModuleBase
             ApiToSerialBridge = apiToSerialBridge;
             AddressIncrement = null;
             Id = Guid.NewGuid();
-            Console.WriteLine($"{this.GetType().Name}: {Id}");
+            Console.WriteLine($"{GetType().Name}: {Id}");
         }
 
         // TODO NOT generic - valid value range is independent for each module.
@@ -80,11 +78,9 @@ namespace BoosterPumpLibrary.ModuleBase
                 var fromDevice = ApiToSerialBridge.Execute(enumerator.Current);
 
                 // ReSharper disable once ConditionIsAlwaysTrueOrFalse
-                if (retryCount > 0 && (fromDevice.Payload.Count() != 1 || fromDevice.Payload[0] != 55))
-                {
-                    enumerator.Reset();
-                    retryCount--;
-                }
+                if (retryCount <= 0 || fromDevice.Payload.Count == 1 && fromDevice.Payload[0] == 55) continue;
+                enumerator.Reset();
+                retryCount--;
             }
         }
 

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Text;
 
 namespace BoosterPumpLibrary.Settings
@@ -32,7 +31,7 @@ namespace BoosterPumpLibrary.Settings
 
         public string Description { get; protected set; }
 
-        private RegisterBase ParentRegister { get; set; }
+        private RegisterBase ParentRegister { get; }
 
         private void CheckRange(ulong value)
         {

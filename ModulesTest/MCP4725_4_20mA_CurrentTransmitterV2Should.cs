@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using eu.iamia.NCD.Bridge;
+﻿using eu.iamia.NCD.Bridge;
 using eu.iamia.NCD.Serial.Contract;
 using eu.iamia.NCD.Shared;
 using NSubstitute;
@@ -63,7 +62,6 @@ namespace ModulesTest
         [Fact]
         public void VerifyMapToPct()
         {
-            var provider = CultureInfo.InvariantCulture;
             Assert.Equal(0.9998f, Sut.GetPctValue(4095),4);
             Assert.Equal(0.5000f, Sut.GetPctValue(4096 / 2), 4);
             Assert.Equal(0.3333f, Sut.GetPctValue(4096 / 3), 4);

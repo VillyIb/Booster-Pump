@@ -38,8 +38,8 @@ namespace eu.iamia.NCD.Bridge.UnitTest
         }
 
         private static readonly IList<byte> DefaultPayload = new List<byte> {0x55};
-        private static readonly byte DefaultDeviceAddress = 0x01;
-        private static readonly byte DefaultReadLength = 0x07;
+        private const byte DefaultDeviceAddress = 0x01;
+        private const byte DefaultReadLength = 0x07;
 
         public static IEnumerable<object[]> TestData =>
             new List<object[]>
@@ -59,7 +59,7 @@ namespace eu.iamia.NCD.Bridge.UnitTest
         public void GetI2CommandCode_WhenCalled_ReturnValidCode(ICommand command, byte expectedI2CommandCode)
         {
             Init();
-            var actual = Sut.GetI2CCommandCode(command);
+            var actual = command.GetI2CCommandCode;
             Assert.Equal((I2CCommandCode) expectedI2CommandCode, actual);
         }
 
@@ -70,13 +70,15 @@ namespace eu.iamia.NCD.Bridge.UnitTest
             {
                 throw new NotImplementedException();
             }
+
+            public I2CCommandCode GetI2CCommandCode => throw new NotImplementedException();
         }
 
         [Fact]
         public void GetI2CommandCode_WhenCalledWithNotValidCommand_ThrowException()
         {
             Init();
-            Assert.Throws<ArgumentOutOfRangeException>(() => Sut.GetI2CCommandCode(new NotValidCommand()));
+            Assert.Throws<NotImplementedException>(() => new NotValidCommand().GetI2CCommandCode);
         }
 
         [Theory]
@@ -90,7 +92,7 @@ namespace eu.iamia.NCD.Bridge.UnitTest
         }
 
         [Fact]
-        public void Execute_WhenCalled_MultipleTimes_CalleSerialPortOpen_Once()
+        public void Execute_WhenCalled_MultipleTimes_CallSerialPortOpen_Once()
         {
             Init();
 
@@ -135,12 +137,12 @@ namespace eu.iamia.NCD.Bridge.UnitTest
 
             var expectedResponse = new List<byte> {0x55, 0x56};
             var overflow = new List<byte> {0x99, 0xFF};
-            List<byte> fakeResponse = new NcdApiProtocol(expectedResponse).GetApiEncodedData().ToList();
+            var fakeResponse = new NcdApiProtocol(expectedResponse).GetApiEncodedData().ToList();
             fakeResponse.AddRange(overflow);
             var command = new CommandRead(0xf1, 1);
 
 
-            FakeSerialPortDecorator fakeSerialPortDecorator = Substitute.ForPartsOf<FakeSerialPortDecorator>();
+            var fakeSerialPortDecorator = Substitute.ForPartsOf<FakeSerialPortDecorator>();
             fakeSerialPortDecorator.GetResponse().Returns(fakeResponse);
             Sut = new ApiToSerialBridge(new SerialGateway(fakeSerialPortDecorator));
 
@@ -161,10 +163,6 @@ namespace eu.iamia.NCD.Bridge.UnitTest
         }
 
         public event EventHandler<DataReceivedArgs> DataReceived;
-
-        public void Close()
-        {
-        }
 
         public void Open()
         {

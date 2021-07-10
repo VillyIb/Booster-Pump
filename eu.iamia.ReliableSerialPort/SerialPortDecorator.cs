@@ -37,14 +37,14 @@ namespace eu.iamia.ReliableSerialPort
 
         private void ReadContinuously()
         {
-            const int BufferSize = 128;
-            var reusedBuffer = new byte[BufferSize];
+            const int bufferSize = 128;
+            var reusedBuffer = new byte[bufferSize];
 
             void ReadUntilClosed() =>
                SerialPort.BaseStream.BeginRead(
                    reusedBuffer,
                    0,
-                   BufferSize,
+                   bufferSize,
                    delegate (IAsyncResult ar)
                    {
                        try
@@ -105,10 +105,5 @@ namespace eu.iamia.ReliableSerialPort
         {
             Close();
         }
-    }
-
-    public class DataReceivedArgs : EventArgs
-    {
-        public byte[] Data { get; set; }
     }
 }

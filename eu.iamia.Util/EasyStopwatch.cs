@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+// ReSharper disable UnusedMember.Global
 
 namespace eu.iamia.Util
 {
@@ -16,7 +17,7 @@ namespace eu.iamia.Util
     {
         private Stopwatch Stopwatch { get; }
 
-        private bool ShowMicroSeconds { get; set; }
+        private bool ShowMicroSeconds { get; init; }
 
         /// <summary>
         /// Stop Stopwatch and return duration in micro- or milliseconds.
@@ -42,7 +43,7 @@ namespace eu.iamia.Util
 
         public static EasyStopwatch StartMs()
         {
-            return new EasyStopwatch {ShowMicroSeconds = false};
+            return new() {ShowMicroSeconds = false};
         }
 
         /// <summary>
@@ -51,7 +52,7 @@ namespace eu.iamia.Util
         /// <returns></returns>
         public static EasyStopwatch StartUs()
         {
-            return new EasyStopwatch {ShowMicroSeconds = true};
+            return new() {ShowMicroSeconds = true};
         }
     }
 }

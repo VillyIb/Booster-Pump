@@ -2,6 +2,7 @@
 {
     public enum I2CCommandCode : byte
     {
+        // ReSharper disable once UnusedMember.Global
         Undefined = 0,
         DeviceWrite = 0xBE,
         DeviceRead = 0xBF,

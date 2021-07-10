@@ -1,45 +1,47 @@
-﻿using eu.iamia.ReliableSerialPort;
-using Microsoft.Extensions.Configuration;
+﻿//using eu.iamia.ReliableSerialPort;
+//using Microsoft.Extensions.Configuration;
 
+// ReSharper disable UnusedMember.Global
 namespace BoosterPumpConfiguration
 {
-    /// <summary>
-    /// Only read at startup
-    /// </summary>
-    public class SerialPortSettings : ISerialPortSettings
-    {
-        public static string Name => "SerialPort";
+    // TODO remove
+    ///// <summary>
+    ///// Only read at startup
+    ///// </summary>
+    //public class SerialPortSettings : ISerialPortSettings
+    //{
+    //    public static string Name => "SerialPort";
 
-        // ReSharper disable once UnusedMember.Global
-        public string PortName { get; set; }
+    //    // ReSharper disable once UnusedMember.Global
+    //    public string PortName { get; set; }
 
-        public int BaudRate { get; set; }
+    //    public int BaudRate { get; set; }
 
-        public int Timeout { get; set; }
-    }
+    //    public int Timeout { get; set; }
+    //}
 
-    public static class SerialPortSettingsExtension
-    {
-        private static bool TryGetValue<T>(IConfiguration section, string propertyName, out T value)
-        {
-            value = (T)section.GetValue(typeof(T), propertyName);
-            return true;
-        }
+    //public static class SerialPortSettingsExtension
+    //{
+    //    private static bool TryGetValue<T>(IConfiguration section, string propertyName, out T value)
+    //    {
+    //        value = (T)section.GetValue(typeof(T), propertyName);
+    //        return true;
+    //    }
 
-        public static SerialPortSettings Parse(this IConfiguration configuration)
-        {
-            IConfigurationSection section = configuration.GetSection(SerialPortSettings.Name);
+    //    public static SerialPortSettings Parse(this IConfiguration configuration)
+    //    {
+    //        IConfigurationSection section = configuration.GetSection(SerialPortSettings.Name);
 
-            var serialPortSettings = new SerialPortSettings
-            {
-                BaudRate = TryGetValue(section, nameof(SerialPortSettings.BaudRate), out int baudRate) ? baudRate: 0,   
-                PortName = TryGetValue(section, nameof (SerialPortSettings.PortName), out string portName) ? portName : "",
-                Timeout = TryGetValue(section, nameof(SerialPortSettings.Timeout), out int timeOut) ? timeOut : 0
-            };
+    //        var serialPortSettings = new SerialPortSettings
+    //        {
+    //            BaudRate = TryGetValue(section, nameof(SerialPortSettings.BaudRate), out int baudRate) ? baudRate : 0,
+    //            PortName = TryGetValue(section, nameof(SerialPortSettings.PortName), out string portName) ? portName : "",
+    //            Timeout = TryGetValue(section, nameof(SerialPortSettings.Timeout), out int timeOut) ? timeOut : 0
+    //        };
 
-            return serialPortSettings;
-        }
-    }
+    //        return serialPortSettings;
+    //    }
+    //}
 
     /// <summary>
     /// Only read at startup

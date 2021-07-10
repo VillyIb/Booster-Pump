@@ -32,7 +32,7 @@ namespace BoosterPumpLibrary.Logger
         /// <returns></returns>
         public static DateTime RoundToMinute(DateTime value)
         {
-            return new DateTime(value.Ticks - value.Ticks % TimeSpan.TicksPerMinute, value.Kind);
+            return new(value.Ticks - value.Ticks % TimeSpan.TicksPerMinute, value.Kind);
         }
 
         private DateTime NextMinute = DateTime.MinValue;
@@ -100,7 +100,7 @@ namespace BoosterPumpLibrary.Logger
                     Queue.Enqueue(new BufferLine(ex.Message, SystemDateTime.UtcNow));
                 }
             }
-            if (!String.IsNullOrEmpty(aggregateValue))
+            if (!string.IsNullOrEmpty(aggregateValue))
             {
                 AggregateFile.WriteLine(threshold, "T", aggregateValue);
             }
@@ -176,7 +176,7 @@ namespace BoosterPumpLibrary.Logger
                     Queue.Enqueue(new BufferLine(ex.Message, SystemDateTime.UtcNow));
                 }
             }
-            if (!String.IsNullOrEmpty(aggregateValue))
+            if (!string.IsNullOrEmpty(aggregateValue))
             {
                 await AggregateFile.WriteLineAsync(threshold, "T", aggregateValue);
             }

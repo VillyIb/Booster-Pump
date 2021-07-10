@@ -1,11 +1,11 @@
 ﻿using eu.iamia.NCD.Bridge;
-using eu.iamia.NCD.Serial;
 using eu.iamia.NCD.Serial.Contract;
 using eu.iamia.NCD.Shared;
 using Modules;
 using NSubstitute;
 using Xunit;
 // ReSharper disable InconsistentNaming
+// ReSharper disable UnusedVariable
 
 namespace ModulesTest
 {
@@ -35,7 +35,7 @@ namespace ModulesTest
         public void ReturnsPressureAndTemperatureWhenCallingRead()
         {
             // Returns: Pressure XL, L, H, Temperature L, H
-            var fakeReturnValue = new NcdApiProtocol(0xAA, 5,  (new byte[] {0x66, 0xF6, 0x3F, 0xA0, 0xFD}),0xE7);
+            var fakeReturnValue = new NcdApiProtocol(0xAA, 5,  new byte[] {0x66, 0xF6, 0x3F, 0xA0, 0xFD},0xE7);
            _FakeGateway.Execute(Arg.Any<INcdApiProtocol>()).Returns(fakeReturnValue);
 
            _FakeGateway.ClearReceivedCalls();

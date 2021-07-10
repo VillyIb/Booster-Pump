@@ -35,6 +35,7 @@ namespace eu.iamia.NCD.Serial
         {
             foreach (var current in args.Data)
             {
+                // ReSharper disable once SwitchStatementMissingSomeEnumCasesNoDefault
                 switch (State)
                 {
                     case NcdState.ExpectHeader:

@@ -4,6 +4,7 @@ using System.Linq;
 using BoosterPumpLibrary.ModuleBase;
 using BoosterPumpLibrary.Settings;
 using eu.iamia.NCD.API.Contract;
+// ReSharper disable UnusedMember.Global
 
 namespace Modules
 {
@@ -29,7 +30,7 @@ namespace Modules
 
         public override byte DefaultAddress => DefaultAddressValue;
 
-        private readonly Register Setting0X00 = new Register(0x00, "Open channels", 1);
+        private readonly Register Setting0X00 = new(0x00, "Open channels", 1);
 
         private BitSetting ChannelSelection => Setting0X00.GetOrCreateSubRegister(4, 0, "Open Channels");
 

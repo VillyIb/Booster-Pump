@@ -25,6 +25,7 @@ namespace BoosterPumpLibrary.Logger
     }
 
     [ExcludeFromCodeCoverage]
+    // ReSharper disable once UnusedMember.Global
     public class OutputFileHandler : IOutputFileHandler, IDisposable
     {
         public DatabaseSettings Settings { get; }

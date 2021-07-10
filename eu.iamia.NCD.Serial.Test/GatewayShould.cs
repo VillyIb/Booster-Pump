@@ -74,11 +74,11 @@ namespace eu.iamia.NCD.Serial.UnitTest
         {
             Init();
 
-            List<byte> fakeResponse = new NcdApiProtocol(new List<byte> {0x55, 0x56}).GetApiEncodedData().ToList();
+            var fakeResponse = new NcdApiProtocol(new List<byte> {0x55, 0x56}).GetApiEncodedData().ToList();
             fakeResponse.AddRange(new List<byte> {0x99, 0xFF});
 
 
-            FakeSerialPortDecorator fakeSerialPortDecorator = Substitute.ForPartsOf<FakeSerialPortDecorator>();
+            var fakeSerialPortDecorator = Substitute.ForPartsOf<FakeSerialPortDecorator>();
             fakeSerialPortDecorator.GetResponse().Returns(fakeResponse);
             Sut = new SerialGateway(fakeSerialPortDecorator);
 
@@ -100,10 +100,6 @@ namespace eu.iamia.NCD.Serial.UnitTest
         }
 
         public event EventHandler<DataReceivedArgs> DataReceived;
-
-        public void Close()
-        {
-        }
 
         public void Open()
         {

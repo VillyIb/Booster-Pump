@@ -15,7 +15,7 @@ namespace Modules
 
         public override byte DefaultAddress => DefaultAddressValue;
 
-        public override byte LengthRequested => 0x04;
+        public virtual byte LengthRequested => 0x04;
 
         /// <summary>
         /// Pressure module

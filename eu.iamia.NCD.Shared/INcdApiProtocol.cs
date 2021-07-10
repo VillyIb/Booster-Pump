@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Immutable;
+// ReSharper disable InvalidXmlDocComment
 
 namespace eu.iamia.NCD.Shared
 {

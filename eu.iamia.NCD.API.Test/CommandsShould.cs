@@ -16,7 +16,7 @@ namespace eu.iamia.NCD.API.UnitTest
 
     public class CommandControllerControllerBusSCanShould : CommandsShould
     {
-        private Command Sut => new CommandControllerControllerBusSCan();
+        private static Command Sut => new CommandControllerControllerBusSCan();
 
         [Fact]
         public void Class_ShouldImplementICommand()
@@ -34,7 +34,7 @@ namespace eu.iamia.NCD.API.UnitTest
 
     public class CommandControllerControllerHardRebootShould : CommandsShould
     {
-        private Command Sut => new CommandControllerControllerHardReboot();
+        private static Command Sut => new CommandControllerControllerHardReboot();
 
         [Fact]
         public void Class_ShouldImplementICommand()
@@ -52,7 +52,7 @@ namespace eu.iamia.NCD.API.UnitTest
 
     public class CommandControllerControllerRebootShould : CommandsShould
     {
-        private Command Sut => new CommandControllerControllerReboot();
+        private static Command Sut => new CommandControllerControllerReboot();
 
         [Fact]
         public void Class_ShouldImplementICommand()
@@ -70,7 +70,7 @@ namespace eu.iamia.NCD.API.UnitTest
 
     public class CommandControllerControllerStopShould : CommandsShould
     {
-        private Command Sut => new CommandControllerControllerStop();
+        private static Command Sut => new CommandControllerControllerStop();
 
         [Fact]
         public void Class_ShouldImplementICommand()
@@ -88,7 +88,7 @@ namespace eu.iamia.NCD.API.UnitTest
 
     public class CommandControllerControllerTest2WayCommunicationShould : CommandsShould
     {
-        private Command Sut => new CommandControllerControllerTest2WayCommunication();
+        private static Command Sut => new CommandControllerControllerTest2WayCommunication();
 
         [Fact]
         public void Class_ShouldImplementICommand()

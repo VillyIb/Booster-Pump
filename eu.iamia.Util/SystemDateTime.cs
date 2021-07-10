@@ -20,37 +20,25 @@ namespace eu.iamia.Util
         #endregion
 
 
-        public static DateTime Now
-        {
-            get { return UtcNow.ToLocalTime(); }
-        }
+        public static DateTime Now => UtcNow.ToLocalTime();
 
 
         /// <summary>
         /// Return the current date according to Local Time.
         /// </summary>
-        public static DateTime Today
-        {
-            get { return UtcNow.ToLocalTime().Date; }
-        }
+        public static DateTime Today => UtcNow.ToLocalTime().Date;
 
 
         /// <summary>
         /// Return Today+1.
         /// </summary>
-        public static DateTime Tomorrow
-        {
-            get { return UtcNow.ToLocalTime().Date.AddDays(1); }
-        }
+        public static DateTime Tomorrow => UtcNow.ToLocalTime().Date.AddDays(1);
 
 
         /// <summary>
         /// Return Today-1
         /// </summary>
-        public static DateTime Yesterday
-        {
-            get { return UtcNow.ToLocalTime().Date.AddDays(-1); }
-        }
+        public static DateTime Yesterday => UtcNow.ToLocalTime().Date.AddDays(-1);
 
 
         public static DateTime UtcNow

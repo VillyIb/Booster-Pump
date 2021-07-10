@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using BoosterPumpLibrary.Settings;
 using Xunit;
 
@@ -33,9 +29,7 @@ namespace BoosterPumpTest
         [Fact]
         public void SetValue_WhenOk_ToStringReturnsRightContent()
         {
-            var sut = new BitSetting(16, 2, ParentRegister, "MyDescription");
-            
-            sut.Value = 1234ul;
+            var sut = new BitSetting(16, 2, ParentRegister, "MyDescription") {Value = 1234ul};
 
             Assert.Equal("MyDescription, Size: 16, Offset: 2, Mask: 1111_1111_1111_1111_00, Value: 1234-0x04D2", sut.ToString());
 

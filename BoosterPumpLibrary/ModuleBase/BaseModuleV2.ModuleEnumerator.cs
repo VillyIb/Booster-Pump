@@ -44,6 +44,7 @@ namespace BoosterPumpLibrary.ModuleBase
                 var currentCommand = new List<byte>();
                 byte currentRegisterAddress = 0;
 
+                // ReSharper disable once ForeachCanBePartlyConvertedToQueryUsingAnotherGetEnumerator
                 foreach (var current in SelectedRegisters)
                 {
                     if (!current.IsDirty) continue;

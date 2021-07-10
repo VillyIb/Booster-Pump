@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using eu.iamia.NCD.Shared;
 
 namespace eu.iamia.NCD.API.Contract
 {
@@ -8,36 +9,7 @@ namespace eu.iamia.NCD.API.Contract
     public interface ICommand
     {
         IEnumerable<byte> I2C_Data();
+
+        I2CCommandCode GetI2CCommandCode { get; }
     }
-
-
-    public interface ICommandDevice : ICommand
-    {
-        byte DeviceAddress { get; }
-    }
-
-    public interface ICommandRead : ICommandDevice
-    { }
-
-    public interface ICommandWrite : ICommandDevice
-    { }
-
-    public interface ICommandWriteRead : ICommandDevice
-    { }
-
-
-    public interface ICommandControllerBusScan : ICommand
-    { }
-
-    public interface ICommandControllerStop : ICommand
-    { }
-
-    public interface ICommandControllerReboot : ICommand
-    { }
-
-    public interface ICommandControllerHardReboot : ICommand
-    { }
-
-    public interface ICommandControllerTest2WayCommunication : ICommand
-    { }
 }

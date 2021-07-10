@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using EnsureThat;
 using eu.iamia.NCD.API.Contract;
+using eu.iamia.NCD.Shared;
 
 namespace eu.iamia.NCD.API
 {
@@ -13,6 +14,7 @@ namespace eu.iamia.NCD.API
     public abstract class Command : ICommand
     {
         public abstract IEnumerable<byte> I2C_Data();
+        public abstract I2CCommandCode GetI2CCommandCode { get; }
 
         public string I2CDataAsHex
         {
@@ -30,7 +32,7 @@ namespace eu.iamia.NCD.API
         }
     }
 
-    public abstract class CommandDevice : Command, ICommandDevice
+    public abstract class CommandDevice : Command
     {
         public byte DeviceAddress { get; set; }
 
@@ -40,7 +42,7 @@ namespace eu.iamia.NCD.API
         }
     }
 
-    public class CommandRead : CommandDevice, ICommandRead
+    public class CommandRead : CommandDevice
     {
         public byte LengthRequested { get; set; }
 
@@ -55,9 +57,11 @@ namespace eu.iamia.NCD.API
             yield return DeviceAddress;
             yield return LengthRequested;
         }
+
+        public override I2CCommandCode GetI2CCommandCode => I2CCommandCode.DeviceRead;
     }
 
-    public class CommandWrite : CommandDevice, ICommandWrite
+    public class CommandWrite : CommandDevice
     {
         public List<byte> Payload { get; set; }
 
@@ -77,9 +81,11 @@ namespace eu.iamia.NCD.API
                 yield return current;
             }
         }
+
+        public override I2CCommandCode GetI2CCommandCode => I2CCommandCode.DeviceWrite;
     }
 
-    public class CommandWriteRead : CommandDevice, ICommandWriteRead
+    public class CommandWriteRead : CommandDevice
     {
         public List<byte> Payload { get; set; }
 
@@ -107,6 +113,8 @@ namespace eu.iamia.NCD.API
                 yield return current;
             }
         }
+
+        public override I2CCommandCode GetI2CCommandCode => I2CCommandCode.DeviceWriteRead;
     }
 
     public abstract class CommandController : Command
@@ -120,56 +128,62 @@ namespace eu.iamia.NCD.API
 
         public override IEnumerable<byte> I2C_Data()
         {
-            foreach (var value in Payload)
-            {
-                yield return value;
-            }
+            return Payload;
         }
     }
 
-    public class CommandControllerControllerBusSCan : CommandController, ICommandControllerBusScan
+    public class CommandControllerControllerBusSCan : CommandController
     {
-        public static byte[] PayloadValue = {0x00};
+        public static byte[] PayloadValue = { 0x00 };
 
         public CommandControllerControllerBusSCan() : base(PayloadValue)
         {
         }
+
+        public override I2CCommandCode GetI2CCommandCode => I2CCommandCode.DeviceBusScan;
     }
 
-    public class CommandControllerControllerStop : CommandController, ICommandControllerStop
+    public class CommandControllerControllerStop : CommandController
     {
-        public static byte[] PayloadValue = {0x21, 0xBB};
+        public static byte[] PayloadValue = { 0x21, 0xBB };
 
         public CommandControllerControllerStop() : base(PayloadValue)
         {
         }
+
+        public override I2CCommandCode GetI2CCommandCode => I2CCommandCode.DeviceConverterCommand;
     }
 
-    public class CommandControllerControllerReboot : CommandController, ICommandControllerReboot
+    public class CommandControllerControllerReboot : CommandController
     {
-        public static byte[] PayloadValue = {0x21, 0xBC};
+        public static byte[] PayloadValue = { 0x21, 0xBC };
 
         public CommandControllerControllerReboot() : base(PayloadValue)
         {
         }
+
+        public override I2CCommandCode GetI2CCommandCode => I2CCommandCode.DeviceConverterCommand;
     }
 
-    public class CommandControllerControllerHardReboot : CommandController, ICommandControllerHardReboot
+    public class CommandControllerControllerHardReboot : CommandController
     {
-        public static byte[] PayloadValue = {0x21, 0xBD};
+        public static byte[] PayloadValue = { 0x21, 0xBD };
 
         public CommandControllerControllerHardReboot() : base(PayloadValue)
         {
         }
+
+        public override I2CCommandCode GetI2CCommandCode => I2CCommandCode.DeviceConverterCommand;
     }
 
-    public class CommandControllerControllerTest2WayCommunication : CommandController,
-        ICommandControllerTest2WayCommunication
+    public class CommandControllerControllerTest2WayCommunication : CommandController
     {
-        public static byte[] PayloadValue = {0x21};
+        public static byte[] PayloadValue = { 0x21 };
 
         public CommandControllerControllerTest2WayCommunication() : base(PayloadValue)
         {
         }
+
+        public override I2CCommandCode GetI2CCommandCode => I2CCommandCode.DeviceConverterCommand;
     }
 }

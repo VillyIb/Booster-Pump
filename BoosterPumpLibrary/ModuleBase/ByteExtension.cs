@@ -14,12 +14,12 @@
 
         public static ByteExtension operator +(ByteExtension first, ByteExtension second)
         {
-            return new ByteExtension(first.Payload + second.Payload);
+            return new(first.Payload + second.Payload);
         }
 
         public static ByteExtension operator +(ByteExtension first, byte second)
         {
-            return new ByteExtension(first.Payload + second);
+            return new(first.Payload + second);
         }
 
         public static implicit operator byte(ByteExtension value)
@@ -29,7 +29,7 @@
 
         public static implicit operator ByteExtension(int value)
         {
-            return new ByteExtension(value);
+            return new(value);
         }
     }
 }

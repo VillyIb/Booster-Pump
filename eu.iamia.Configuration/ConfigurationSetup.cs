@@ -1,4 +1,5 @@
 ﻿// ReSharper disable StringLiteralTypo
+// ReSharper disable UnusedMember.Global
 namespace eu.iamia.Configuration
 {
     using System;

@@ -10,8 +10,6 @@ namespace eu.iamia.ReliableSerialPort
         /// </summary>
         event EventHandler<DataReceivedArgs> DataReceived;
 
-        void Close();
-
         void Open();
         
         /// <summary>

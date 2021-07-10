@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Reflection.PortableExecutable;
 using BoosterPumpLibrary.Settings;
 using Xunit;
 // ReSharper disable UnusedVariable
@@ -142,8 +141,8 @@ namespace BoosterPumpTest
         [Fact]
         public void StoreMaxValuefor64Bits()
         {
-            const ulong Value = ulong.MaxValue;
-            LimaSetting.Value = Value;
+            const ulong value = ulong.MaxValue;
+            LimaSetting.Value = value;
             Assert.Equal(0b1111_1111_1111_1111_1111_1111_1111_1111_1111_1111_1111_1111_1111_1111_1111_1111, Sut.Value);
         }
 

@@ -5,6 +5,7 @@
     /// </summary>
     public enum NcdState
     {
+        // ReSharper disable once UnusedMember.Global
         Undefined = 0,
         ExpectHeader = 1,
         ExpectLength = 2,
