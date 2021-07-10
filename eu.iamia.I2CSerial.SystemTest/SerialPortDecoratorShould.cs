@@ -8,7 +8,7 @@ using Xunit;
 namespace eu.iamia.ReliableSerialPort.SystemTest
 {
     /// <summary>
-    /// NOTE Requires attached hardware.
+    /// NOTE System tests requires attached hardware.
     /// </summary>
     public class SerialPortDecoratorShould
     {
