@@ -19,7 +19,7 @@ namespace eu.iamia.NCD.Serial
             SerialPort = serialPort;
         }
 
-        private readonly AutoResetEvent ResultReady = new(false);
+        private readonly AutoResetEvent ResultReady = new AutoResetEvent(false); 
 
         private NcdState State;
 
