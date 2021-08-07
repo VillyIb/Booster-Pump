@@ -44,13 +44,13 @@ namespace BoosterPumpApplication
             services.AddTransient(typeof(IController), typeof(Controller));
 
             services.AddTransient(typeof(As1115Module), typeof(As1115Module));
-            services.AddTransient(typeof(AMS5812_0150_D_B_Module), typeof(AMS5812_0150_D_B_Module));
-            services.AddTransient(typeof(AMS5812_0300_A_PressureModule), typeof(AMS5812_0300_A_PressureModule));
+            services.AddTransient(typeof(AMS5812_0150_D_Pressure), typeof(AMS5812_0150_D_Pressure));
+            services.AddTransient(typeof(AMS5812_0300_A_Pressure), typeof(AMS5812_0300_A_Pressure));
 
             //services.a
-            services.AddTransient(typeof(LPS25HB_BarometerModule), typeof(LPS25HB_BarometerModule));
+            services.AddTransient(typeof(LPS25HB_Barometer), typeof(LPS25HB_Barometer));
 
-            services.AddTransient(typeof(TCA9546MultiplexerModule), typeof(TCA9546MultiplexerModule));
+            services.AddTransient(typeof(TCA9546A_Multiplexer), typeof(TCA9546A_Multiplexer));
             services.AddTransient(typeof(MCP4725_4_20mA_CurrentTransmitterV2), typeof(MCP4725_4_20mA_CurrentTransmitterV2));
         }
     }

@@ -10,8 +10,9 @@ using eu.iamia.NCD.API.Contract;
 
 namespace Modules
 {
-    public class LPS25HB_BarometerModule : BaseModuleV2
+    public class LPS25HB_Barometer : BaseModuleV2
     {
+        // see: https://store.ncd.io/product/lps25hb-mems-pressure-sensor-260-1260-hpa-absolute-digital-output-barometer-i2c-mini-module/
         // Description see: https://media.ncd.io/sites/2/20170721134650/LPS25hb.pdf
         // Technical note regarding calculating values.
         // see: https://www.st.com/resource/en/technical_note/dm00242307-how-to-interpret-pressure-and-temperature-readings-in-the-lps25hb-pressure-sensor-stmicroelectronics.pdf
@@ -20,7 +21,7 @@ namespace Modules
 
         public override byte DefaultAddress => DefaultAddressValue;
 
-        private readonly Register Settings0X10 = new(0X10, "RES_CONF", 1);
+        private readonly Register Settings0X10 = new Register(0X10, "RES_CONF", 1);
 
         /// <summary>
         /// 0: 8-, 1: 16, 2: 32, 3: 64 internal average.
@@ -33,7 +34,7 @@ namespace Modules
         private BitSetting TemperatureResolution => Settings0X10.GetOrCreateSubRegister(2, 2, "Temperature Resolution");
 
 
-        private readonly Register Settings0X20 = new(0x20, "Control Register", 1);
+        private readonly Register Settings0X20 = new Register(0x20, "Control Register", 1);
 
         /// <summary>
         /// 0: Power Down, 1: Active Mode.
@@ -46,7 +47,7 @@ namespace Modules
         private BitSetting OutputDataRate => Settings0X20.GetOrCreateSubRegister(3, 4, "Output data rate.");
 
 
-        private readonly Register Reading0X28 = new(0x28, "Air Pressure & Temperature", 5);
+        private readonly Register Reading0X28 = new Register(0x28, "Air Pressure & Temperature", 5);
 
         private BitSetting PressureHex => Reading0X28.GetOrCreateSubRegister(24, 0, "Barometric Pressure");
 
@@ -59,7 +60,7 @@ namespace Modules
 
         protected override IEnumerable<RegisterBase> Registers => new List<RegisterBase> { Settings0X20, Settings0X10 };
 
-        public LPS25HB_BarometerModule(IBridge apiToSerialBridge) : base(apiToSerialBridge)
+        public LPS25HB_Barometer(IBridge apiToSerialBridge) : base(apiToSerialBridge)
         { }
 
         public virtual void Init()
@@ -79,7 +80,7 @@ namespace Modules
         public void ReadDevice()
         {
             SelectRegisterForReadingWithAutoIncrement(Reading0X28);
-            var readCommand = new CommandRead(DeviceAddress, (byte) Reading0X28.Size);
+            var readCommand = new CommandRead(DeviceAddress, (byte)Reading0X28.Size);
             var readings = ApiToSerialBridge.Execute(readCommand);
 
             //var readings = SerialPort.Execute(readCommand);
@@ -88,7 +89,7 @@ namespace Modules
             var length = readings.Payload.Count;
 
             var mapped = new byte[8];
-            Array.Copy(readings.Payload.ToArray(), mapped,  length);
+            Array.Copy(readings.Payload.ToArray(), mapped, length);
             Reading0X28.Value = BitConverter.ToUInt64(mapped, 0);
         }
     }

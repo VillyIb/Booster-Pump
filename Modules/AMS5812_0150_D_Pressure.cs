@@ -9,7 +9,9 @@ namespace Modules
 {
     // ReSharper disable once UnusedMember.Global
     // ReSharper disable once InconsistentNaming
-    public class AMS5812_0150_D_B_Module : BaseModuleV2
+    // see: https://store.ncd.io/product/ams5812-0150-d-b-amplified-pressure-sensor-1034-to-1034-mbar-15-to-15-psi-i2c-mini-module/
+
+    public class AMS5812_0150_D_Pressure : BaseModuleV2
     {
         public static byte DefaultAddressValue => 0x78;
 
@@ -21,17 +23,17 @@ namespace Modules
         /// Pressure module
         /// </summary>
         /// <param name="apiToSerialBridge"></param>
-        public AMS5812_0150_D_B_Module(IBridge apiToSerialBridge) : base(apiToSerialBridge)
+        public AMS5812_0150_D_Pressure(IBridge apiToSerialBridge) : base(apiToSerialBridge)
         { }
 
-        public int DevicePressureMin => 3277;
-        public int DevicePressureMax => 29491;
+        public static int DevicePressureMin => 3277;
+        public static int DevicePressureMax => 29491;
 
         public virtual float OutputPressureMin => -1034f;
         public virtual float OutputPressureMax => 1034f;
 
-        public int DeviceTempMin => 3277;
-        public int DeviceTempMax => 29491;
+        public static int DeviceTempMin => 3277;
+        public static int DeviceTempMax => 29491;
 
         public virtual float OutputTempMin => -25f;
         public virtual float OutputTempMax => 85f;

@@ -25,8 +25,6 @@ namespace BoosterPumpApplication
 
         public ControllerSettings ControllerSettings { get; }
 
-        private DeviceFactory DeviceFactory { get; }
-
         public Controller(
             IOptions<MeasurementSettings> measurementSettings,
             IOptions<ControllerSettings> controllerSettings,
@@ -38,19 +36,17 @@ namespace BoosterPumpApplication
             MeasurementSettings = measurementSettings.Value;
             Gateway = gateway;
             ControllerSettings = controllerSettings.Value;
-            DeviceFactory = new DeviceFactory();
-
         }
 
         private Stopwatch Stopwatch;
         private As1115Module DisplayModule;
-        private AMS5812_0150_D_B_Module ManifoldPressureDifference;
-        private AMS5812_0150_D_B_Module FlowNorthWest;
-        private AMS5812_0150_D_B_Module FlowSouthEast;
-        private AMS5812_0300_A_PressureModule SystemPressure;
-        private LPS25HB_BarometerModule BarometerModule1;
-        private LPS25HB_BarometerModule BarometerModule2;
-        private TCA9546MultiplexerModule Multiplexer;
+        private AMS5812_0150_D_Pressure ManifoldPressureDifference;
+        private AMS5812_0150_D_Pressure FlowNorthWest;
+        private AMS5812_0150_D_Pressure FlowSouthEast;
+        private AMS5812_0300_A_Pressure SystemPressure;
+        private LPS25HB_Barometer BarometerModule1;
+        private LPS25HB_Barometer BarometerModule2;
+        private TCA9546A_Multiplexer Multiplexer;
         private MCP4725_4_20mA_CurrentTransmitterV2 SpeedController;
         private System.Collections.Generic.Queue<double> FlowNorthWestStack;
         private System.Collections.Generic.Queue<double> FlowSouthEastStack;
@@ -66,19 +62,19 @@ namespace BoosterPumpApplication
             DisplayModule = scope.ServiceProvider.GetRequiredService<As1115Module>();
             DisplayModule.Init();
 
-            ManifoldPressureDifference = scope.ServiceProvider.GetRequiredService<AMS5812_0150_D_B_Module>();
+            ManifoldPressureDifference = scope.ServiceProvider.GetRequiredService<AMS5812_0150_D_Pressure>();
 
-            FlowNorthWest = scope.ServiceProvider.GetRequiredService<AMS5812_0150_D_B_Module>();
+            FlowNorthWest = scope.ServiceProvider.GetRequiredService<AMS5812_0150_D_Pressure>();
 
-            FlowSouthEast = scope.ServiceProvider.GetRequiredService<AMS5812_0150_D_B_Module>();
+            FlowSouthEast = scope.ServiceProvider.GetRequiredService<AMS5812_0150_D_Pressure>();
 
-            SystemPressure = scope.ServiceProvider.GetRequiredService<AMS5812_0300_A_PressureModule>();
+            SystemPressure = scope.ServiceProvider.GetRequiredService<AMS5812_0300_A_Pressure>();
 
-            BarometerModule1 = scope.ServiceProvider.GetRequiredService<LPS25HB_BarometerModule>();
-            BarometerModule2 = scope.ServiceProvider.GetRequiredService<LPS25HB_BarometerModule>();
+            BarometerModule1 = scope.ServiceProvider.GetRequiredService<LPS25HB_Barometer>();
+            BarometerModule2 = scope.ServiceProvider.GetRequiredService<LPS25HB_Barometer>();
             BarometerModule2.SetAddressIncrement(1);
 
-            Multiplexer = scope.ServiceProvider.GetRequiredService<TCA9546MultiplexerModule>();
+            Multiplexer = scope.ServiceProvider.GetRequiredService<TCA9546A_Multiplexer>();
 
             SpeedController = scope.ServiceProvider.GetRequiredService<MCP4725_4_20mA_CurrentTransmitterV2>();
 

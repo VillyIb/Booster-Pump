@@ -22,7 +22,7 @@ namespace Modules
     }
 
     // ReSharper disable once InconsistentNaming
-    public class TCA9546MultiplexerModule : BaseModuleV2
+    public class TCA9546A_Multiplexer : BaseModuleV2
     {
         // See: https://media.ncd.io/sites/2/20170721134413/tca9546a.pdf
 
@@ -30,13 +30,13 @@ namespace Modules
 
         public override byte DefaultAddress => DefaultAddressValue;
 
-        private readonly Register Setting0X00 = new(0x00, "Open channels", 1);
+        private readonly Register Setting0X00 = new Register(0x00, "Open channels", 1);
 
         private BitSetting ChannelSelection => Setting0X00.GetOrCreateSubRegister(4, 0, "Open Channels");
 
         protected override IEnumerable<RegisterBase> Registers => new List<RegisterBase> { Setting0X00 };
 
-        public TCA9546MultiplexerModule(IBridge apiToSerialBridge) : base(apiToSerialBridge)
+        public TCA9546A_Multiplexer(IBridge apiToSerialBridge) : base(apiToSerialBridge)
         { }
 
         /// <summary>

@@ -11,13 +11,13 @@ namespace ModulesTest
 {
     public class TCA9546MultiplexerModuleShould
     {
-        private readonly TCA9546MultiplexerModule _Sut;
+        private readonly TCA9546A_Multiplexer _Sut;
         private readonly IGateway _FakeSerialPort;
 
         public TCA9546MultiplexerModuleShould()
         {
             _FakeSerialPort = Substitute.For<IGateway>();
-            _Sut = new TCA9546MultiplexerModule(new ApiToSerialBridge(_FakeSerialPort));
+            _Sut = new TCA9546A_Multiplexer(new ApiToSerialBridge(_FakeSerialPort));
         }
 
         [Fact]

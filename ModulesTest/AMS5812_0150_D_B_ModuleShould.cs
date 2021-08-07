@@ -12,13 +12,13 @@ namespace ModulesTest
 {
     public class AMS5812_0150_D_B_ModuleShould
     {
-        private readonly AMS5812_0150_D_B_Module _Sut;
+        private readonly AMS5812_0150_D_Pressure _Sut;
         private readonly IGateway _FakeGateway;
 
         public AMS5812_0150_D_B_ModuleShould()
         {
             _FakeGateway = Substitute.For<IGateway>();
-            _Sut = new AMS5812_0150_D_B_Module( new ApiToSerialBridge(_FakeGateway));
+            _Sut = new AMS5812_0150_D_Pressure( new ApiToSerialBridge(_FakeGateway));
         }
 
         [Fact]

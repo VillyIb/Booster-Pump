@@ -12,13 +12,13 @@ namespace ModulesTest
     // ReSharper disable once UnusedMember.Global
     public class LPS25HB_BarometerModuleShould
     {
-        private readonly LPS25HB_BarometerModule Sut;
+        private readonly LPS25HB_Barometer Sut;
         private readonly IGateway _FakeGateway;
 
         public LPS25HB_BarometerModuleShould()
         {
             _FakeGateway = Substitute.For<IGateway>();
-            Sut = new LPS25HB_BarometerModule(new ApiToSerialBridge(_FakeGateway));
+            Sut = new LPS25HB_Barometer(new ApiToSerialBridge(_FakeGateway));
             }
 
         [Fact]
