@@ -5,6 +5,10 @@ using Microsoft.Extensions.DependencyInjection;
 using BoosterPumpApplication;
 using BoosterPumpLibrary.Logger;
 using eu.iamia.Configuration;
+using eu.iamia.NCD.API;
+using eu.iamia.NCD.API.Contract;
+using eu.iamia.NCD.Bridge;
+using eu.iamia.ReliableSerialPort;
 
 namespace BoosterPumpApplication1
 {
@@ -27,12 +31,12 @@ namespace BoosterPumpApplication1
             IServiceProvider serviceProvider = services.BuildServiceProvider();
 
             using var scope = serviceProvider.CreateScope();
-            var serialPort = scope.ServiceProvider.GetRequiredService<INcdApiSerialPort>();
+            var serialPort = scope.ServiceProvider.GetRequiredService<ISerialPortDecorator>();
             serialPort.Open();
 
             {
-                var ncdCommand = new ConverterScan();
-                var serialConverter = scope.ServiceProvider.GetRequiredService<SerialConverter>();
+                var ncdCommand = new CommandControllerControllerBusSCan();
+                var serialConverter = scope.ServiceProvider.GetRequiredService<IBridge>();
                 var dataFromDevice = serialConverter.Execute(ncdCommand);
                 if (!dataFromDevice.IsValid)
                 {
