@@ -12,7 +12,7 @@ namespace BoosterPumpConfiguration
 
         public static SerialPortSettings Parse(this IConfiguration configuration)
         {
-            IConfigurationSection section = configuration.GetSection(SerialPortSettings.Name);
+            var section = configuration.GetSection(SerialPortSettings.Name);
 
             var serialPortSettings = new SerialPortSettings
             {
