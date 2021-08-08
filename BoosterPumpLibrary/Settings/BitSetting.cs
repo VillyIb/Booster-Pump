@@ -82,7 +82,7 @@ namespace BoosterPumpLibrary.Settings
                 if (index % 4 == 0 ) { result.Append("_"); }
             }
 
-            return result.ToString().Substring(0, result.Length - 1);
+            return result.ToString()[..(result.Length - 1)];
         }
 
         public override string ToString()
