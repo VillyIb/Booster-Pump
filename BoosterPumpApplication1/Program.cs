@@ -7,7 +7,6 @@ using BoosterPumpLibrary.Logger;
 using eu.iamia.Configuration;
 using eu.iamia.NCD.API;
 using eu.iamia.NCD.API.Contract;
-using eu.iamia.NCD.Bridge;
 using eu.iamia.ReliableSerialPort;
 
 namespace BoosterPumpApplication1
@@ -59,14 +58,11 @@ namespace BoosterPumpApplication1
 
                 controller.Execute(logWriter);
 
-                if (Console.KeyAvailable)
-                {
-                    if (ConsoleKey.Q == Console.ReadKey(false).Key)
-                    {
-                        Console.WriteLine("Quit selected");
-                        loop = false;
-                    }
-                }
+                if (!Console.KeyAvailable) continue;
+                if (ConsoleKey.Q != Console.ReadKey(false).Key) continue;
+
+                Console.WriteLine("Quit selected");
+                loop = false;
             }
 
             logWriter.AggregateFlushUnconditionally();
