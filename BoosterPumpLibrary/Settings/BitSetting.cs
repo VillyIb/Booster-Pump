@@ -14,9 +14,9 @@ namespace BoosterPumpLibrary.Settings
         /// BitSetting start position value: 0..N where N = 
         /// value is shifted this number of bits.
         /// </summary>
-        public int Offset { get; protected set; }
+        public ushort Offset { get; protected set; }
 
-        internal BitSetting(int size, int offset, RegisterBase parentRegister, string description = "")
+        internal BitSetting(ushort size, ushort offset, RegisterBase parentRegister, string description = "")
         {
             Size = size;
             Offset = offset;
@@ -27,7 +27,7 @@ namespace BoosterPumpLibrary.Settings
         /// <summary>
         /// Number of bits in setting , value: 1..8 (1..16/1..24/1....)
         /// </summary>
-        public int Size { get; protected set; }
+        public ushort Size { get; protected set; }
 
         public string Description { get; protected set; }
 

@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Collections.Generic;
 using System.Text;
+using eu.iamia.Util.Extensions;
 
 namespace BoosterPumpLibrary.Settings
 {
@@ -14,9 +15,9 @@ namespace BoosterPumpLibrary.Settings
         /// <summary>
         /// Number of bytes matching T.
         /// </summary>
-        protected abstract int MaxSize { get; }
+        protected abstract ushort MaxSize { get; }
 
-        protected void CheckRange(dynamic value, dynamic minValue, dynamic maxValue, string name)
+        protected void CheckRange(ushort value, ushort minValue, ushort maxValue, string name)
         {
             if (value.IsOutsideRange(minValue, maxValue))
             {
@@ -27,7 +28,7 @@ namespace BoosterPumpLibrary.Settings
         /// <summary>
         /// Number of bytes this Register is managing {1..8}
         /// </summary>
-        public int Size { get; protected set; }
+        public ushort Size { get; protected set; }
 
         public string Description { get; protected set; }
 
@@ -47,7 +48,7 @@ namespace BoosterPumpLibrary.Settings
             IsDirty = true;
         }
 
-        public BitSetting GetOrCreateSubRegister(int size, int offset, string description = "")
+        public BitSetting GetOrCreateSubRegister(ushort size, ushort offset, string description = "")
         {
             var key = $"{offset}_{size}_{description}";
 
@@ -58,7 +59,7 @@ namespace BoosterPumpLibrary.Settings
 
             var max = Size * 8;
 
-            if (size < 0 || offset < 0 || size + offset > max) { throw new ArgumentOutOfRangeException($"Size + offeset must be less or equal to {max}."); }
+            if (size + offset > max) { throw new ArgumentOutOfRangeException($"Size + offeset must be less or equal to {max}."); }
 
             var result = new BitSetting(size, offset, this, description);
             BitSettings.Add(key, result);
@@ -112,11 +113,11 @@ namespace BoosterPumpLibrary.Settings
             }
         }
 
-        protected RegisterBase(byte registerAddress, string description, int byteCount)
+        protected RegisterBase(byte registerAddress, string description, ushort byteCount)
         {
-            CheckRange((ushort)registerAddress, 0, 127, nameof(registerAddress));
+            CheckRange((ushort)registerAddress, (ushort)0, (ushort)127, nameof(registerAddress));
             // ReSharper disable once VirtualMemberCallInConstructor
-            CheckRange((ushort)byteCount, 1, MaxSize, nameof(byteCount));
+            CheckRange(byteCount, 1, MaxSize, nameof(byteCount));
 
             RegisterAddress = registerAddress;
             Description = description;

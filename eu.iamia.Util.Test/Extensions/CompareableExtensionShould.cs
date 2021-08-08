@@ -26,5 +26,13 @@ namespace eu.iamia.Util.UnitTest.Extensions
         {
             Assert.Equal(expected, value.IsOutsideRange(lower, upper));
         }
+
+        [Theory]
+        [InlineData(false, 0, 0, 1)]
+        public void ReturnExpectedForIsOutsideRangeWithUshort(bool expected, ushort value, ushort lower, ushort upper)
+        {
+            Assert.Equal(expected, value.IsOutsideRange(lower, upper));
+        }
+
     }
 }
