@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using EnsureThat;
 using eu.iamia.NCD.API.Contract;
+using eu.iamia.Util.Extensions;
 
 namespace Modules
 {
@@ -228,7 +229,7 @@ namespace Modules
         public void SetBcdValue(float value)
         {
             // ReSharper disable once MergeIntoLogicalPattern
-            if (value < -99 || 999 < value)
+            if(value.IsOutsideRange(-99, 999))
             {
                 Digit0.Value = 0x0B; // 'E'
                 Digit1.Value = 0x0B; // 'E'

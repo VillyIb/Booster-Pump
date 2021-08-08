@@ -18,7 +18,7 @@ namespace BoosterPumpLibrary.Settings
 
         protected void CheckRange(dynamic value, dynamic minValue, dynamic maxValue, string name)
         {
-            if (value < minValue || maxValue < value)
+            if (value.IsOutsideRange(minValue, maxValue))
             {
                 throw new ArgumentOutOfRangeException(name, value, $"Range: {minValue}..{maxValue}");
             }
@@ -33,7 +33,7 @@ namespace BoosterPumpLibrary.Settings
 
         public byte RegisterAddress { get; protected set; }
 
-        public bool IsDirty { get; protected set; }       
+        public bool IsDirty { get; protected set; }
 
         protected Dictionary<string, BitSetting> BitSettings { get; }
 
@@ -84,7 +84,7 @@ namespace BoosterPumpLibrary.Settings
         {
             var result = new StringBuilder();
 
-            foreach(var current in BitSettings.Values)
+            foreach (var current in BitSettings.Values)
             {
                 if (result.Length > 0)
                 {
@@ -102,12 +102,14 @@ namespace BoosterPumpLibrary.Settings
     {
         private T ValueField;
 
-        public T Value { 
-            get => ValueField; 
-            set { 
+        public T Value
+        {
+            get => ValueField;
+            set
+            {
                 ValueField = value;
                 IsDirty = true;
-            } 
+            }
         }
 
         protected RegisterBase(byte registerAddress, string description, int byteCount)
@@ -119,6 +121,6 @@ namespace BoosterPumpLibrary.Settings
             RegisterAddress = registerAddress;
             Description = description;
             Size = byteCount;
-        }      
+        }
     }
 }

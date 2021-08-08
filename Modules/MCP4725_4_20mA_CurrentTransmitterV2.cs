@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using eu.iamia.NCD.API.Contract;
+using eu.iamia.Util.Extensions;
 
 // ReSharper disable CommentTypo
 // ReSharper disable StringLiteralTypo
@@ -97,13 +98,13 @@ namespace Modules
         public void SetSpeedPersistent(float speed)
         {
             WriteToDacAndEeprom();
-            var speedMapped = (ulong) GetIntValue(speed);
+            var speedMapped = (ulong)GetIntValue(speed);
             SetSpeed(speedMapped);
         }
 
         public float GetPctValue(int value)
         {
-            if (value < 0 || 4096 <= value) { throw new ArgumentOutOfRangeException(nameof(value), value, "Valid: [0...4096[ (int)"); }
+            if (value.IsOutsideRange(0, 4096)) { throw new ArgumentOutOfRangeException(nameof(value), value, "Valid: [0...4096[ (int)"); }
 
             var dec = value / 4096.0f; //  4096 = 2**12)
             return dec;
@@ -111,7 +112,7 @@ namespace Modules
 
         public int GetIntValue(float value)
         {
-            if (value < 0.0f || 1.0f <= value) { throw new ArgumentOutOfRangeException(nameof(value), value, "Valid: [0...1[ (float)"); }
+            if (value.IsOutsideRange(0.0f, 1.0f) ) { throw new ArgumentOutOfRangeException(nameof(value), value, "Valid: [0...1[ (float)"); }
 
             return (int)Math.Round(value * 4096f, 0);
         }

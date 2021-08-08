@@ -5,6 +5,7 @@ using BoosterPumpLibrary.Settings;
 using EnsureThat;
 using eu.iamia.NCD.API;
 using eu.iamia.NCD.API.Contract;
+using eu.iamia.Util.Extensions;
 
 // ReSharper disable UnusedMember.Global
 
@@ -39,7 +40,7 @@ namespace BoosterPumpLibrary.ModuleBase
         /// <returns></returns>
         public void SetAddressIncrement(int value)
         {
-            if (value < 0 | 1 < value) { throw new ArgumentOutOfRangeException(nameof(value), value, "Valid: {0:1}"); }
+            if (value.IsOutsideRange(0, 1)) { throw new ArgumentOutOfRangeException(nameof(value), value, "Valid: {0:1}"); }
             AddressIncrement = value;
         }
 
