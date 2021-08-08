@@ -19,7 +19,7 @@ namespace eu.iamia.NCD.Serial
             SerialPort = serialPort;
         }
 
-        private readonly AutoResetEvent ResultReady = new AutoResetEvent(false); 
+        private readonly AutoResetEvent ResultReady = new(false); 
 
         private NcdState State;
 
@@ -50,7 +50,7 @@ namespace eu.iamia.NCD.Serial
                     case NcdState.ExpectLength:
                         {
                             ByteCount = current;
-                            Payload = new List<byte>(ByteCount);
+                            Payload = new(ByteCount);
                             State = NcdState.ExpectPayload;
                             break;
                         }

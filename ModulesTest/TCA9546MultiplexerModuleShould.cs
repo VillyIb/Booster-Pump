@@ -17,7 +17,7 @@ namespace ModulesTest
         public TCA9546MultiplexerModuleShould()
         {
             _FakeSerialPort = Substitute.For<IGateway>();
-            _Sut = new TCA9546A_Multiplexer(new ApiToSerialBridge(_FakeSerialPort));
+            _Sut = new(new ApiToSerialBridge(_FakeSerialPort));
         }
 
         [Fact]

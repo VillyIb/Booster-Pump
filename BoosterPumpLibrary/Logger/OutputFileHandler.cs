@@ -55,7 +55,7 @@ namespace BoosterPumpLibrary.Logger
             var file = new FileInfo($"{logfilePrefix}{filename}");
             var fs = file.Open(FileMode.OpenOrCreate);
             Console.WriteLine($"\r\nWriting to logfile {file.Name}");
-            Sw = new StreamWriter(fs) { AutoFlush = true };
+            Sw = new(fs) { AutoFlush = true };
 
             fs.Position = fs.Seek(0, SeekOrigin.End);
             if (fs.Position == 0L)
@@ -74,7 +74,7 @@ namespace BoosterPumpLibrary.Logger
             var file = new FileInfo($"{logfilePrefix}{filename}");
             var fs = file.Open(FileMode.OpenOrCreate);
             Console.WriteLine($"\r\nWriting to logfile {file.Name}");
-            Sw = new StreamWriter(fs) { AutoFlush = true };
+            Sw = new(fs) { AutoFlush = true };
 
             fs.Position = fs.Seek(0, SeekOrigin.End);
             if (fs.Position == 0L)

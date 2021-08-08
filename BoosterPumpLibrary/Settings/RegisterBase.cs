@@ -39,7 +39,7 @@ namespace BoosterPumpLibrary.Settings
 
         protected RegisterBase()
         {
-            BitSettings = new Dictionary<string, BitSetting>();
+            BitSettings = new();
         }
 
         public void SetDirty()

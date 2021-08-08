@@ -21,7 +21,7 @@ namespace eu.iamia.ReliableSerialPort.SystemTest
         }
 
         [Fact]
-        public void OpenConnectedPort()
+        public void IT_OpenConnectedPort()
         {
             Init();
             using var sut = new SerialPortDecorator(SerialPortSettings);
@@ -46,18 +46,12 @@ namespace eu.iamia.ReliableSerialPort.SystemTest
             Init();
             using var sut =  new SerialPortDecorator(SerialPortSettings);
             sut.Open();
-            sut.DataReceived += (sender, args) =>
-            {
-                foreach (var current in args.Data)
-                {
-                    received.Add(current);
-                }
-            };
+            sut.DataReceived += (_, args) => { received.AddRange(args.Data); };
 
             sut.Write(new List<byte>{0xAA, 0x02, 0xFE, 0x21, 0xCB});
             Thread.Sleep(110);
 
-            Assert.Equal(new List<byte>{0xAA, 0x01, 0x55, 0x00}, received);
+            Assert.Equal(new() {0xAA, 0x01, 0x55, 0x00}, received);
         }
 
         /// <summary>
@@ -100,18 +94,12 @@ namespace eu.iamia.ReliableSerialPort.SystemTest
             Init();
             using var sut = new SerialPortDecorator(SerialPortSettings);
             sut.Open();
-            sut.DataReceived += (sender, args) =>
-            {
-                foreach (var current in args.Data)
-                {
-                    received.Add(current);
-                }
-            };
+            sut.DataReceived += (_, args) => { received.AddRange(args.Data); };
 
             sut.Write(new List<byte> { 0xAA, 0x02, 0xC1, 0x00, 0x6D });
             Thread.Sleep(delay);
 
-            Assert.Equal(new List<byte> { 0xAA, 0x03, 0x48, 0x50, 0x58, 0x9d }, received);
+            Assert.Equal(new() { 0xAA, 0x03, 0x48, 0x50, 0x58, 0x9d }, received);
         }
 
     }

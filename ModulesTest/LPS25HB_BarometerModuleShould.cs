@@ -18,7 +18,7 @@ namespace ModulesTest
         public LPS25HB_BarometerModuleShould()
         {
             _FakeGateway = Substitute.For<IGateway>();
-            Sut = new LPS25HB_Barometer(new ApiToSerialBridge(_FakeGateway));
+            Sut = new(new ApiToSerialBridge(_FakeGateway));
             }
 
         [Fact]

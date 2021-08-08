@@ -13,6 +13,7 @@ namespace eu.iamia.ReliableSerialPort
         private ISerialPortSettings SerialPortSettings { get; }
 
         [ExcludeFromCodeCoverage]
+        // ReSharper disable once UnusedMember.Global
         public SerialPortDecorator(IOptions<ISerialPortSettings> settings)
         {
             SerialPortSettings = settings.Value;
@@ -32,19 +33,19 @@ namespace eu.iamia.ReliableSerialPort
 
         private void OnDataReceived(byte[] data)
         {
-            DataReceived?.Invoke(this, new DataReceivedArgs { Data = data });
+            DataReceived?.Invoke(this, new() { Data = data });
         }
 
         private void ReadContinuously()
         {
-            const int bufferSize = 128;
-            var reusedBuffer = new byte[bufferSize];
+            const int BufferSize = 128;
+            var reusedBuffer = new byte[BufferSize];
 
             void ReadUntilClosed() =>
                SerialPort.BaseStream.BeginRead(
                    reusedBuffer,
                    0,
-                   bufferSize,
+                   BufferSize,
                    delegate (IAsyncResult ar)
                    {
                        try
@@ -84,7 +85,7 @@ namespace eu.iamia.ReliableSerialPort
 
             SerialPort?.Close();
 
-            SerialPort = new SerialPort(SerialPortSettings.PortName, SerialPortSettings.BaudRate)
+            SerialPort = new(SerialPortSettings.PortName, SerialPortSettings.BaudRate)
             {
                 ReadTimeout = SerialPortSettings.Timeout,
                 WriteTimeout = SerialPortSettings.Timeout

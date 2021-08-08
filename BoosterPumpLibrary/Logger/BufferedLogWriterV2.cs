@@ -22,7 +22,7 @@ namespace BoosterPumpLibrary.Logger
         public BufferedLogWriterV2(IOutputFileHandler aggregateFile)
         {
             AggregateFile = aggregateFile;
-            Queue = new ConcurrentQueue<BufferLine>();
+            Queue = new();
         }
 
         /// <summary>
@@ -97,7 +97,7 @@ namespace BoosterPumpLibrary.Logger
                 }
                 catch (Exception ex)
                 {
-                    Queue.Enqueue(new BufferLine(ex.Message, SystemDateTime.UtcNow));
+                    Queue.Enqueue(new(ex.Message, SystemDateTime.UtcNow));
                 }
             }
             if (!string.IsNullOrEmpty(aggregateValue))
@@ -173,7 +173,7 @@ namespace BoosterPumpLibrary.Logger
                 }
                 catch (Exception ex)
                 {
-                    Queue.Enqueue(new BufferLine(ex.Message, SystemDateTime.UtcNow));
+                    Queue.Enqueue(new(ex.Message, SystemDateTime.UtcNow));
                 }
             }
             if (!string.IsNullOrEmpty(aggregateValue))

@@ -18,7 +18,7 @@ namespace eu.iamia.NCD.Serial.UnitTest
         private void Init()
         {
             FakeSerialPortDecorator = Substitute.For<ISerialPortDecorator>();
-            Sut = new SerialGateway(FakeSerialPortDecorator);
+            Sut = new(FakeSerialPortDecorator);
         }
 
         [Fact]
@@ -80,7 +80,7 @@ namespace eu.iamia.NCD.Serial.UnitTest
 
             var fakeSerialPortDecorator = Substitute.ForPartsOf<FakeSerialPortDecorator>();
             fakeSerialPortDecorator.GetResponse().Returns(fakeResponse);
-            Sut = new SerialGateway(fakeSerialPortDecorator);
+            Sut = new(fakeSerialPortDecorator);
 
             var i2CCommand = new NcdApiProtocol(Array.Empty<byte>());
             var response = Sut.Execute(i2CCommand);
@@ -108,7 +108,7 @@ namespace eu.iamia.NCD.Serial.UnitTest
         public void Write(IEnumerable<byte> byteSequence)
         {
             // Response is passed as DataReceived.
-            DataReceived?.Invoke(this, new DataReceivedArgs {Data = GetResponse().ToArray()});
+            DataReceived?.Invoke(this, new() {Data = GetResponse().ToArray()});
         }
     }
 }

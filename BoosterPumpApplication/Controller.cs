@@ -57,7 +57,7 @@ namespace BoosterPumpApplication
         public void Init(IServiceScope scope)
         {
             Console.WriteLine("+Controller.ExecuteAsync");
-            Stopwatch = new Stopwatch();
+            Stopwatch = new();
 
             DisplayModule = scope.ServiceProvider.GetRequiredService<As1115Module>();
             DisplayModule.Init();
@@ -78,8 +78,8 @@ namespace BoosterPumpApplication
 
             SpeedController = scope.ServiceProvider.GetRequiredService<MCP4725_4_20mA_CurrentTransmitterV2>();
 
-            FlowNorthWestStack = new System.Collections.Generic.Queue<double>();
-            FlowSouthEastStack = new System.Collections.Generic.Queue<double>();
+            FlowNorthWestStack = new();
+            FlowSouthEastStack = new();
 
             LogWriter = scope.ServiceProvider.GetRequiredService<IBufferedLogWriter>();
 
@@ -170,7 +170,7 @@ namespace BoosterPumpApplication
                     }
 
                     var now = SystemDateTime.UtcNow;
-                    now = new DateTime(
+                    now = new(
                         now.Ticks - now.Ticks % (TimeSpan.TicksPerSecond / 10),
                         now.Kind
                     );

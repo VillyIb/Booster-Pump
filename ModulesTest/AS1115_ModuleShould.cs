@@ -15,7 +15,7 @@ namespace ModulesTest
         public As1115ModuleShould()
         {
             FakeGateway = Substitute.For<IGateway>();
-            Sut = new As1115Module(new ApiToSerialBridge(FakeGateway));
+            Sut = new(new ApiToSerialBridge(FakeGateway));
         }
 
         [Fact]

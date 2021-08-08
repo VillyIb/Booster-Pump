@@ -37,7 +37,7 @@ namespace eu.iamia.Util
         /// </summary>
         public EasyStopwatch()
         {
-            Stopwatch = new Stopwatch();
+            Stopwatch = new();
             Stopwatch.Start();
         }
 

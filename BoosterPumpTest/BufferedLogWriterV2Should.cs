@@ -16,7 +16,7 @@ namespace BoosterPumpTest
         {
             // Arrange
             FakeFileHandler = Substitute.For<IOutputFileHandler>();
-            Sut = new BufferedLogWriterV2(FakeFileHandler);
+            Sut = new(FakeFileHandler);
         }
 
         [Fact]
@@ -67,12 +67,12 @@ namespace BoosterPumpTest
         private void SetupBufferLines()
         {
             InitSystemDateTime(10);
-            Sut.Add(new BufferLine("A", SystemDateTime.UtcNow));
+            Sut.Add(new("A", SystemDateTime.UtcNow));
             InitSystemDateTime(11);
-            Sut.Add(new BufferLine("B", SystemDateTime.UtcNow));
-            Sut.Add(new BufferLine("C", SystemDateTime.UtcNow));
+            Sut.Add(new("B", SystemDateTime.UtcNow));
+            Sut.Add(new("C", SystemDateTime.UtcNow));
             InitSystemDateTime(12);
-            Sut.Add(new BufferLine("D", SystemDateTime.UtcNow));
+            Sut.Add(new("D", SystemDateTime.UtcNow));
         }
 
         private void SetupBufferLineMeasurements()

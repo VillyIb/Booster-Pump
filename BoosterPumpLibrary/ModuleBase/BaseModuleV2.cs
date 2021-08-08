@@ -48,7 +48,7 @@ namespace BoosterPumpLibrary.ModuleBase
         public ModuleEnumerator GetEnumerator()
         {
             var registersToSend = Registers.Where(t => t.IsDirty);
-            return new ModuleEnumerator(registersToSend, DeviceAddress);
+            return new(registersToSend, DeviceAddress);
         }
 
         public void SendOld()

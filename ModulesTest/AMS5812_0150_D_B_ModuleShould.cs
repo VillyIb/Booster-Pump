@@ -18,7 +18,7 @@ namespace ModulesTest
         public AMS5812_0150_D_B_ModuleShould()
         {
             _FakeGateway = Substitute.For<IGateway>();
-            _Sut = new AMS5812_0150_D_Pressure( new ApiToSerialBridge(_FakeGateway));
+            _Sut = new( new ApiToSerialBridge(_FakeGateway));
         }
 
         [Fact]

@@ -20,7 +20,7 @@ namespace eu.iamia.NCD.Bridge.UnitTest
         private void Init()
         {
             FakeSerialPortDecorator = Substitute.For<ISerialPortDecorator>();
-            Sut = new ApiToSerialBridge(new SerialGateway(FakeSerialPortDecorator));
+            Sut = new(new SerialGateway(FakeSerialPortDecorator));
         }
 
         [Fact]
@@ -44,7 +44,7 @@ namespace eu.iamia.NCD.Bridge.UnitTest
         public static IEnumerable<object[]> TestData =>
             new List<object[]>
             {
-                new object[] {new CommandWrite(DefaultDeviceAddress, DefaultPayload), 0xBE,},
+                new object[] {new CommandWrite(DefaultDeviceAddress, DefaultPayload), 0xBE},
                 new object[] {new CommandRead(DefaultDeviceAddress, DefaultReadLength), 0xBF},
                 new object[] {new CommandWriteRead(DefaultDeviceAddress, DefaultPayload, DefaultReadLength), 0xC0},
                 new object[] {new CommandControllerControllerBusSCan(), 0xC1},
@@ -144,7 +144,7 @@ namespace eu.iamia.NCD.Bridge.UnitTest
 
             var fakeSerialPortDecorator = Substitute.ForPartsOf<FakeSerialPortDecorator>();
             fakeSerialPortDecorator.GetResponse().Returns(fakeResponse);
-            Sut = new ApiToSerialBridge(new SerialGateway(fakeSerialPortDecorator));
+            Sut = new(new SerialGateway(fakeSerialPortDecorator));
 
             var response = Sut.Execute(command);
 
@@ -171,7 +171,7 @@ namespace eu.iamia.NCD.Bridge.UnitTest
         public void Write(IEnumerable<byte> byteSequence)
         {
             // Response is passed as DataReceived.
-            DataReceived?.Invoke(this, new DataReceivedArgs {Data = GetResponse().ToArray()});
+            DataReceived?.Invoke(this, new() {Data = GetResponse().ToArray()});
         }
     }
 }

@@ -21,7 +21,7 @@ namespace Modules
 
         public override byte DefaultAddress => DefaultAddressValue;
 
-        private readonly Register Settings0X10 = new Register(0X10, "RES_CONF", 1);
+        private readonly Register Settings0X10 = new(0X10, "RES_CONF", 1);
 
         /// <summary>
         /// 0: 8-, 1: 16, 2: 32, 3: 64 internal average.
@@ -34,7 +34,7 @@ namespace Modules
         private BitSetting TemperatureResolution => Settings0X10.GetOrCreateSubRegister(2, 2, "Temperature Resolution");
 
 
-        private readonly Register Settings0X20 = new Register(0x20, "Control Register", 1);
+        private readonly Register Settings0X20 = new(0x20, "Control Register", 1);
 
         /// <summary>
         /// 0: Power Down, 1: Active Mode.
@@ -47,7 +47,7 @@ namespace Modules
         private BitSetting OutputDataRate => Settings0X20.GetOrCreateSubRegister(3, 4, "Output data rate.");
 
 
-        private readonly Register Reading0X28 = new Register(0x28, "Air Pressure & Temperature", 5);
+        private readonly Register Reading0X28 = new(0x28, "Air Pressure & Temperature", 5);
 
         private BitSetting PressureHex => Reading0X28.GetOrCreateSubRegister(24, 0, "Barometric Pressure");
 

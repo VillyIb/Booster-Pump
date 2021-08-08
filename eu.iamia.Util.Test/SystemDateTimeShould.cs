@@ -9,7 +9,7 @@ namespace eu.iamia.Util.UnitTest
 
         private void Init(int hour)
         {
-            Initial = new DateTime(2021, 01, 01, hour, 30, 0, DateTimeKind.Utc);
+            Initial = new(2021, 01, 01, hour, 30, 0, DateTimeKind.Utc);
             SystemDateTime.SetTime(Initial, 0d);
         }
 

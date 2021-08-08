@@ -33,7 +33,7 @@ namespace BoosterPumpTest
 
         public RegisterShould()
         {
-            Sut = new Register(0x00, "64 bit register", 8);
+            Sut = new(0x00, "64 bit register", 8);
 
             // ReSharper disable once StringLiteralTypo
             Alfa0Setting = Sut.GetOrCreateSubRegister(1, 7, "Alfa0"); // 0
@@ -141,8 +141,8 @@ namespace BoosterPumpTest
         [Fact]
         public void StoreMaxValuefor64Bits()
         {
-            const ulong value = ulong.MaxValue;
-            LimaSetting.Value = value;
+            const ulong Value = ulong.MaxValue;
+            LimaSetting.Value = Value;
             Assert.Equal(0b1111_1111_1111_1111_1111_1111_1111_1111_1111_1111_1111_1111_1111_1111_1111_1111, Sut.Value);
         }
 

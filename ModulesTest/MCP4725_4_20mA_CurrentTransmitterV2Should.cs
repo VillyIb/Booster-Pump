@@ -17,7 +17,7 @@ namespace ModulesTest
         public MCP4725_4_20mA_CurrentTransmitterV2Should()
         {
             FakeSerialPort = Substitute.For<IGateway>();
-            Sut = new MCP4725_4_20mA_CurrentTransmitterV2(new ApiToSerialBridge(FakeSerialPort));
+            Sut = new(new ApiToSerialBridge(FakeSerialPort));
         }
 
         [Fact]
