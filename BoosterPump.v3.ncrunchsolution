@@ -4,4 +4,14 @@
     <MetricsExclusionList />
     <SolutionConfigured>True</SolutionConfigured>
   </Settings>
+  <EngineModes>
+    <EngineMode>
+      <Name>With Hardware</Name>
+      <Settings>
+        <AllowParallelTestExecution>False</AllowParallelTestExecution>
+        <TestFilter>ProjectNameMatchesRegex '*SystemTest"'</TestFilter>
+        <TestsToExecuteAutomatically>ProjectNameMatchesRegex 'SystemTest$'</TestsToExecuteAutomatically>
+      </Settings>
+    </EngineMode>
+  </EngineModes>
 </SolutionConfiguration>
