@@ -60,49 +60,49 @@ namespace BoosterPumpTest
         }
 
         [Fact]
-        public void StoreMaxValuefor1BitsWithOffsett()
+        public void StoreMaxValuefor1BitsWithOffset()
         {
             Alfa0Setting.Value = 1;
             Assert.Equal((ulong)0b1000_0000, Sut.Value);
         }
 
         [Fact]
-        public void StoreMaxValuefor2BitsWithOffsett()
+        public void StoreMaxValuefor2BitsWithOffset()
         {
             BravoSetting.Value = 3;
             Assert.Equal((ulong)0b1100_0000, Sut.Value);
         }
 
         [Fact]
-        public void StoreMaxValuefor3BitsWithOffsett()
+        public void StoreMaxValuefor3BitsWithOffset()
         {
             CharlieSetting.Value = 7;
             Assert.Equal((ulong)0b1110_0000, Sut.Value);
         }
 
         [Fact]
-        public void StoreMaxValuefor4BitsWithOffsett()
+        public void StoreMaxValuefor4BitsWithOffset()
         {
             DeltaSetting.Value = 15;
             Assert.Equal((ulong)0b1111_0000, Sut.Value);
         }
 
         [Fact]
-        public void StoreMaxValuefor5BitsWithOffsett()
+        public void StoreMaxValuefor5BitsWithOffset()
         {
             EchoSetting.Value = 31;
             Assert.Equal((ulong)0b1111_1000, Sut.Value);
         }
 
         [Fact]
-        public void StoreMaxValuefor6BitsWithOffsett()
+        public void StoreMaxValuefor6BitsWithOffset()
         {
             FoxtrotSetting.Value = 63;
             Assert.Equal((ulong)0b1111_1100, Sut.Value);
         }
 
         [Fact]
-        public void StoreMaxValuefor7BitsWithOffsett()
+        public void StoreMaxValuefor7BitsWithOffset()
         {
             GolfSetting.Value = 127;
             Assert.Equal((ulong)0b1111_1110, Sut.Value);
@@ -116,14 +116,14 @@ namespace BoosterPumpTest
         }
 
         [Fact]
-        public void StoreMaxValuefor16BitsWithOffsett()
+        public void StoreMaxValuefor16BitsWithOffset()
         {
             IndiaSetting.Value = ushort.MaxValue;
             Assert.Equal((ulong)0b1111_1111_1111_1111_0000, Sut.Value);
         }
 
         [Fact]
-        public void StoreMaxValuefor12BitsWithOffsett()
+        public void StoreMaxValuefor12BitsWithOffset()
         {
             JulietSetting.Value = (1 << 12) - 1;
             Assert.Equal((ulong)0b0111_1111_1111_100, Sut.Value);
