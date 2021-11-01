@@ -1,3 +1,5 @@
+#define HAS_HARDWARE
+
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -20,7 +22,11 @@ namespace eu.iamia.ReliableSerialPort.SystemTest
             SerialPortSettings = configuration.Parse();
         }
 
+#if HAS_HARDWARE
         [Fact]
+#else
+        [Fact(Skip = "Requires hardware")]
+#endif
         public void IT_OpenConnectedPort()
         {
             Init();
@@ -38,26 +44,34 @@ namespace eu.iamia.ReliableSerialPort.SystemTest
             Assert.Throws<ApplicationException>(() => sut.Open());
         }
 
+#if HAS_HARDWARE
         [Fact]
+#else
+        [Fact(Skip = "Requires hardware")]
+#endif
         public void ReceiveSpecificResponseOnCommand_Test2WayCommunication()
         {
             var received = new List<byte>();
 
             Init();
-            using var sut =  new SerialPortDecorator(SerialPortSettings);
+            using var sut = new SerialPortDecorator(SerialPortSettings);
             sut.Open();
             sut.DataReceived += (_, args) => { received.AddRange(args.Data); };
 
-            sut.Write(new List<byte>{0xAA, 0x02, 0xFE, 0x21, 0xCB});
+            sut.Write(new List<byte> { 0xAA, 0x02, 0xFE, 0x21, 0xCB });
             Thread.Sleep(110);
 
-            Assert.Equal(new() {0xAA, 0x01, 0x55, 0x00}, received);
+            Assert.Equal(new() { 0xAA, 0x01, 0x55, 0x00 }, received);
         }
 
         /// <summary>
-        /// Required devices: 0x48, 0x50, 0x58
+        /// Required devices: 0x48, 0x50, 0x58½
         /// </summary>
+#if HAS_HARDWARE2
         [Theory]
+#else
+        [Theory(Skip = "Requires hardware")]
+#endif
         // Repeated by intention.
         [InlineData(110)]
         [InlineData(110)]

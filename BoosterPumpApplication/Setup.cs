@@ -34,12 +34,16 @@ namespace BoosterPumpApplication
 
             services.AddOptions();
 
+            services.AddTransient(typeof(ISerialPortSettings), typeof(SerialPortSettings));
+
             services.AddSingleton(typeof(IBridge), typeof(ApiToSerialBridge));
 
             services.AddSingleton(typeof(IGateway), typeof(SerialGateway));
             services.AddSingleton(typeof(ISerialPortDecorator), typeof(SerialPortDecorator));
+
             services.AddSingleton(typeof(IOutputFileHandler), typeof(OutputFileHandler));
             services.AddSingleton(typeof(IBufferedLogWriter), typeof(BufferedLogWriterV2));
+
 
             services.AddTransient(typeof(IController), typeof(Controller));
 
@@ -47,7 +51,6 @@ namespace BoosterPumpApplication
             services.AddTransient(typeof(AMS5812_0150_D_Pressure), typeof(AMS5812_0150_D_Pressure));
             services.AddTransient(typeof(AMS5812_0300_A_Pressure), typeof(AMS5812_0300_A_Pressure));
 
-            //services.a
             services.AddTransient(typeof(LPS25HB_Barometer), typeof(LPS25HB_Barometer));
 
             services.AddTransient(typeof(TCA9546A_Multiplexer), typeof(TCA9546A_Multiplexer));

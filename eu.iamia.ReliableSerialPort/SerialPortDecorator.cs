@@ -3,23 +3,29 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO.Ports;
 using System.Linq;
+using System.Threading;
+using BoosterPumpConfiguration;
 using Microsoft.Extensions.Options;
 
 namespace eu.iamia.ReliableSerialPort
 {
     // Requires real hardware to test.
-    public sealed class SerialPortDecorator : ISerialPortDecorator
+    public  class SerialPortDecorator : ISerialPortDecorator
     {
         private ISerialPortSettings SerialPortSettings { get; }
 
         [ExcludeFromCodeCoverage]
         // ReSharper disable once UnusedMember.Global
-        public SerialPortDecorator(IOptions<ISerialPortSettings> settings)
+        public SerialPortDecorator(IOptions<SerialPortSettings> settings)
         {
             SerialPortSettings = settings.Value;
         }
 
-        public SerialPortDecorator(ISerialPortSettings settings)
+        /// <summary>
+        /// Only referenced fro Unit Tests
+        /// </summary>
+        /// <param name="settings"></param>
+        internal SerialPortDecorator(ISerialPortSettings settings)
         {
             SerialPortSettings = settings;
         }
@@ -42,27 +48,29 @@ namespace eu.iamia.ReliableSerialPort
             var reusedBuffer = new byte[BufferSize];
 
             void ReadUntilClosed() =>
-               SerialPort.BaseStream.BeginRead(
-                   reusedBuffer,
-                   0,
-                   BufferSize,
-                   delegate (IAsyncResult ar)
-                   {
-                       try
-                       {
-                           var count = SerialPort.BaseStream.EndRead(ar); // InvalidOperationException if port is closed.
-                           var dst = new byte[count];
-                           Buffer.BlockCopy(reusedBuffer, 0, dst, 0, count);
-                           OnDataReceived(dst);
-                           ReadUntilClosed(); // loop...
-                       }
-                       catch (InvalidOperationException)
-                       {
-                           // no action, loop is broken by closed port.
-                       }
-                   },
-                   null
-               );
+                SerialPort.BaseStream.BeginRead(
+                    reusedBuffer,
+                    0,
+                    BufferSize,
+                    delegate(IAsyncResult ar)
+                    {
+                        try
+                        {
+                            var count = SerialPort.BaseStream
+                                .EndRead(ar); // InvalidOperationException if port is closed.
+                            var dst = new byte[count];
+                            Buffer.BlockCopy(reusedBuffer, 0, dst, 0, count);
+                            OnDataReceived(dst);
+                            Thread.Sleep(5);
+                            ReadUntilClosed(); // loop...
+                        }
+                        catch (InvalidOperationException)
+                        {
+                            // no action, loop is broken by closed port.
+                        }
+                    },
+                    null
+                );
 
             ReadUntilClosed(); // One-time Read...
         }
