@@ -18,4 +18,7 @@ namespace eu.iamia.ReliableSerialPort
         /// <param name="byteSequence"></param>
         void Write(IEnumerable<byte> byteSequence);
     }
+
+    public interface ISerialPortDecoratorForUnitTest : ISerialPortDecorator
+    { }
 }

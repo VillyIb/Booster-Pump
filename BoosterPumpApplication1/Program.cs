@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Threading;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using BoosterPumpApplication;
+using BoosterPumpConfiguration;
 using BoosterPumpLibrary.Logger;
 using eu.iamia.Configuration;
 using eu.iamia.NCD.API;
 using eu.iamia.NCD.API.Contract;
 using eu.iamia.ReliableSerialPort;
+using Microsoft.Extensions.Options;
 
 namespace BoosterPumpApplication1
 {
@@ -30,9 +33,27 @@ namespace BoosterPumpApplication1
             IServiceProvider serviceProvider = services.BuildServiceProvider();
 
             using var scope = serviceProvider.CreateScope();
+
+            var t1 = serviceProvider.GetService<IOptions<SerialPortSettings>>();
+            var t2 = t1.ToString();
+            var t3 = t1.Value;
+
+            //var u1 =  serviceProvider.GetService<IOptions<ISerialPortSettings>>();
+
+
             var serialPort = scope.ServiceProvider.GetRequiredService<ISerialPortDecorator>();
             serialPort.Open();
 
+            {
+                var ncdCommand = new CommandControllerControllerHardReboot();
+                var serialConverter = scope.ServiceProvider.GetRequiredService<IBridge>();
+                var dataFromDevice = serialConverter.Execute(ncdCommand);
+                if (!dataFromDevice.IsValid)
+                {
+                    throw new ApplicationException(dataFromDevice.ToString());
+                }
+                Thread.Sleep(100);
+            }
             {
                 var ncdCommand = new CommandControllerControllerBusSCan();
                 var serialConverter = scope.ServiceProvider.GetRequiredService<IBridge>();

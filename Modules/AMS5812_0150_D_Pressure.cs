@@ -52,7 +52,15 @@ namespace Modules
 
             var response =  ApiToSerialBridge.Execute(command);
 
-            if (!response.IsValid) { return; }
+            if (response is null)
+            {
+                return;
+            }
+
+            if (!response.IsValid)
+            {
+                return;
+            }
 
             var measuredPressure = response.Payload[0] << 8 | response.Payload[1];
 

@@ -10,7 +10,7 @@ namespace eu.iamia.NCD.Serial
 {
     public class SerialGateway : IGateway
     {
-        private static TimeSpan ReadTimeout => TimeSpan.FromSeconds(5);
+        private static TimeSpan ReadTimeout => TimeSpan.FromSeconds(10); // TODO move to settings.
 
         private ISerialPortDecorator SerialPort { get; }
 
@@ -90,7 +90,7 @@ namespace eu.iamia.NCD.Serial
 
             if (IsInitialized) return;
 
-            SerialPort.Open();
+            //SerialPort.Open();
             SerialPort.DataReceived += ProcessInput;
             IsInitialized = true;
         }
@@ -119,14 +119,16 @@ namespace eu.iamia.NCD.Serial
 
                 SerialPort.Write(i2CCommand.GetApiEncodedData());
 
-                return WaitForResultToBeReady()
-                        ? new NcdApiProtocol(Header, ByteCount, Payload, Checksum)
-                        : null
-                    ;
+                Thread.Sleep(100);
+                
+                if (WaitForResultToBeReady())
+                    return new NcdApiProtocol(Header, ByteCount, Payload, Checksum);
+                else
+                    return (NcdApiProtocol)null;
             }
             finally
             {
-                Console.WriteLine($"Execute took: {timer.Stop()} ms");
+                //Console.WriteLine($"Execute took: {timer.Stop()} ms");
             }
         }
     }
