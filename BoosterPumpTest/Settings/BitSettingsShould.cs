@@ -2,7 +2,7 @@
 using BoosterPumpLibrary.Settings;
 using Xunit;
 
-namespace BoosterPumpTest
+namespace BoosterPumpLibrary.Unit.Test.Settings
 {
     public class BitSettingsShould
     {
@@ -23,13 +23,13 @@ namespace BoosterPumpTest
             Assert.Equal("MyDescription", sut.Description);
             Assert.Equal("11_1111_1111_1111_1100", sut.MaskAsBinary());
             Assert.Equal((ulong)0xFFFF, sut.Mask);
-            Assert.Equal("MyDescription, Size: 16, Offset: 2, Mask: 11_1111_1111_1111_1100, Value: 0-0x0000" , sut.ToString());
+            Assert.Equal("MyDescription, Size: 16, Offset: 2, Mask: 11_1111_1111_1111_1100, Value: 0-0x0000", sut.ToString());
         }
 
         [Fact]
         public void SetValue_WhenOk_ToStringReturnsRightContent()
         {
-            var sut = new BitSetting(16, 2, ParentRegister, "MyDescription") {Value = 1234ul};
+            var sut = new BitSetting(16, 2, ParentRegister, "MyDescription") { Value = 1234ul };
 
             Assert.Equal("MyDescription, Size: 16, Offset: 2, Mask: 11_1111_1111_1111_1100, Value: 1234-0x04D2", sut.ToString());
 
@@ -39,8 +39,8 @@ namespace BoosterPumpTest
         public void SetValue_ToLargeValue_ThrowsException()
         {
             var sut = new BitSetting(4, 2, ParentRegister, "MyDescription");
-            
-            Assert.Throws< ArgumentOutOfRangeException>(() => sut.Value = 0xFF);
+
+            Assert.Throws<ArgumentOutOfRangeException>(() => sut.Value = 0xFF);
         }
 
 
