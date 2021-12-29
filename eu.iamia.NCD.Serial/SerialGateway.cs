@@ -90,7 +90,7 @@ namespace eu.iamia.NCD.Serial
 
             if (IsInitialized) return;
 
-            //SerialPort.Open();
+            SerialPort.Open();
             SerialPort.DataReceived += ProcessInput;
             IsInitialized = true;
         }
