@@ -13,11 +13,11 @@ namespace BoosterPumpLibrary.Logger
 
         void AggregateFlushUnconditionally();
 
-        Task AggregateFlushAsync(DateTime window);
+        //Task AggregateFlushAsync(DateTime window);
 
-        Task AggregateFlushUnconditionalAsync();
+        //Task AggregateFlushUnconditionalAsync();
 
-        Task WaitUntilSecond02InNextMinuteAsync();
+        //Task WaitUntilSecond02InNextMinuteAsync();
 
         bool IsNextMinute();
     }
