@@ -10,9 +10,10 @@
         /// <param name="registerAddress"></param>
         /// <param name="description"></param>
         /// <param name="byteCount"></param>
-        public Register(byte registerAddress, string description, ushort byteCount) : base(registerAddress, description, byteCount)
-        { }              
-             
+        public Register(byte registerAddress, string description, ushort byteCount)
+            : base(registerAddress, description, byteCount)
+        { }
+
         internal override void SetValue(ulong value)
         {
             Value = value;
