@@ -31,11 +31,10 @@ namespace eu.iamia.Util
                 : Stopwatch.ElapsedMilliseconds;
         }
 
-
         /// <summary>
         /// Create and start Stopwatch.
         /// </summary>
-        public EasyStopwatch()
+        private EasyStopwatch()
         {
             Stopwatch = new();
             Stopwatch.Start();
