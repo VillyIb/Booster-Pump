@@ -1,6 +1,6 @@
 ﻿namespace BoosterPumpLibrary.Settings
 {
-    public class Register : RegisterBase<ulong>
+    public class Register : RegisterBase
     {
         protected override ushort MaxSize => 8;
 
