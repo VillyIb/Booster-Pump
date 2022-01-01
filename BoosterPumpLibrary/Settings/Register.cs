@@ -12,7 +12,7 @@
         /// <summary>
         /// Maximum number of bytes matching in register.
         /// </summary>
-        protected ushort MaxSize => 8;
+        protected static ushort MaxSize => 8;
 
         protected static void CheckRange(ushort value, ushort minValue, ushort maxValue, string name)
         {
