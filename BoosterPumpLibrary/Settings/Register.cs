@@ -14,7 +14,7 @@
         /// </summary>
         protected ushort MaxSize => 8;
 
-        protected void CheckRange(ushort value, ushort minValue, ushort maxValue, string name)
+        protected static void CheckRange(ushort value, ushort minValue, ushort maxValue, string name)
         {
             if (value.IsOutsideRange(minValue, maxValue))
             {
@@ -31,7 +31,7 @@
 
         public byte RegisterAddress { get; protected set; }
 
-        protected Dictionary<string, BitSetting> BitSettings { get; }
+        protected Dictionary<string, BitSetting> SubRegisters { get; }
 
         protected bool IsOutputDirtyField;
 
@@ -56,7 +56,7 @@
 
         protected Register()
         {
-            BitSettings = new();
+            SubRegisters = new();
         }
 
         /// <summary>
@@ -71,9 +71,9 @@
         {
             var key = $"{offset}_{size}_{description}";
 
-            if (BitSettings.ContainsKey(key))
+            if (SubRegisters.ContainsKey(key))
             {
-                return BitSettings[key];
+                return SubRegisters[key];
             }
 
             var max = Size * 8;
@@ -81,7 +81,7 @@
             if (size + offset > max) { throw new ArgumentOutOfRangeException($"Size + offeset must be less or equal to {max}."); }
 
             var result = new BitSetting(size, offset, this, description);
-            BitSettings.Add(key, result);
+            SubRegisters.Add(key, result);
             return result;
         }
 
@@ -89,7 +89,7 @@
         {
             var result = new StringBuilder();
 
-            foreach (var current in BitSettings.Values)
+            foreach (var current in SubRegisters.Values)
             {
                 if (result.Length > 0)
                 {
@@ -101,10 +101,6 @@
 
             return result.ToString();
         }
-
-
-
-        protected ulong ValueField;
 
         /// <summary>
         /// Returns Value as byte list of length ByteCount.
@@ -121,6 +117,8 @@
             return result;
         }
 
+        protected ulong ValueField;
+
         public ulong Value
         {
             get => ValueField;
@@ -135,7 +133,6 @@
         public Register(byte registerAddress, string description, ushort byteCount) : this()
         {
             CheckRange(registerAddress, 0, 127, nameof(registerAddress));
-            // ReSharper disable once VirtualMemberCallInConstructor
             CheckRange(byteCount, 1, MaxSize, nameof(byteCount));
 
             RegisterAddress = registerAddress;
