@@ -14,7 +14,7 @@
         /// </summary>
         protected static ushort MaxSize => 8;
 
-        protected static void CheckRange(ushort value, ushort minValue, ushort maxValue, string name)
+        internal static void CheckRange(ushort value, ushort minValue, ushort maxValue, string name)
         {
             if (value.IsOutsideRange(minValue, maxValue))
             {
@@ -78,7 +78,10 @@
 
             var max = Size * 8;
 
-            if (size + offset > max) { throw new ArgumentOutOfRangeException($"Size + offeset must be less or equal to {max}."); }
+            if (size + offset > max)
+            {
+                throw new ArgumentOutOfRangeException($"Size + offeset must be less or equal to {max}.");
+            }
 
             var result = new BitSetting(size, offset, this, description);
             SubRegisters.Add(key, result);

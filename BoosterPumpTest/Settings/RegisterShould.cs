@@ -45,6 +45,27 @@ namespace BoosterPumpLibrary.UnitTest.Settings
             SixtyFourBitsOffset0 = Sut.GetOrCreateSubRegister(64, 0, "Lima");
         }
 
+        #region static CheckRange
+        [Fact]
+        public void ThrowExceptionForCheckRangeMinValue()
+        {
+            Assert.Throws<ArgumentOutOfRangeException>(() => Register.CheckRange(0, 1, 1, "test"));
+        }
+
+        [Fact]
+        public void ThrowExceptionForCheckRangeMaxValue()
+        {
+            Assert.Throws<ArgumentOutOfRangeException>(() => Register.CheckRange(1, 0, 0, "test"));
+        }
+
+        [Fact]
+        public void DontThrowExceptionForCheckRangeLegalValue()
+        {
+            Register.CheckRange(1, 1, 1, "test");
+        }
+        #endregion
+
+        #region Constructor
         [Fact]
         public void ThrowExceptionForTooLargeRegister()
         {
@@ -57,6 +78,46 @@ namespace BoosterPumpLibrary.UnitTest.Settings
             Exception ex = Assert.Throws<ArgumentOutOfRangeException>(() => new Register(0x00, "Illegal", 0));
         }
 
+        [Fact]
+        public void ReturnRegisterWithRightVauesForConstructor()
+        {
+            Assert.Equal(0, Sut.RegisterAddress);
+            Assert.Equal(8, Sut.Size);
+            Assert.Equal(0ul, Sut.Value);
+            Assert.Equal("64 bit register", Sut.Description);
+            Assert.False(Sut.IsOutputDirty);
+            Assert.False(Sut.IsInputDirty);
+        }
+        #endregion
+
+        #region GetOrCreateSubRegister
+        [Fact]
+        public void ReturnBitSettingWithRightValuesForGetOrCreateSubRegister()
+        {
+            var subregister = Sut.GetOrCreateSubRegister(4, 4, "Test");
+            Assert.Equal((ushort)0b0000_1111, subregister.Mask);
+            Assert.Equal(4u,subregister.Offset);
+            Assert.Equal(4u,subregister.Size);
+            Assert.Equal("Test", subregister.Description);
+        }
+
+        [Fact]
+        public void ReturnSameInstanceForRepeatedCallsToGetOrCreateSubRegisterWithSameParameters()
+        {
+            var subregister1 = Sut.GetOrCreateSubRegister(4, 4, "Test");
+            var subregister2 = Sut.GetOrCreateSubRegister(4, 4, "Test");
+
+            Assert.Same(subregister1, subregister2);
+        }
+
+        [Fact]
+        public void ThrowExceptionForIllegalSizeAndOffset()
+        {
+            Assert.Throws<ArgumentOutOfRangeException>(() => Sut.GetOrCreateSubRegister(60, 5, "Test"));
+        }
+        #endregion
+
+        #region Value save value
         [Theory]
         // byte:                 7         6         5         4         3         2         1         0
         [InlineData((ulong)0b0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0001, 00)]
@@ -172,7 +233,9 @@ namespace BoosterPumpLibrary.UnitTest.Settings
             SixtyFourBitsOffset0.Value = Value;
             Assert.Equal(0b1111_1111_1111_1111_1111_1111_1111_1111, Sut.Value);
         }
+        #endregion
 
+        #region Exception when setting illegal Value
         [Theory]
         [InlineData(0b10)]
         public void ThrowsExceptionWhenOutOfRangeOneBit(ulong value)
@@ -207,7 +270,9 @@ namespace BoosterPumpLibrary.UnitTest.Settings
         {
             Exception ex = Assert.Throws<ArgumentOutOfRangeException>(() => SixteenBitsOffset4.Value = value);
         }
+        #endregion
 
+        #region IsOutputDirty
         [Fact]
         public void HaveOutputDirtyAfterAssigningOutputValue()
         {
@@ -216,20 +281,24 @@ namespace BoosterPumpLibrary.UnitTest.Settings
         }
 
         [Fact]
-        public void ReturnRightSequenceFromGetByteValuesToWriteToDevice()
-        {
-            Sut.Value = 0xABCD;
-            Assert.Equal(new byte[] { 0, 0, 0, 0, 0, 0, 0xAB, 0xCD }, Sut.GetByteValuesToWriteToDevice());
-        }
-        
-        [Fact]
         public void HaveOutputNotDirtyAfterGetByteValuesToWriteToDevice()
         {
             Sut.Value = 0xABCD;
             var _ = Sut.GetByteValuesToWriteToDevice();
             Assert.False(Sut.IsOutputDirty);
         }
+        #endregion
 
+        #region GetByteValuesToWriteToDevice
+        [Fact]
+        public void ReturnRightSequenceFromGetByteValuesToWriteToDevice()
+        {
+            Sut.Value = 0xABCD;
+            Assert.Equal(new byte[] { 0, 0, 0, 0, 0, 0, 0xAB, 0xCD }, Sut.GetByteValuesToWriteToDevice());
+        }
+        #endregion
+
+        #region ToString()
         [Fact]
         public void ReturnRightStringFromToString()
         {
@@ -250,5 +319,6 @@ namespace BoosterPumpLibrary.UnitTest.Settings
                 "\r\nLima: 1111_1111_1111_1111_1111_1111_1111_1111_1111_1111_1111_1111_1111_1111_1111_1111, 4294967295 / 0xFFFFFFFF, ";
             Assert.Equal(expected, stringValue);
         }
+        #endregion
     }
 }
