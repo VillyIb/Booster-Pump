@@ -1,6 +1,7 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 using System.Text;
 using eu.iamia.Util.Extensions;
 
@@ -34,20 +35,42 @@ namespace BoosterPumpLibrary.Settings
 
         public byte RegisterAddress { get; protected set; }
 
-        public bool IsDirty { get; protected set; }
-
         protected Dictionary<string, BitSetting> BitSettings { get; }
+
+        protected bool IsOutputDirtyField;
+
+        protected bool IsInputDirtyField;
+
+        /// <summary>
+        /// Indicate input data is valid.
+        /// </summary>
+        public bool IsOutputDirty => IsOutputDirtyField;
+
+        public bool IsInputDirty => IsInputDirtyField;
+
+        public void SetOutputDirty()
+        {
+            IsOutputDirtyField = true;
+        }
+
+        public void SetInputDirty()
+        {
+            IsInputDirtyField = true;
+        }
 
         protected RegisterBase()
         {
             BitSettings = new();
         }
 
-        public void SetDirty()
-        {
-            IsDirty = true;
-        }
-
+        /// <summary>
+        /// Defines a subview <em>size</em> bits long shifted <em>offset</em> bits with <em>description</em> as name.
+        /// </summary>
+        /// <param name="size"></param>
+        /// <param name="offset"></param>
+        /// <param name="description"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
         public BitSetting GetOrCreateSubRegister(ushort size, ushort offset, string description = "")
         {
             var key = $"{offset}_{size}_{description}";
@@ -66,21 +89,6 @@ namespace BoosterPumpLibrary.Settings
             return result;
         }
 
-        /// <summary>
-        /// Returns Value as byte list of length ByteCount.
-        /// Clears IsDirty
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerable<byte> GetByteValue()
-        {
-            IsDirty = false;
-            var value = GetValue();
-            var bytes = BitConverter.GetBytes(value);
-            var reverse = bytes.Reverse().ToArray();
-            var result = reverse.Skip(MaxSize - Size).Take(Size).ToArray();
-            return result;
-        }
-
         public override string ToString()
         {
             var result = new StringBuilder();
@@ -92,30 +100,45 @@ namespace BoosterPumpLibrary.Settings
                     result.Append("\r\n");
 
                 }
-                result.AppendFormat($"{current.Description}: {current.MaskAsBinary()}, 0x{current.Value:X8}, ");
+                result.AppendFormat( CultureInfo.InvariantCulture,  $"{current.Description}: {current.MaskAsBinary()}, {current.Value} / 0x{current.Value:X8}, ");
             }
 
             return result.ToString();
         }
-    }
+    
 
-    public abstract class RegisterBase<T> : RegisterBase where T : struct
-    {
-        private T ValueField;
+  
+        protected ulong ValueField;
 
-        public T Value
+        /// <summary>
+        /// Returns Value as byte list of length ByteCount.
+        /// Clears IsOutputDirty
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<byte> GetByteValuesToWriteToDevice()
+        {
+            IsOutputDirtyField = false;
+            var value = GetValue();
+            var bytes = BitConverter.GetBytes(value);
+            var reverse = bytes.Reverse().ToArray();
+            var result = reverse.Skip(MaxSize - Size).Take(Size).ToArray();
+            return result;
+        }
+
+        public ulong Value
         {
             get => ValueField;
             set
             {
                 ValueField = value;
-                IsDirty = true;
+                IsOutputDirtyField = true;
+                IsInputDirtyField = false;
             }
         }
 
-        protected RegisterBase(byte registerAddress, string description, ushort byteCount)
+        protected RegisterBase(byte registerAddress, string description, ushort byteCount) : this()
         {
-            CheckRange((ushort)registerAddress, (ushort)0, (ushort)127, nameof(registerAddress));
+            CheckRange(registerAddress, 0, 127, nameof(registerAddress));
             // ReSharper disable once VirtualMemberCallInConstructor
             CheckRange(byteCount, 1, MaxSize, nameof(byteCount));
 

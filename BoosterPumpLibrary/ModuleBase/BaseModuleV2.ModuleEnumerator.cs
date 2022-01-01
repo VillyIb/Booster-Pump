@@ -32,14 +32,14 @@ namespace BoosterPumpLibrary.ModuleBase
             {
                 foreach (var current in SelectedRegisters)
                 {
-                    current.SetDirty();
+                    current.SetOutputDirty();
                 }
             }
 
             public bool MoveNext()
             {
                 Current = null;
-                if (!SelectedRegisters.Any(t => t.IsDirty)) { return false; }
+                if (!SelectedRegisters.Any(t => t.IsOutputDirty)) { return false; }
 
                 var currentCommand = new List<byte>();
                 byte currentRegisterAddress = 0;
@@ -47,14 +47,14 @@ namespace BoosterPumpLibrary.ModuleBase
                 // ReSharper disable once ForeachCanBePartlyConvertedToQueryUsingAnotherGetEnumerator
                 foreach (var current in SelectedRegisters)
                 {
-                    if (!current.IsDirty) continue;
+                    if (!current.IsOutputDirty) continue;
 
                     if (currentCommand.Count > 0 && currentRegisterAddress + 1 != current.RegisterAddress) { break; }
                     if (currentCommand.Count == 0)
                     {
                         currentCommand.Add(current.RegisterAddress);
                     }
-                    currentCommand.AddRange(current.GetByteValue());
+                    currentCommand.AddRange(current.GetByteValuesToWriteToDevice());
                     currentRegisterAddress = current.RegisterAddress;
                 }
 

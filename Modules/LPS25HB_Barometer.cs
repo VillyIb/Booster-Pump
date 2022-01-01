@@ -1,16 +1,15 @@
-﻿using BoosterPumpLibrary.ModuleBase;
-using BoosterPumpLibrary.Settings;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using eu.iamia.NCD.API;
-using eu.iamia.NCD.API.Contract;
-
-// ReSharper disable InconsistentNaming
+﻿// ReSharper disable InconsistentNaming
 
 namespace Modules
 {
-    public class LPS25HB_Barometer : BaseModuleV2
+    using BoosterPumpLibrary.Settings;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using eu.iamia.NCD.API;
+    using eu.iamia.NCD.API.Contract;
+
+    public class LPS25HB_Barometer : InputModule
     {
         // see: https://store.ncd.io/product/lps25hb-mems-pressure-sensor-260-1260-hpa-absolute-digital-output-barometer-i2c-mini-module/
         // Description see: https://media.ncd.io/sites/2/20170721134650/LPS25hb.pdf
@@ -45,8 +44,7 @@ namespace Modules
         /// 0: One Shot, 1: 1 Hz, 2: 7 Hz, 3: 12,5 Hz, 4: 25Hz, 5..7 Reserved.
         /// </summary>
         private BitSetting OutputDataRate => Settings0X20.GetOrCreateSubRegister(3, 4, "Output data rate.");
-
-
+        
         private readonly Register Reading0X28 = new(0x28, "Air Pressure & Temperature", 5);
 
         private BitSetting PressureHex => Reading0X28.GetOrCreateSubRegister(24, 0, "Barometric Pressure");
@@ -77,8 +75,10 @@ namespace Modules
             var returnValue = ApiToSerialBridge.Execute(readCommand);
         }
 
-        public void ReadDevice()
+        public override void ReadFromDevice()
         {
+            Reading0X28.SetInputDirty();
+
             SelectRegisterForReadingWithAutoIncrement(Reading0X28);
             var readCommand = new CommandRead(DeviceAddress, (byte)Reading0X28.Size);
             var readings = ApiToSerialBridge.Execute(readCommand);
@@ -92,5 +92,7 @@ namespace Modules
             Array.Copy(readings.Payload.ToArray(), mapped, length);
             Reading0X28.Value = BitConverter.ToUInt64(mapped, 0);
         }
+        
+        public override bool IsOutputValid => !Reading0X28.IsInputDirty;
     }
 }

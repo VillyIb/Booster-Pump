@@ -217,7 +217,7 @@ namespace Modules
 
             foreach (var register in registers)
             {
-                register.SetDirty();
+                register.SetOutputDirty();
             }
         }
 

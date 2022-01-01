@@ -14,6 +14,7 @@ namespace BoosterPumpLibrary.ModuleBase
     public abstract partial class BaseModuleV2
     {
         protected readonly IBridge ApiToSerialBridge;
+
         public Guid Id { get; }
 
         public abstract byte DefaultAddress { get; }
@@ -48,7 +49,7 @@ namespace BoosterPumpLibrary.ModuleBase
 
         public ModuleEnumerator GetEnumerator()
         {
-            var registersToSend = Registers.Where(t => t.IsDirty);
+            var registersToSend = Registers.Where(t => t.IsOutputDirty);
             return new(registersToSend, DeviceAddress);
         }
 
