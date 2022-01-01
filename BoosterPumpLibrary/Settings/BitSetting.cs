@@ -16,7 +16,7 @@ namespace BoosterPumpLibrary.Settings
         /// </summary>
         public ushort Offset { get; protected set; }
 
-        internal BitSetting(ushort size, ushort offset, RegisterBase parentRegister, string description = "")
+        internal BitSetting(ushort size, ushort offset, Register parentRegister, string description = "")
         {
             Size = size;
             Offset = offset;
@@ -31,7 +31,7 @@ namespace BoosterPumpLibrary.Settings
 
         public string Description { get; protected set; }
 
-        private RegisterBase ParentRegister { get; }
+        private Register ParentRegister { get; }
 
         private void CheckRange(ulong value)
         {
@@ -47,7 +47,7 @@ namespace BoosterPumpLibrary.Settings
         {
             get
             {
-                var current = ParentRegister.GetValue();
+                var current = ParentRegister.Value;
                 var m2 = Mask << Offset;
                 var v2 = current & m2;
                 var v1 = v2 >> Offset;
@@ -62,9 +62,9 @@ namespace BoosterPumpLibrary.Settings
                 var m2 = Mask << Offset;
 
                 //ParentRegister.SetDataRegister( ParentRegister.Value & ~m2 | v2);
-                var current = ParentRegister.GetValue();
+                var current = ParentRegister.Value;
                 var next = current & ~m2 | v2;
-                ParentRegister.SetValue(next);
+                ParentRegister.Value =next;
             }
         }
 

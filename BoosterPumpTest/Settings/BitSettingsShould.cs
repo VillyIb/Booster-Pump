@@ -6,7 +6,7 @@ namespace BoosterPumpLibrary.Unit.Test.Settings
 {
     public class BitSettingsShould
     {
-        private readonly RegisterBase ParentRegister;
+        private readonly Register ParentRegister;
 
         public BitSettingsShould()
         {

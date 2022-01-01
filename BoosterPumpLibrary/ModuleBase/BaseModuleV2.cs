@@ -45,7 +45,7 @@ namespace BoosterPumpLibrary.ModuleBase
             AddressIncrement = value;
         }
 
-        protected abstract IEnumerable<RegisterBase> Registers { get; }
+        protected abstract IEnumerable<Register> Registers { get; }
 
         public ModuleEnumerator GetEnumerator()
         {

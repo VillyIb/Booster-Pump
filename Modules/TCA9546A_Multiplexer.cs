@@ -34,7 +34,7 @@ namespace Modules
 
         private BitSetting ChannelSelection => Setting0X00.GetOrCreateSubRegister(4, 0, "Open Channels");
 
-        protected override IEnumerable<RegisterBase> Registers => new List<RegisterBase> { Setting0X00 };
+        protected override IEnumerable<Register> Registers => new List<Register> { Setting0X00 };
 
         public TCA9546A_Multiplexer(IBridge apiToSerialBridge) : base(apiToSerialBridge)
         { }

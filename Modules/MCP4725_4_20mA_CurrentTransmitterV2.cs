@@ -39,7 +39,7 @@ namespace Modules
         /// </summary>
         private BitSetting Speed => Setting.GetOrCreateSubRegister(12, 4, "Speed");
 
-        protected override IEnumerable<RegisterBase> Registers => new[] { Setting };
+        protected override IEnumerable<Register> Registers => new[] { Setting };
 
         public virtual void Init()
         {

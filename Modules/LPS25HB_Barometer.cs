@@ -56,7 +56,7 @@ namespace Modules
 
         public double Temperature => Math.Round(42.5 + (short)TemperatureHex.Value / 480.0, 1);
 
-        protected override IEnumerable<RegisterBase> Registers => new List<RegisterBase> { Settings0X20, Settings0X10 };
+        protected override IEnumerable<Register> Registers => new List<Register> { Settings0X20, Settings0X10 };
 
         public LPS25HB_Barometer(IBridge apiToSerialBridge) : base(apiToSerialBridge)
         { }

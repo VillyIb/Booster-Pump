@@ -44,7 +44,7 @@ namespace Modules
             Pressure = float.NaN;
         }
 
-        protected override IEnumerable<RegisterBase> Registers => new List<RegisterBase>(0); // TODO right to use '=>'
+        protected override IEnumerable<Register> Registers => new List<Register>(0); // TODO right to use '=>'
 
         /// <summary>
         /// Pressure module

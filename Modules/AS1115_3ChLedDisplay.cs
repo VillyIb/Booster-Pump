@@ -102,7 +102,7 @@ namespace Modules
         public As1115Module(IBridge apiToSerialBridge) : base(apiToSerialBridge)
         { }
 
-        protected override IEnumerable<RegisterBase> Registers => new[] {
+        protected override IEnumerable<Register> Registers => new[] {
             // Notice the order is important!
             Setting0X0C,
             Setting0X0E,

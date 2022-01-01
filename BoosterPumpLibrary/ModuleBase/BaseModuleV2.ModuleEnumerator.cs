@@ -15,13 +15,13 @@ namespace BoosterPumpLibrary.ModuleBase
         {
             private readonly byte DeviceAddress;
 
-            private List<RegisterBase> SelectedRegisters { get; }
+            private List<Register> SelectedRegisters { get; }
 
             public CommandWrite? Current { get; set; }
 
             object? IEnumerator.Current => Current;
 
-            public ModuleEnumerator(IEnumerable<RegisterBase> selectedRegisters, byte deviceAddress)
+            public ModuleEnumerator(IEnumerable<Register> selectedRegisters, byte deviceAddress)
             {
                 DeviceAddress = deviceAddress;
                 SelectedRegisters = selectedRegisters.ToList();
