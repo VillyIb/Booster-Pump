@@ -2,7 +2,7 @@
 using BoosterPumpLibrary.Settings;
 using Xunit;
 
-namespace BoosterPumpLibrary.Unit.Test.Settings
+namespace BoosterPumpLibrary.UnitTest.Settings
 {
     public class BitSettingsShould
     {

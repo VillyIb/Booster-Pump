@@ -1,7 +1,7 @@
 ﻿// ReSharper disable UnusedVariable
 // ReSharper disable IdentifierTypo
 
-namespace BoosterPumpLibrary.Unit.Test.Settings
+namespace BoosterPumpLibrary.UnitTest.Settings
 {
     using System;
     using BoosterPumpLibrary.Settings;

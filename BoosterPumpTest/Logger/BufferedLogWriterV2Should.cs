@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Xunit;
-using NSubstitute;
 using BoosterPumpLibrary.Logger;
 using eu.iamia.Util;
+using NSubstitute;
+using Xunit;
 
-namespace BoosterPumpLibrary.Unit.Test.Logger
+namespace BoosterPumpLibrary.UnitTest.Logger
 {
     public class BufferedLogWriterV2Should
     {
