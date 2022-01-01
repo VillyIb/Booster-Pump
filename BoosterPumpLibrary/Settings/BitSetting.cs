@@ -87,7 +87,7 @@ namespace BoosterPumpLibrary.Settings
 
         public override string ToString()
         {
-            return $"{Description}, Size: {Size}, Offset: {Offset}, Mask: {MaskAsBinary()}, Value: {Value}-0x{Value:X4}";
+            return $"{Description}, Size: {Size}, Offset: {Offset}, Mask: {MaskAsBinary()}, Value: {Value} / 0x{Value:X4}";
         }
     }
 }
