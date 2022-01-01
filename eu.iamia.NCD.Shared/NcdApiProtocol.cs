@@ -20,7 +20,7 @@ namespace eu.iamia.NCD.Shared
 
         public byte Checksum { get; }
 
-        private byte CalculatedChecksum
+        internal byte CalculatedChecksum
         {
             get
             {
