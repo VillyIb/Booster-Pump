@@ -10,7 +10,7 @@ using Microsoft.Extensions.Options;
 namespace eu.iamia.ReliableSerialPort
 {
     // Requires real hardware to test.
-    public  class SerialPortDecorator : ISerialPortDecorator
+    public class SerialPortDecorator : ISerialPortDecorator
     {
         private ISerialPortSettings SerialPortSettings { get; }
 
@@ -22,7 +22,7 @@ namespace eu.iamia.ReliableSerialPort
         }
 
         /// <summary>
-        /// Only referenced fro Unit Tests
+        /// Only referenced from Unit Tests
         /// </summary>
         /// <param name="settings"></param>
         internal SerialPortDecorator(ISerialPortSettings settings)
@@ -39,29 +39,33 @@ namespace eu.iamia.ReliableSerialPort
 
         private void OnDataReceived(byte[] data)
         {
+            if (DataReceived is null)
+            {
+                throw new InvalidOperationException("No receivers");
+            }
+
             DataReceived?.Invoke(this, new() { Data = data });
         }
 
         private void ReadContinuously()
         {
-            const int BufferSize = 128;
-            var reusedBuffer = new byte[BufferSize];
+            const int bufferSize = 128;
+            var reusedBuffer = new byte[bufferSize];
 
             void ReadUntilClosed() =>
                 SerialPort.BaseStream.BeginRead(
                     reusedBuffer,
                     0,
-                    BufferSize,
-                    delegate(IAsyncResult ar)
+                    bufferSize,
+                    delegate (IAsyncResult ar)
                     {
                         try
                         {
-                            var count = SerialPort.BaseStream
-                                .EndRead(ar); // InvalidOperationException if port is closed.
+                            var count = SerialPort.BaseStream.EndRead(ar); // InvalidOperationException if port is closed.
                             var dst = new byte[count];
                             Buffer.BlockCopy(reusedBuffer, 0, dst, 0, count);
                             OnDataReceived(dst);
-                            Thread.Sleep(5);
+                            //Thread.Sleep(50);
                             ReadUntilClosed(); // loop...
                         }
                         catch (InvalidOperationException)
@@ -108,6 +112,9 @@ namespace eu.iamia.ReliableSerialPort
         {
             var output = byteSequence.ToArray();
             SerialPort.Write(output, 0, output.Length);
+            
+            // Required to read input.
+            Thread.Sleep(100);
         }
 
         public void Dispose()

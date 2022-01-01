@@ -34,25 +34,40 @@ namespace BoosterPumpApplication1
 
             using var scope = serviceProvider.CreateScope();
 
-            var t1 = serviceProvider.GetService<IOptions<SerialPortSettings>>();
-            var t2 = t1.ToString();
-            var t3 = t1.Value;
+            //var t1 = serviceProvider.GetService<IOptions<SerialPortSettings>>();
+            //var t2 = t1.ToString();
+            //var t3 = t1.Value;
 
             //var u1 =  serviceProvider.GetService<IOptions<ISerialPortSettings>>();
 
 
-            var serialPort = scope.ServiceProvider.GetRequiredService<ISerialPortDecorator>();
-            serialPort.Open();
+            //var serialPort = scope.ServiceProvider.GetRequiredService<ISerialPortDecorator>();
+            //serialPort.Open();
 
+            if(false)
             {
                 var ncdCommand = new CommandControllerControllerHardReboot();
                 var serialConverter = scope.ServiceProvider.GetRequiredService<IBridge>();
                 var dataFromDevice = serialConverter.Execute(ncdCommand);
                 if (!dataFromDevice.IsValid)
                 {
-                    throw new ApplicationException(dataFromDevice.ToString());
+                    throw new ApplicationException($"{ncdCommand.GetType().Name}: {dataFromDevice}");
                 }
                 Thread.Sleep(100);
+            }
+
+            {
+
+            }
+
+            {
+                var ncdCommand = new CommandControllerControllerTest2WayCommunication();
+                var serialConverter = scope.ServiceProvider.GetRequiredService<IBridge>();
+                var dataFromDevice = serialConverter.Execute(ncdCommand);
+                if (!dataFromDevice.IsValid)
+                {
+                    throw new ApplicationException($"{ncdCommand.GetType().Name}: {dataFromDevice}");
+                }
             }
             {
                 var ncdCommand = new CommandControllerControllerBusSCan();
@@ -60,7 +75,7 @@ namespace BoosterPumpApplication1
                 var dataFromDevice = serialConverter.Execute(ncdCommand);
                 if (!dataFromDevice.IsValid)
                 {
-                    throw new ApplicationException(dataFromDevice.ToString());
+                    throw new ApplicationException($"{ncdCommand.GetType().Name}: {dataFromDevice}");
                 }
             }
 

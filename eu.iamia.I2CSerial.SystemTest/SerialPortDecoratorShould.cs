@@ -51,6 +51,7 @@ namespace eu.iamia.ReliableSerialPort.SystemTest
 #endif
         public void ReceiveSpecificResponseOnCommand_Test2WayCommunication()
         {
+            var expected = new byte[] { 0xAA, 0x01, 0x55, 0x00 };
             var received = new List<byte>();
 
             Init();
@@ -58,10 +59,12 @@ namespace eu.iamia.ReliableSerialPort.SystemTest
             sut.Open();
             sut.DataReceived += (_, args) => { received.AddRange(args.Data); };
 
-            sut.Write(new List<byte> { 0xAA, 0x02, 0xFE, 0x21, 0xCB });
+            var commandByteSequence = new List<byte> { 0xAA, 0x02, 0xFE, 0x21, 0xCB };
+
+            sut.Write(commandByteSequence);
             Thread.Sleep(110);
 
-            Assert.Equal(new() { 0xAA, 0x01, 0x55, 0x00 }, received);
+            Assert.Equal(expected, received);
         }
 
         /// <summary>

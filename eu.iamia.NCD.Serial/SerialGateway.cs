@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices.ComTypes;
 using System.Threading;
 using eu.iamia.NCD.Serial.Contract;
 using eu.iamia.NCD.Shared;
@@ -81,6 +82,8 @@ namespace eu.iamia.NCD.Serial
 
         private bool IsInitialized;
 
+        public List<byte> xReceived = new List<byte>();
+
         private void Init()
         {
             State = NcdState.ExpectHeader;
@@ -92,6 +95,7 @@ namespace eu.iamia.NCD.Serial
 
             SerialPort.Open();
             SerialPort.DataReceived += ProcessInput;
+            SerialPort.DataReceived += (_, args) => { xReceived.AddRange(args.Data); };
             IsInitialized = true;
         }
 
@@ -119,7 +123,7 @@ namespace eu.iamia.NCD.Serial
 
                 SerialPort.Write(i2CCommand.GetApiEncodedData());
 
-                Thread.Sleep(100);
+                //Thread.Sleep(100);
                 
                 if (WaitForResultToBeReady())
                     return new NcdApiProtocol(Header, ByteCount, Payload, Checksum);

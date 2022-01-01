@@ -1,12 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
-using EnsureThat;
-using eu.iamia.NCD.API.Contract;
-using eu.iamia.NCD.Serial.Contract;
-using eu.iamia.NCD.Shared;
-
-namespace eu.iamia.NCD.Bridge
+﻿namespace eu.iamia.NCD.Bridge
 {
+    using System.Collections.Generic;
+    using EnsureThat;
+    using API.Contract;
+    using Serial.Contract;
+    using Shared;
+
     /// <summary>
     /// Translates ICommand to 
     /// </summary>
@@ -34,7 +33,7 @@ namespace eu.iamia.NCD.Bridge
             var i2CResponse = Gateway.Execute(i2CCommand);
 
             return i2CResponse is null
-                ? null
+                ? new NcdApiProtocol(0, 0, new byte[0], 1)
                 : new NcdApiProtocol(i2CResponse.Header, i2CResponse.ByteCount, i2CResponse.Payload, i2CResponse.Checksum);
         }
 
