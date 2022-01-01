@@ -29,14 +29,14 @@ namespace BoosterPumpLibrary.Unit.Test.Settings
             Sut = new(0x00, "64 bit register", 8); // 0000_0000_1111_1111_2222_2222_3333_3333_4444_4444_5555_5555_6666_6666_7777_7777
 
             // ReSharper disable once StringLiteralTypo
-            OneBitOffset7 = Sut.GetOrCreateSubRegister(1, 7, "Alfa0"); // 0
+            OneBitOffset7 = Sut.GetOrCreateSubRegister(1, 7, "Alfa"); // 0
 
             TwoBitsOffset6 = Sut.GetOrCreateSubRegister(2, 6, "Bravo"); // 1..2
             TreeBitsOffset5 = Sut.GetOrCreateSubRegister(3, 5, "Charlie"); // 3..5
             FourBitsOffset4 = Sut.GetOrCreateSubRegister(4, 4, "Delta"); // 4..7
-            FiveBitsOffset3 = Sut.GetOrCreateSubRegister(5, 3, "Echo ");
+            FiveBitsOffset3 = Sut.GetOrCreateSubRegister(5, 3, "Echo");
             SixBitsOffset2 = Sut.GetOrCreateSubRegister(6, 2, "Foxtrot");
-            GolfSetting = Sut.GetOrCreateSubRegister(7, 1, "Golf ");
+            GolfSetting = Sut.GetOrCreateSubRegister(7, 1, "Golf");
             EightBitsOffset0 = Sut.GetOrCreateSubRegister(8, 0, "Hotel");
 
             SixteenBitsOffset4 = Sut.GetOrCreateSubRegister(16, 4, "India");
@@ -174,55 +174,81 @@ namespace BoosterPumpLibrary.Unit.Test.Settings
         }
 
         [Theory]
-        [InlineData(2)]
-        public void ThrowsExceptionWhenOutOfRangeAlfa(ulong value)
+        [InlineData(0b10)]
+        public void ThrowsExceptionWhenOutOfRangeOneBit(ulong value)
         {
             Exception ex = Assert.Throws<ArgumentOutOfRangeException>(() => OneBitOffset7.Value = value);
         }
 
         [Theory]
-        [InlineData(4)]
-        public void ThrowsExceptionWhenOutOfRangeBravo(ulong value)
+        [InlineData(0b100)]
+        public void ThrowsExceptionWhenOutOfRangeTwoBits(ulong value)
         {
             Exception ex = Assert.Throws<ArgumentOutOfRangeException>(() => TwoBitsOffset6.Value = value);
         }
 
         [Theory]
-        [InlineData(8)]
-        public void ThrowsExceptionWhenOutOfRangeCharlie(ulong value)
+        [InlineData(0b1000)]
+        public void ThrowsExceptionWhenOutOfRangeThreeBits(ulong value)
         {
             Exception ex = Assert.Throws<ArgumentOutOfRangeException>(() => TreeBitsOffset5.Value = value);
         }
 
         [Theory]
-        [InlineData(256)]
-        public void ThrowsExceptionWhenOutOfRangeHotel(ulong value)
+        [InlineData(0b1_0000_0000)]
+        public void ThrowsExceptionWhenOutOfRangeEightBits(ulong value)
         {
             Exception ex = Assert.Throws<ArgumentOutOfRangeException>(() => EightBitsOffset0.Value = value);
         }
 
         [Theory]
-        [InlineData(16777216)]
-        public void ThrowsExceptionWhenOutOfRangeIndia(ulong value)
+        [InlineData(0b1_0000_0000_0000_0000)]
+        public void ThrowsExceptionWhenOutOfRangeSixteenBits(ulong value)
         {
             Exception ex = Assert.Throws<ArgumentOutOfRangeException>(() => SixteenBitsOffset4.Value = value);
         }
 
         [Fact]
-        public void GetByteValue_WhenOk_Returns()
+        public void HaveOutputDirtyAfterAssigningOutputValue()
         {
             Sut.Value = 0xABCD;
-            Assert.True(Sut.IsDirty);
-            Assert.Equal(new byte[] { 0, 0, 0, 0, 0, 0, 0xAB, 0xCD }, Sut.GetByteValue());
-            Assert.False(Sut.IsDirty);
+            Assert.True(Sut.IsOutputDirty);
         }
 
         [Fact]
-        public void ToString_WhenOk_Returns()
+        public void ReturnRightSequenceFromGetByteValuesToWriteToDevice()
+        {
+            Sut.Value = 0xABCD;
+            Assert.Equal(new byte[] { 0, 0, 0, 0, 0, 0, 0xAB, 0xCD }, Sut.GetByteValuesToWriteToDevice());
+        }
+        
+        [Fact]
+        public void HaveOutputNotDirtyAfterGetByteValuesToWriteToDevice()
+        {
+            Sut.Value = 0xABCD;
+            var _ = Sut.GetByteValuesToWriteToDevice();
+            Assert.False(Sut.IsOutputDirty);
+        }
+
+        [Fact]
+        public void ReturnRightStringFromToString()
         {
             ThirtyTwoBitsOffset0.Value = 0xFFFFFFFF;
             var stringValue = Sut.ToString();
-            Assert.True(stringValue.Length > 100);
+            var expected =
+                @"Alfa: 1000_0000, 1 / 0x00000001, " +
+                "\r\nBravo: 1100_0000, 3 / 0x00000003, " +
+                "\r\nCharlie: 1110_0000, 7 / 0x00000007, " +
+                "\r\nDelta: 1111_0000, 15 / 0x0000000F, " +
+                "\r\nEcho: 1111_1000, 31 / 0x0000001F, " +
+                "\r\nFoxtrot: 1111_1100, 63 / 0x0000003F, " +
+                "\r\nGolf: 1111_1110, 127 / 0x0000007F, " +
+                "\r\nHotel: 1111_1111, 255 / 0x000000FF, " +
+                "\r\nIndia: 1111_1111_1111_1111_0000, 65535 / 0x0000FFFF, " +
+                "\r\nJuliet: 11_1111_1111_1111_1111_1111_1100, 16777215 / 0x00FFFFFF, " +
+                "\r\nKilo: 1111_1111_1111_1111_1111_1111_1111_1111, 4294967295 / 0xFFFFFFFF, " +
+                "\r\nLima: 1111_1111_1111_1111_1111_1111_1111_1111_1111_1111_1111_1111_1111_1111_1111_1111, 4294967295 / 0xFFFFFFFF, ";
+            Assert.Equal(expected, stringValue);
         }
     }
 }

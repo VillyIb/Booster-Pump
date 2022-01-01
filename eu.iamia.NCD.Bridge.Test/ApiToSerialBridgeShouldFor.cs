@@ -24,7 +24,7 @@ namespace eu.iamia.NCD.Bridge.UnitTest
         }
 
         [Fact]
-        public void Class_ImplementIGateway()
+        public void BeAssignableToIBridge()
         {
             Init();
             // ReSharper disable once RedundantCast
@@ -32,7 +32,7 @@ namespace eu.iamia.NCD.Bridge.UnitTest
         }
 
         [Fact]
-        public void Ctor_WhenCalledWithNull_ThrowException()
+        public void ThrowExceptionForNullGateway()
         {
             Assert.Throws<ArgumentNullException>(() => new ApiToSerialBridge(null));
         }
@@ -56,7 +56,7 @@ namespace eu.iamia.NCD.Bridge.UnitTest
 
         [Theory]
         [MemberData(nameof(TestData))]
-        public void GetI2CommandCode_WhenCalled_ReturnValidCode(ICommand command, byte expectedI2CommandCode)
+        public void ReturnRightCodeForGetI2CCommandCode(ICommand command, byte expectedI2CommandCode)
         {
             Init();
             var actual = command.GetI2CCommandCode;
@@ -75,7 +75,7 @@ namespace eu.iamia.NCD.Bridge.UnitTest
         }
 
         [Fact]
-        public void GetI2CommandCode_WhenCalledWithNotValidCommand_ThrowException()
+        public void ThrowExceptionForInvalidCommand()
         {
             Init();
             Assert.Throws<NotImplementedException>(() => new NotValidCommand().GetI2CCommandCode);
@@ -83,7 +83,7 @@ namespace eu.iamia.NCD.Bridge.UnitTest
 
         [Theory]
         [MemberData(nameof(TestData))]
-        public void GetI2Command_WhenCalled_ReturnValidCode(ICommand command, byte expectedI2CommandCode)
+        public void ReturnRightCommandCodeFromFirstByteInPayload(ICommand command, byte expectedI2CommandCode)
         {
             Init();
             var actual = Sut.GetI2CCommand(command);
@@ -92,7 +92,7 @@ namespace eu.iamia.NCD.Bridge.UnitTest
         }
 
         [Fact]
-        public void Execute_WhenCalled_MultipleTimes_CallSerialPortOpen_Once()
+        public void OpenSerialPortOnceForMultipleCallsToExecute()
         {
             Init();
 
@@ -105,7 +105,7 @@ namespace eu.iamia.NCD.Bridge.UnitTest
         }
 
         [Fact]
-        public void Execute_ForEachCall_CallSerialPortWrite()
+        public void CallSerialPortWriteForEachCallToExecute()
         {
             Init();
 
@@ -118,7 +118,7 @@ namespace eu.iamia.NCD.Bridge.UnitTest
         }
 
         [Fact]
-        public void Dispose_WhenCalled_CallDisposeOnSerialPort()
+        public void CallSerialPortDisposeForCallToDispose()
         {
             Init();
 

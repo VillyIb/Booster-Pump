@@ -10,14 +10,22 @@ namespace eu.iamia.NCD.Shared.UnitTest
         private static INcdApiProtocol Sut => new NcdApiProtocol(new byte[] {0x55});
 
         [Fact]
-        public void Class_ShouldImplementINcdApiProtocolShould()
+        public void BeAssignableToINcdApiProtocol()
         {
             // ReSharper disable once RedundantCast
             Assert.NotNull(Sut as INcdApiProtocol);
         }
 
         [Fact]
-        public void Properties_WhenOk_ShouldReturnRightValues()
+        public void ReturnRightValueForCalculateChecksum()
+        {
+            var sut = new NcdApiProtocol(new byte[] { 0x55, 0x44, 0x33 });
+            var checksum = sut.CalculatedChecksum;
+            Assert.Equal(121,checksum);
+        }
+
+        [Fact]
+        public void ReturnRightProperytValues()
         {
             Assert.Equal(0xAA, Sut.Header);
             Assert.Equal(0x01, Sut.ByteCount);
@@ -26,27 +34,34 @@ namespace eu.iamia.NCD.Shared.UnitTest
         }
 
         [Fact]
-        public void IsValid_WhenOk_ShouldReturnTrue()
+        public void BeValid()
         {
             Assert.True(Sut.IsValid);
         }
 
         [Fact]
-        public void IsValid_WhenWrong_ShouldReturnFalse()
+        public void NotBeValidForWrongByteCount()
         {
-            var sut = new NcdApiProtocol(0xAA, 0xff, new byte[] {0x55}, 0x00);
+            var sut = new NcdApiProtocol(0xAA, 0x02, new byte[] { 0x55 }, 0x00);
             Assert.False(sut.IsValid);
         }
 
         [Fact]
-        public void Ctor_WhenNullPayload_ShouldThrowException()
+        public void NotBeValidForWrongChecksum()
+        {
+            var sut = new NcdApiProtocol(0xAA, 0x01, new byte[] { 0x55 }, 0x01);
+            Assert.False(sut.IsValid);
+        }
+
+        [Fact]
+        public void ThrowExceptionForNullPayload()
         {
             Assert.Throws<ArgumentNullException>(() => new NcdApiProtocol(0xAA, 0xff, null, 0x00));
             Assert.Throws<ArgumentNullException>(() => new NcdApiProtocol(null));
         }
 
         [Fact]
-        public void Ctor_WhenTooLargePayload_ShouldThrowException()
+        public void ThrowExceptionForTooLargePayload()
         {
             var tooLargePayload = Enumerable.Repeat<byte>(0x01, 256).ToList();
             Assert.Throws<ArgumentException>(() => new NcdApiProtocol(0xAA, 0xff, tooLargePayload, 0x00));
@@ -54,30 +69,20 @@ namespace eu.iamia.NCD.Shared.UnitTest
         }
 
         [Fact]
-        public void Ctor_WhenLegalPayload_ShouldNotThrowException()
-        {
-            var largePayload = Enumerable.Repeat<byte>(0x01, 255).ToList();
-            // ReSharper disable ObjectCreationAsStatement
-            new NcdApiProtocol(0xAA, 0xff, largePayload, 0x00);
-            new NcdApiProtocol(largePayload);
-            // ReSharper restore ObjectCreationAsStatement
-        }
-
-        [Fact]
-        public void GetApiEncodedData_WhenOk_ShouldReturnRightByteSequence()
+        public void ReturnRightByteSequencForGetApiEncodedData()
         {
             var expectedByteSequence = new List<byte> {0xAA, 0x01, 0x55, 0x00};
             Assert.Equal(expectedByteSequence, Sut.GetApiEncodedData());
         }
 
         [Fact]
-        public void PayloadAsHex_WhenOk_ShouldReturnRightValue()
+        public void ReturnRightStringForPayloadAsHex()
         {
             Assert.Equal("55 ", ((NcdApiProtocol) Sut).PayloadAsHex);
         }
 
         [Fact]
-        public void ToString_WhenOk_ShouldReturnRightValue()
+        public void ReturnRightStringForToString()
         {
             Assert.Equal("AA 01 55 00 ", Sut.ToString());
         }

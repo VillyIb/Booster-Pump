@@ -30,7 +30,7 @@ namespace eu.iamia.NCD.Serial.UnitTest
         }
 
         [Fact]
-        public void Execute_WhenCalled_ShouldCallOpenOnce()
+        public void CallSerialPortOpenOnceForMultipleCallsToExecute()
         {
             Init();
 
@@ -44,7 +44,7 @@ namespace eu.iamia.NCD.Serial.UnitTest
         }
 
         [Fact]
-        public void Execute_ForEachCall_ShouldCallWrite()
+        public void CallSerialPortWrieForEachCallToExecute()
         {
             Init();
 
@@ -57,20 +57,20 @@ namespace eu.iamia.NCD.Serial.UnitTest
         }
 
         [Fact]
-        public void Dispose_WhenCalled_ShouldDisposeSerialPortDecorator()
+        public void CallSerialPortDisposeForCallToDispose()
         {
             Init();
 
             var i2CCommand = new NcdApiProtocol(0xf1, 1, new byte[] {0x00}, 0);
 
             Sut.Execute(i2CCommand);
-
             Sut.Dispose();
+
             FakeSerialPortDecorator.Received(1).Dispose();
         }
 
         [Fact]
-        public void Execute_WhenCalled_ShouldReceiveValidResponse()
+        public void ReceiveValidResponseForCallToExecute()
         {
             Init();
 
