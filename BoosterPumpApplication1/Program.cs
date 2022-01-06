@@ -44,7 +44,7 @@ namespace BoosterPumpApplication1
             //var serialPort = scope.ServiceProvider.GetRequiredService<ISerialPortDecorator>();
             //serialPort.Open();
 
-            if(false)
+            if (false)
             {
                 var ncdCommand = new CommandControllerControllerHardReboot();
                 var serialConverter = scope.ServiceProvider.GetRequiredService<IBridge>();

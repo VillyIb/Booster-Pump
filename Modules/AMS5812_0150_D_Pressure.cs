@@ -70,7 +70,7 @@ namespace Modules
 
             var command = new CommandRead(DeviceAddress, LengthRequested);
 
-            var response =  ApiToSerialBridge.Execute(command);
+            var response = ApiToSerialBridge.Execute(command);
 
             if (response is null)
             {

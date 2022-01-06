@@ -92,7 +92,7 @@ namespace BoosterPumpApplication
             var command = new CommandControllerControllerBusSCan();
             var dataFromDevice = ApiToSerialBridge.Execute(command);
 
-            if (dataFromDevice is not null &&  !dataFromDevice.IsValid)
+            if (dataFromDevice is not null && !dataFromDevice.IsValid)
             {
                 throw new ApplicationException(dataFromDevice.ToString());
             }
@@ -186,17 +186,17 @@ namespace BoosterPumpApplication
                             FlowSouthEast.Pressure + MeasurementSettings.FlowSouthEastCorrection,
                             SystemPressure.Pressure + MeasurementSettings.SystemPressureCorrection
                             , Speed2 * 100.0f,
-                            (SpeedCurrent - Speed2) * 100.0f, 
+                            (SpeedCurrent - Speed2) * 100.0f,
                             (float) BarometerModule1.AirPressure,
-                            (float) BarometerModule2.AirPressure, 
+                            (float) BarometerModule2.AirPressure,
                             (float) BarometerModule2.Temperature,
-                            (float) BarometerModule1.Temperature, 
+                            (float) BarometerModule1.Temperature,
                             ManifoldPressureDifference.Temperature,
-                            FlowNorthWest.Temperature, 
-                            SystemPressure.Temperature, 
+                            FlowNorthWest.Temperature,
                             SystemPressure.Temperature,
-                            ControllerSettings.CommonGradient, 
-                            ControllerSettings.CommonIntercept, 
+                            SystemPressure.Temperature,
+                            ControllerSettings.CommonGradient,
+                            ControllerSettings.CommonIntercept,
                             0.0f
                         };
 
@@ -213,7 +213,7 @@ namespace BoosterPumpApplication
                 catch (ApplicationException)
                 {
                     var command = new CommandControllerControllerTest2WayCommunication();
-                    
+
                     var dataFromDevice = ApiToSerialBridge.Execute(command);
 
                     Console.WriteLine($"Reset serial converter, {dataFromDevice}");
