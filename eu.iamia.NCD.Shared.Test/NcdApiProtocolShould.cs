@@ -69,7 +69,7 @@ namespace eu.iamia.NCD.Shared.UnitTest
         }
 
         [Fact]
-        public void ReturnRightByteSequencForGetApiEncodedData()
+        public void ReturnRightByteSequenceForGetApiEncodedData()
         {
             var expectedByteSequence = new List<byte> {0xAA, 0x01, 0x55, 0x00};
             Assert.Equal(expectedByteSequence, Sut.GetApiEncodedData());
@@ -85,6 +85,16 @@ namespace eu.iamia.NCD.Shared.UnitTest
         public void ReturnRightStringForToString()
         {
             Assert.Equal("AA 01 55 00 ", Sut.ToString());
+        }
+
+        [Theory]
+        [InlineData(new byte[] { 0xBC, 0x5A, 0xA5, 0x43 })]
+        [InlineData(new byte[] { 0xBC, 0x5B, 0xA5, 0x43 })]
+        [InlineData(new byte[] { 0xBC, 0x5C, 0xA5, 0x43 })]
+        public void ReturnErrorForSpecificPayload(byte[] payload)
+        {
+            var sut = new NcdApiProtocol(payload);
+            Assert.True(sut.IsError);
         }
     }
 }

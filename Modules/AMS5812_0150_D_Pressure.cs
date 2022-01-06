@@ -82,6 +82,11 @@ namespace Modules
                 return;
             }
 
+            if (response.IsError)
+            {
+                return;
+            }
+
             var measuredPressure = response.Payload[0] << 8 | response.Payload[1];
 
             Pressure = (float)Math.Round(

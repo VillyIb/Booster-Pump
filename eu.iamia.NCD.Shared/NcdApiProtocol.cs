@@ -42,8 +42,27 @@ namespace eu.iamia.NCD.Shared
 
         public bool IsValid => CheckConsistency;
 
+        public bool IsError
+        {
+            get
+            {
+                var payload = Payload;
 
-        //private static Ens
+                var result =
+                        ByteCount == 0x04 &&
+                        payload[0] == 0xBC &&
+                        payload[2] == 0xA5 &&
+                        payload[3] == 0x43 &&
+                        (
+                            payload[1] == 0x5A |
+                            payload[1] == 0x5B |
+                            payload[1] == 0x5C
+                        )
+                ;
+
+                return result;
+            }
+        }
 
         public NcdApiProtocol(byte header, byte byteCount, [NotNull] IEnumerable<byte> payload, byte checksum)
         {

@@ -113,6 +113,5 @@ namespace BoosterPumpLibrary.ModuleBase
             // ReSharper disable once UnusedVariable
             var returnValue = ApiToSerialBridge.Execute(writeCommand);
         }
-
     }
 }

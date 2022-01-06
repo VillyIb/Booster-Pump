@@ -37,5 +37,10 @@ namespace eu.iamia.NCD.Shared
         /// Returns true when Checksum can be verified.
         /// </summary>
         bool IsValid { get; }
+
+        /// <summary>
+        /// Returns true for one of the Error Codes  90 (0x5A), 91 (0X5A), 92 (0X5C) 
+        /// </summary>
+        bool IsError { get; }
     }
 }
