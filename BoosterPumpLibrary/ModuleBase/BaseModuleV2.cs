@@ -53,24 +53,6 @@ namespace BoosterPumpLibrary.ModuleBase
             return new(registersToSend, DeviceAddress);
         }
 
-        public void SendOld()
-        {
-            //using var enumerator = GetEnumerator();
-            //var retryCount = 0;
-            //while (enumerator.MoveNext())
-            //{
-            //    var commandController = enumerator.Current;
-            //    var fromDevice = SerialPort.Execute(commandController);
-
-            //    // ReSharper disable once ConditionIsAlwaysTrueOrFalse
-            //    if (retryCount > 0 && (fromDevice.Payload.Length != 1 || fromDevice.Payload[0] != 55))
-            //    {
-            //        enumerator.Reset();
-            //        retryCount--;
-            //    }
-            //}
-        }
-
         public void Send()
         {
             using var enumerator = GetEnumerator();
@@ -84,27 +66,6 @@ namespace BoosterPumpLibrary.ModuleBase
                 enumerator.Reset();
                 retryCount--;
             }
-        }
-
-        public void SelectRegisterForReadingOld(Register register)
-        {
-            //var writeCommand = new CommandWrite(DeviceAddress, new[] {register.RegisterAddress});
-            //// ReSharper disable once UnusedVariable
-            //var returnValue = SerialPort.Execute(writeCommand);
-        }
-
-        public void SelectRegisterForReadingWithAutoIncrementOld(Register register)
-        {
-            //var writeCommand = new CommandWrite(DeviceAddress, new[] {(byte) (register.RegisterAddress | 0x80)});
-            //// ReSharper disable once UnusedVariable
-            //var returnValue = SerialPort.Execute(writeCommand);
-        }
-
-        public void SelectRegisterForReading(Register register)
-        {
-            var writeCommand = new CommandWrite(DeviceAddress, new[] { register.RegisterAddress });
-            // ReSharper disable once UnusedVariable
-            var returnValue = ApiToSerialBridge.Execute(writeCommand);
         }
 
         public void SelectRegisterForReadingWithAutoIncrement(Register register)
