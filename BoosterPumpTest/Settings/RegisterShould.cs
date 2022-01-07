@@ -85,8 +85,6 @@ namespace BoosterPumpLibrary.UnitTest.Settings
             Assert.Equal(8, Sut.Size);
             Assert.Equal(0ul, Sut.Value);
             Assert.Equal("64 bit register", Sut.Description);
-            Assert.False(Sut.IsOutputDirty);
-            Assert.False(Sut.IsInputDirty);
         }
         #endregion
 
@@ -96,8 +94,8 @@ namespace BoosterPumpLibrary.UnitTest.Settings
         {
             var subregister = Sut.GetOrCreateSubRegister(4, 4, "Test");
             Assert.Equal((ushort)0b0000_1111, subregister.Mask);
-            Assert.Equal(4u,subregister.Offset);
-            Assert.Equal(4u,subregister.Size);
+            Assert.Equal(4u, subregister.Offset);
+            Assert.Equal(4u, subregister.Size);
             Assert.Equal("Test", subregister.Description);
         }
 
@@ -273,19 +271,54 @@ namespace BoosterPumpLibrary.UnitTest.Settings
         #endregion
 
         #region IsOutputDirty
+
         [Fact]
-        public void HaveOutputDirtyAfterAssigningOutputValue()
+        public void HaveOutputDirtyDirtyForConstructor()
         {
+            Assert.False(Sut.IsOutputDirty);
+        }
+
+        [Fact]
+        public void NotHaveOutputDirtyForSetValue()
+        {
+            Assert.False(Sut.IsInputDirty);
             Sut.Value = 0xABCD;
             Assert.True(Sut.IsOutputDirty);
         }
 
         [Fact]
-        public void HaveOutputNotDirtyAfterGetByteValuesToWriteToDevice()
+        public void NotHaveOutputDirtyForGetByteValuesToWriteToDevice()
         {
             Sut.Value = 0xABCD;
+            Assert.True(Sut.IsOutputDirty);
             var _ = Sut.GetByteValuesToWriteToDevice();
             Assert.False(Sut.IsOutputDirty);
+        }
+
+        [Fact]
+        public void HaveOutputDirtyForSetOutputDirty()
+        {
+            Sut.GetByteValuesToWriteToDevice();
+            Assert.False(Sut.IsOutputDirty);
+            Sut.SetOutputDirty();
+            Assert.True(Sut.IsOutputDirty);
+        }
+        #endregion
+
+        #region IsInputDirty
+
+        [Fact]
+        public void HaveInputDirtyForConstructor()
+        {
+            Assert.False(Sut.IsInputDirty);
+        }
+
+        [Fact]
+        public void NotHaveInputDirtyForSetValue()
+        {
+            Assert.False(Sut.IsInputDirty);
+            Sut.SetInputDirty();
+            Assert.True(Sut.IsInputDirty);
         }
         #endregion
 
