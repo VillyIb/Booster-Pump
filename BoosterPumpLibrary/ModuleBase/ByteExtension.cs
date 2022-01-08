@@ -1,9 +1,11 @@
-﻿namespace BoosterPumpLibrary.ModuleBase
+﻿using System;
+
+namespace BoosterPumpLibrary.ModuleBase
 {
     /// <summary>
     /// Enables operator overloading for + and = making an int assignable to a byte.
     /// </summary>
-   public class ByteExtension
+   public class ByteExtension : IEquatable<ByteExtension>
     {
         private readonly byte Payload;
 
@@ -30,6 +32,13 @@
         public static implicit operator ByteExtension(int value)
         {
             return new(value);
+        }
+
+        public bool Equals(ByteExtension? other)
+        {
+            if (other is null) return false;
+
+            return Payload == other.Payload;
         }
     }
 }

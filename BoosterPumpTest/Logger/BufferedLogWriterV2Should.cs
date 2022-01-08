@@ -133,6 +133,15 @@ namespace BoosterPumpLibrary.UnitTest.Logger
             FakeFileHandler.Received(4).WriteLine(Arg.Any<DateTime>(), Arg.Is("S"), Arg.Any<string>());
             FakeFileHandler.Received(5).WriteLine(Arg.Any<DateTime>(), Arg.Any<string>(), Arg.Any<string>());
         }
+
+        [Fact]
+        public void x()
+        {
+            var x = new BufferLineMeasurement(new DateTime(2929,9,9,9,9,9,DateTimeKind.Local), 1f, 2f, 3f, 4f, 5f, 6f, 7f, 8f, 9f, 10f, 11f, 12f, 13f, 14f, 15f, 16f, 17f);
+            var logText = x.LogText;
+
+            Assert.StartsWith("2929-09-09T09:09:09.0000000+02:00", logText);
+        }
     }
 }
 

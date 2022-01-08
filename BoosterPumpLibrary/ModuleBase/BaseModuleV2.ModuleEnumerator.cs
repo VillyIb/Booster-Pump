@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 using BoosterPumpLibrary.Settings;
@@ -19,6 +20,7 @@ namespace BoosterPumpLibrary.ModuleBase
 
             public CommandWrite? Current { get; set; }
 
+            [ExcludeFromCodeCoverage]
             object? IEnumerator.Current => Current;
 
             public ModuleEnumerator(IEnumerable<Register> selectedRegisters, byte deviceAddress)

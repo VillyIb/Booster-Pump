@@ -1,15 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net.NetworkInformation;
-using System.Text;
-using System.Threading.Tasks;
 using BoosterPumpLibrary.ModuleBase;
 using BoosterPumpLibrary.Settings;
-using EnsureThat.Enforcers;
-using eu.iamia.NCD.API;
 using eu.iamia.NCD.API.Contract;
-using eu.iamia.NCD.Bridge;
 using eu.iamia.NCD.Shared;
 using NSubstitute;
 using Xunit;
@@ -37,10 +30,10 @@ namespace BoosterPumpLibrary.UnitTest.ModuleBase
         public DateTime Timestamp { get; set; }
     }
 
-    public partial class BaseModuleShould
+    public class BaseModuleShould
     {
-        private byte[] ResponseWriteSuccess = { 0x55 };
-        private byte[] ResponseError90 = { 0x5A };
+        private readonly byte[] ResponseWriteSuccess = { 0x55 };
+        private readonly byte[] ResponseError90 = { 0x5A };
 
         private readonly IBridge Bridge = Substitute.For<IBridge>();
 
@@ -92,7 +85,7 @@ namespace BoosterPumpLibrary.UnitTest.ModuleBase
             Sut.Register1.SetOutputDirty();
             Sut.Register2.SetOutputDirty();
 
-            var enumerator = Sut.GetEnumerator();
+            using var enumerator = Sut.GetEnumerator();
 
             Assert.True(enumerator.MoveNext());
         }

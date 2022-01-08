@@ -9,11 +9,6 @@
   <ItemGroup>
     <Compile Remove="DateTimeTest.cs" />
     <Compile Remove="DateTimeTestShould.cs" />
-    <Compile Remove="ModuleBase\BaseModule.ModelEnumeratorShould.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="ModuleBase\BaseModule.ModelEnumeratorShould.cs" />
   </ItemGroup>
 
   <ItemGroup>
