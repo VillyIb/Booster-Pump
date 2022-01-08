@@ -10,7 +10,7 @@ using Xunit;
 namespace eu.iamia.ReliableSerialPort.SystemTest
 {
     /// <summary>
-    /// NOTE System tests requires attached hardware.
+    /// NOTE System tests requires attached hardware AND executed in sequence.
     /// </summary>
     public class SerialPortDecoratorShould
     {
@@ -70,7 +70,7 @@ namespace eu.iamia.ReliableSerialPort.SystemTest
         /// <summary>
         /// Required devices: 0x48, 0x50, 0x58½
         /// </summary>
-#if HAS_HARDWARE2
+#if HAS_HARDWARE
         [Theory]
 #else
         [Theory(Skip = "Requires hardware")]
@@ -104,6 +104,8 @@ namespace eu.iamia.ReliableSerialPort.SystemTest
         [InlineData(170)]
         [InlineData(180)]
         [InlineData(190)]
+        // Returns the Address of I2C Devices on a I2C Port
+        // Requires 0x48: TCN75A TEMP, 0x50: ADC121C021 POTENTIOMETER
         public void ReceiveSpecificResponseOnCommand_BusScanCommand(int delay)
         {
             var received = new List<byte>();
@@ -116,7 +118,7 @@ namespace eu.iamia.ReliableSerialPort.SystemTest
             sut.Write(new List<byte> { 0xAA, 0x02, 0xC1, 0x00, 0x6D });
             Thread.Sleep(delay);
 
-            Assert.Equal(new() { 0xAA, 0x03, 0x48, 0x50, 0x58, 0x9d }, received);
+            Assert.Equal(new() { 0xAA, 0x02, 0x48, 0x50, 0x44 }, received);
         }
 
     }
