@@ -13,6 +13,8 @@ namespace BoosterPumpLibrary.ModuleBase
 {
     public abstract partial class BaseModuleV2
     {
+        public const int ResponseWriteSuccess = 0x55;
+
         protected readonly IBridge ApiToSerialBridge;
 
         public Guid Id { get; }
@@ -22,6 +24,8 @@ namespace BoosterPumpLibrary.ModuleBase
         public ByteExtension AddressIncrement { get; protected set; }
 
         public byte DeviceAddress => DefaultAddress + (AddressIncrement ?? new ByteExtension(0));
+
+        public int RetryCount { get; set; } = 0;
 
         protected BaseModuleV2(IBridge apiToSerialBridge)
         {
@@ -56,15 +60,23 @@ namespace BoosterPumpLibrary.ModuleBase
         public void Send()
         {
             using var enumerator = GetEnumerator();
-            var retryCount = 0;
+            var currentRetryCount = RetryCount;
             while (enumerator.MoveNext() && enumerator.Current != null)
             {
                 var fromDevice = ApiToSerialBridge.Execute(enumerator.Current);
 
                 // ReSharper disable once ConditionIsAlwaysTrueOrFalse
-                if (retryCount <= 0 || fromDevice.Payload.Count == 1 && fromDevice.Payload[0] == 55) continue;
+                if (
+                    currentRetryCount <= 0
+                    ||
+                    fromDevice.Payload.Count == 1
+                    &&
+                    fromDevice.Payload[0] == ResponseWriteSuccess)
+                {
+                    continue;
+                }
                 enumerator.Reset();
-                retryCount--;
+                currentRetryCount--;
             }
         }
 

@@ -25,7 +25,7 @@ namespace eu.iamia.NCD.Shared.UnitTest
         }
 
         [Fact]
-        public void ReturnRightProperytValues()
+        public void ReturnRightPropertyValues()
         {
             Assert.Equal(0xAA, Sut.Header);
             Assert.Equal(0x01, Sut.ByteCount);
