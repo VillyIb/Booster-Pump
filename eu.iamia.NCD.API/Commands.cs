@@ -14,6 +14,7 @@ namespace eu.iamia.NCD.API
     public abstract class Command : ICommand
     {
         public abstract IEnumerable<byte> I2C_Data();
+
         public abstract I2CCommandCode GetI2CCommandCode { get; }
 
         public string I2CDataAsHex

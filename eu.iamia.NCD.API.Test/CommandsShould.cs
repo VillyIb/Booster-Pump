@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using eu.iamia.NCD.API.Contract;
+using eu.iamia.NCD.Shared;
 using Xunit;
 
 // ReSharper disable InconsistentNaming
@@ -30,6 +31,13 @@ namespace eu.iamia.NCD.API.UnitTest
         {
             Assert.Equal("00 ", Sut.I2CDataAsHex);
         }
+
+        [Fact]
+        public void ReturnRightCommandCode()
+        {
+            var actual = Sut.GetI2CCommandCode;
+            Assert.Equal(I2CCommandCode.DeviceBusScan, actual);
+        }
     }
 
     public class CommandControllerControllerHardRebootShould : CommandsShould
@@ -47,6 +55,13 @@ namespace eu.iamia.NCD.API.UnitTest
         public void I2CDataAsHex_WhenOk_ReturnsOk()
         {
             Assert.Equal("21 BD ", Sut.I2CDataAsHex);
+        }
+
+        [Fact]
+        public void ReturnRightCommandCode()
+        {
+            var actual = Sut.GetI2CCommandCode;
+            Assert.Equal(I2CCommandCode.DeviceConverterCommand, actual);
         }
     }
 
@@ -66,6 +81,12 @@ namespace eu.iamia.NCD.API.UnitTest
         {
             Assert.Equal("21 BC ", Sut.I2CDataAsHex);
         }
+        [Fact]
+        public void ReturnRightCommandCode()
+        {
+            var actual = Sut.GetI2CCommandCode;
+            Assert.Equal(I2CCommandCode.DeviceConverterCommand, actual);
+        }
     }
 
     public class CommandControllerControllerStopShould : CommandsShould
@@ -83,6 +104,13 @@ namespace eu.iamia.NCD.API.UnitTest
         public void I2CDataAsHex_WhenOk_ReturnsOk()
         {
             Assert.Equal("21 BB ", Sut.I2CDataAsHex);
+        }
+
+        [Fact]
+        public void ReturnRightCommandCode()
+        {
+            var actual = Sut.GetI2CCommandCode;
+            Assert.Equal(I2CCommandCode.DeviceConverterCommand, actual);
         }
     }
 
@@ -102,6 +130,13 @@ namespace eu.iamia.NCD.API.UnitTest
         {
             Assert.Equal("21 ", Sut.I2CDataAsHex);
         }
+
+        [Fact]
+        public void ReturnRightCommandCode()
+        {
+            var actual = Sut.GetI2CCommandCode;
+            Assert.Equal(I2CCommandCode.DeviceConverterCommand, actual);
+        }
     }
 
     public class CommandReadShould : CommandsShould
@@ -119,6 +154,13 @@ namespace eu.iamia.NCD.API.UnitTest
         public void I2CDataAsHex_WhenOk_ReturnsOk()
         {
             Assert.Equal("33 32 ", Sut.I2CDataAsHex);
+        }
+
+        [Fact]
+        public void ReturnRightCommandCode()
+        {
+            var actual = Sut.GetI2CCommandCode;
+            Assert.Equal(I2CCommandCode.DeviceRead, actual);
         }
     }
 
@@ -152,6 +194,13 @@ namespace eu.iamia.NCD.API.UnitTest
             var largePayload = Enumerable.Repeat<byte>(0x01, 255).ToList();
             // ReSharper disable once ObjectCreationAsStatement
             new CommandWrite(DefaultAddress, largePayload);
+        }
+
+        [Fact]
+        public void ReturnRightCommandCode()
+        {
+            var actual = Sut.GetI2CCommandCode;
+            Assert.Equal(I2CCommandCode.DeviceWrite, actual);
         }
     }
 
@@ -188,6 +237,13 @@ namespace eu.iamia.NCD.API.UnitTest
         {
             var sut = new CommandWriteRead(0x33, DefaultPayload, DefaultReadLength);
             Assert.Equal("33 32 16 55 ", sut.I2CDataAsHex);
+        }
+
+        [Fact]
+        public void ReturnRightCommandCode()
+        {
+            var actual = Sut.GetI2CCommandCode;
+            Assert.Equal(I2CCommandCode.DeviceWriteRead, actual);
         }
     }
 }
