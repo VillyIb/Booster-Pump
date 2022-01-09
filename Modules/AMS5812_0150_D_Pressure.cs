@@ -55,7 +55,7 @@ namespace Modules
             ClearOutput();
         }
 
-        public override bool IsOutputValid =>
+        public override bool IsInputValid =>
             float.IsFinite(Temperature)
             &&
             Temperature.IsWithinRange(OutputPressureMin, OutputPressureMax)
@@ -64,6 +64,9 @@ namespace Modules
             && Pressure.IsWithinRange(OutputPressureMin, OutputPressureMin)
             ;
 
+        public override bool IsOutputValid => true; // TODO fix real value
+
+        // TODO 
         public override void ReadFromDevice()
         {
             ClearOutput();

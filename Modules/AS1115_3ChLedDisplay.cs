@@ -99,6 +99,8 @@ namespace Modules
 
         public override byte DefaultAddress => DefaultAddressValue;
 
+        public override bool IsOutputValid => true; // TODO fix real value
+
         public As1115Module(IBridge apiToSerialBridge) : base(apiToSerialBridge)
         { }
 

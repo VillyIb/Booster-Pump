@@ -102,5 +102,7 @@ namespace Modules
         }
 
         public override bool IsOutputValid => !Reading0X28.IsInputDirty;
+
+        public override bool IsInputValid => !Reading0X28.IsInputDirty;
     }
 }

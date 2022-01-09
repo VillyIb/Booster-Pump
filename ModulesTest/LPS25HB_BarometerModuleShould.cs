@@ -28,6 +28,8 @@ namespace ModulesTest
             _FakeGateway.Received().Execute(Arg.Is<NcdApiProtocol>(c => c.PayloadAsHex == "BF 5C 05 "));
         }
 
+        #region ReadFromDevice()
+
         [Fact]
         public void ReturnsPressureAndTemperatureWhenCallingRead()
         {
@@ -38,7 +40,7 @@ namespace ModulesTest
             _FakeGateway.ClearReceivedCalls();
             Sut.ReadFromDevice();
 
-            Assert.True(Sut.IsOutputValid);
+            Assert.True(Sut.IsInputValid);
             Assert.Equal(1023.4, Sut.AirPressure);
             Assert.Equal(41.2, Sut.Temperature);
         }
@@ -53,8 +55,23 @@ namespace ModulesTest
             _FakeGateway.ClearReceivedCalls();
             Sut.ReadFromDevice();
 
-            Assert.False(Sut.IsOutputValid);
-
+            Assert.False(Sut.IsInputValid);
         }
+
+        [Fact]
+        public void NotHaveValidOutputWhenCallingReadFromDeviceWithErrorCode()
+        {
+            // Returns: Pressure XL, L, H, Temperature L, H
+            var fakeReturnValueWithInvalidData = new NcdApiProtocol(0xAA, 4, new byte[] { 0xBC, 0x5A, 0xA5, 0x43 }, 0xAC);
+            _FakeGateway.Execute(Arg.Any<INcdApiProtocol>()).Returns(fakeReturnValueWithInvalidData);
+
+            _FakeGateway.ClearReceivedCalls();
+            Sut.ReadFromDevice();
+
+            Assert.False(Sut.IsInputValid);
+        }
+
+        #endregion
+
     }
 }

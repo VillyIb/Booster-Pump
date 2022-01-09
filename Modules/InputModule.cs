@@ -10,6 +10,6 @@ namespace Modules
 
         public abstract void ReadFromDevice();
 
-        public abstract bool IsOutputValid { get; }
+        public abstract bool IsInputValid { get; }
     }
 }

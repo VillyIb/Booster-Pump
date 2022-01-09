@@ -21,6 +21,8 @@ namespace BoosterPumpLibrary.ModuleBase
 
         public abstract byte DefaultAddress { get; }
 
+        public abstract bool IsOutputValid { get; }
+
         public ByteExtension AddressIncrement { get; protected set; }
 
         public byte DeviceAddress => DefaultAddress + (AddressIncrement ?? new ByteExtension(0));

@@ -19,6 +19,8 @@ namespace Modules
 
         public override byte DefaultAddress => DefaultAddressValue;
 
+        public override bool IsOutputValid => true; // TODO fix real value
+
         private readonly Register Setting = new(0, "Settings", 3);
 
         /// <summary>
