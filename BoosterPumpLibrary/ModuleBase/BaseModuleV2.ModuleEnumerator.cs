@@ -12,18 +12,23 @@ namespace BoosterPumpLibrary.ModuleBase
 {
     public abstract partial class BaseModuleV2
     {
-        public class ModuleEnumerator : IEnumerator<CommandWrite?>
+        public class WriteModuleEnumerator : IEnumerator<CommandDevice?>
         {
-            private readonly byte DeviceAddress;
+            protected readonly byte DeviceAddress;
 
-            private List<Register> SelectedRegisters { get; }
+            protected List<Register> SelectedRegisters { get; }
 
-            public CommandWrite? Current { get; set; }
+            /// <summary>
+            /// CommandWrite or CommandRead
+            /// </summary>
+            public CommandDevice? Current { get; set; }
 
             [ExcludeFromCodeCoverage]
             object? IEnumerator.Current => Current;
 
-            public ModuleEnumerator(IEnumerable<Register> selectedRegisters, byte deviceAddress)
+            public CommandWrite? CurrentWriteCommand => (CommandWrite?)Current;
+
+            public WriteModuleEnumerator(IEnumerable<Register> selectedRegisters, byte deviceAddress)
             {
                 DeviceAddress = deviceAddress;
                 SelectedRegisters = selectedRegisters.ToList();
@@ -38,7 +43,7 @@ namespace BoosterPumpLibrary.ModuleBase
                 }
             }
 
-            public bool MoveNext()
+            public virtual bool MoveNext()
             {
                 Current = null;
                 if (!SelectedRegisters.Any(t => t.IsOutputDirty)) { return false; }

@@ -22,6 +22,8 @@ namespace eu.iamia.NCD.Shared
 
         IImmutableList<byte> Payload { get; }
 
+        ulong Value { get; }
+
         /// <summary>
         /// NCD API Checksum
         /// </summary>

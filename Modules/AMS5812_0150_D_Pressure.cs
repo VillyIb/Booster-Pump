@@ -20,14 +20,14 @@ namespace Modules
 
         public virtual byte LengthRequested => 0x04;
 
-        public static int DevicePressureMin => 3277;
-        public static int DevicePressureMax => 29491;
+        public static uint DevicePressureMin => 3277;
+        public static uint DevicePressureMax => 29491;
 
         public virtual float OutputPressureMin => -1034f;
         public virtual float OutputPressureMax => 1034f;
 
-        public static int DeviceTempMin => 3277;
-        public static int DeviceTempMax => 29491;
+        public static uint DeviceTempMin => 3277;
+        public static uint DeviceTempMax => 29491;
 
         public virtual float OutputTempMin => -25f;
         public virtual float OutputTempMax => 85f;
@@ -42,9 +42,19 @@ namespace Modules
         {
             Temperature = float.NaN;
             Pressure = float.NaN;
+            Readings.SetInputDirty();
         }
 
-        protected override IEnumerable<Register> Registers => new List<Register>(0); // TODO right to use '=>'
+        private readonly Register Readings = new(0x78, "Readings", 4);
+
+        protected override IEnumerable<Register> Registers => new[]
+        {
+            Readings
+        };
+
+        private BitSetting TemperatureRegister => Readings.GetOrCreateSubRegister(16, 0, "Temperature");
+
+        private BitSetting PressureRegister => Readings.GetOrCreateSubRegister(16, 16, "Pressure");
 
         /// <summary>
         /// Pressure module
@@ -58,55 +68,83 @@ namespace Modules
         public override bool IsInputValid =>
             float.IsFinite(Temperature)
             &&
-            Temperature.IsWithinRange(OutputPressureMin, OutputPressureMax)
+            Temperature.IsWithinRange(OutputTempMin, OutputTempMax)
             &&
             float.IsFinite(Pressure)
-            && Pressure.IsWithinRange(OutputPressureMin, OutputPressureMin)
+            && Pressure.IsWithinRange(OutputPressureMin, OutputPressureMax)
             ;
 
         public override bool IsOutputValid => true; // TODO fix real value
 
+        public  float ToOutputPressure(ulong measuredPressure) => (float)Math.Round(
+            (measuredPressure - DevicePressureMin) *
+            (OutputPressureMax - OutputPressureMin) /
+            (DevicePressureMax - DevicePressureMin) +
+            OutputPressureMin,
+            2);
+
+        public  float ToOutputTemperature (ulong measuredTemperature) => (float)Math.Round(
+            (measuredTemperature - DeviceTempMin) *
+            (OutputTempMax - OutputTempMin) /
+            (DeviceTempMax - DeviceTempMin) +
+            OutputTempMin,
+            2);
+
         // TODO 
-        public override void ReadFromDevice()
+        public override void ReadFromDevice() 
         {
-            ClearOutput();
+            base.ReadFromDevice();
 
-            var command = new CommandRead(DeviceAddress, LengthRequested);
+            //ClearOutput();
 
-            var response = ApiToSerialBridge.Execute(command);
+            //using var loop = this.GetEnumerator();
 
-            if (response is null)
-            {
-                return;
-            }
 
-            if (!response.IsValid)
-            {
-                return;
-            }
+            //while (loop.MoveNext())
+            //{
+            //    var writeCommand = loop.Current;
+            //    var resp = ApiToSerialBridge.Execute(writeCommand);
+            //    PressureRegister.Value = resp.Value;
+                Pressure = ToOutputPressure(PressureRegister.Value);
+                Temperature = ToOutputTemperature(TemperatureRegister.Value);
+            //}
 
-            if (response.IsError)
-            {
-                return;
-            }
+            //var command = new CommandRead(DeviceAddress, LengthRequested);
 
-            var measuredPressure = response.Payload[0] << 8 | response.Payload[1];
+            //var response = ApiToSerialBridge.Execute(command);
 
-            Pressure = (float)Math.Round(
-                (measuredPressure - DevicePressureMin) *
-                (OutputPressureMax - OutputPressureMin) /
-                (DevicePressureMax - DevicePressureMin) +
-                OutputPressureMin,
-                2);
+            //if (response is null)
+            //{
+            //    return;
+            //}
 
-            var measuredTemp = response.Payload[2] << 8 | response.Payload[3];
+            //if (!response.IsValid)
+            //{
+            //    return;
+            //}
 
-            Temperature = (float)Math.Round(
-                (measuredTemp - DeviceTempMin) *
-                (OutputTempMax - OutputTempMin) /
-                (DeviceTempMax - DeviceTempMin) +
-                OutputTempMin,
-                2);
+            //if (response.IsError)
+            //{
+            //    return;
+            //}
+
+            //var measuredPressure = response.Payload[0] << 8 | response.Payload[1];
+
+            //Pressure = (float)Math.Round(
+            //    (measuredPressure - DevicePressureMin) *
+            //    (OutputPressureMax - OutputPressureMin) /
+            //    (DevicePressureMax - DevicePressureMin) +
+            //    OutputPressureMin,
+            //    2);
+
+            //var measuredTemp = response.Payload[2] << 8 | response.Payload[3];
+
+            //Temperature = (float)Math.Round(
+            //    (measuredTemp - DeviceTempMin) *
+            //    (OutputTempMax - OutputTempMin) /
+            //    (DeviceTempMax - DeviceTempMin) +
+            //    OutputTempMin,
+            //    2);
         }
     }
 }

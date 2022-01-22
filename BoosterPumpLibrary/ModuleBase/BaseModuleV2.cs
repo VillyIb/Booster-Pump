@@ -53,7 +53,7 @@ namespace BoosterPumpLibrary.ModuleBase
 
         protected abstract IEnumerable<Register> Registers { get; }
 
-        public ModuleEnumerator GetEnumerator()
+        public virtual WriteModuleEnumerator GetEnumerator()
         {
             var registersToSend = Registers.Where(t => t.IsOutputDirty);
             return new(registersToSend, DeviceAddress);

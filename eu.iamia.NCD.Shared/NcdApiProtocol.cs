@@ -64,6 +64,21 @@ namespace eu.iamia.NCD.Shared
             }
         }
 
+        public ulong Value
+        {
+            get
+            {
+                ulong result = 0UL;
+
+                foreach (var current in Payload)
+                {
+                    result = (result << 8) + current;
+                }
+
+                return result;
+            }
+        }
+
         public NcdApiProtocol(byte header, byte byteCount, [NotNull] IEnumerable<byte> payload, byte checksum)
         {
             EnsureArg.IsNotNull(payload, nameof(payload));
