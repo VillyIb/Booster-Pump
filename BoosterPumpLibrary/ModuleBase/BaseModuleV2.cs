@@ -21,13 +21,14 @@ namespace BoosterPumpLibrary.ModuleBase
 
         public abstract byte DefaultAddress { get; }
 
-        public abstract bool IsOutputValid { get; }
-
         public ByteExtension AddressIncrement { get; protected set; }
 
         public byte DeviceAddress => DefaultAddress + (AddressIncrement ?? new ByteExtension(0));
 
-        public int RetryCount { get; set; } = 0;
+        /// <summary>
+        /// Default value: 1.
+        /// </summary>
+        public int RetryCount { get; set; } = 1;
 
         protected BaseModuleV2(IBridge apiToSerialBridge)
         {

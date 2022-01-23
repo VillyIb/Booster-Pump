@@ -18,8 +18,6 @@ namespace BoosterPumpLibrary.UnitTest.ModuleBase
 
         public override byte DefaultAddress => 0b00;
 
-        public override bool IsOutputValid => true; // TODO fix real value
-
         public Register Register1 = new Register(0x01, "Register1", 8);
         public Register Register2 = new Register(0x02, "Register2", 8);
 

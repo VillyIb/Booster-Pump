@@ -38,7 +38,7 @@ namespace Modules
 
         public float Temperature { get; protected set; }
 
-        private void ClearOutput()
+        private void Clear()
         {
             Temperature = float.NaN;
             Pressure = float.NaN;
@@ -62,7 +62,7 @@ namespace Modules
         /// <param name="apiToSerialBridge"></param>
         public AMS5812_0150_D_Pressure(IBridge apiToSerialBridge) : base(apiToSerialBridge)
         {
-            ClearOutput();
+            Clear();
         }
 
         public override bool IsInputValid =>
@@ -74,16 +74,14 @@ namespace Modules
             && Pressure.IsWithinRange(OutputPressureMin, OutputPressureMax)
             ;
 
-        public override bool IsOutputValid => true; // TODO fix real value
-
-        public  float ToOutputPressure(ulong measuredPressure) => (float)Math.Round(
+        public float ToOutputPressure(ulong measuredPressure) => (float)Math.Round(
             (measuredPressure - DevicePressureMin) *
             (OutputPressureMax - OutputPressureMin) /
             (DevicePressureMax - DevicePressureMin) +
             OutputPressureMin,
             2);
 
-        public  float ToOutputTemperature (ulong measuredTemperature) => (float)Math.Round(
+        public float ToOutputTemperature(ulong measuredTemperature) => (float)Math.Round(
             (measuredTemperature - DeviceTempMin) *
             (OutputTempMax - OutputTempMin) /
             (DeviceTempMax - DeviceTempMin) +
@@ -91,60 +89,14 @@ namespace Modules
             2);
 
         // TODO 
-        public override void ReadFromDevice() 
+        public override void ReadFromDevice()
         {
+            Clear();
             base.ReadFromDevice();
 
-            //ClearOutput();
+            Pressure = ToOutputPressure(PressureRegister.Value);
+            Temperature = ToOutputTemperature(TemperatureRegister.Value);
 
-            //using var loop = this.GetEnumerator();
-
-
-            //while (loop.MoveNext())
-            //{
-            //    var writeCommand = loop.Current;
-            //    var resp = ApiToSerialBridge.Execute(writeCommand);
-            //    PressureRegister.Value = resp.Value;
-                Pressure = ToOutputPressure(PressureRegister.Value);
-                Temperature = ToOutputTemperature(TemperatureRegister.Value);
-            //}
-
-            //var command = new CommandRead(DeviceAddress, LengthRequested);
-
-            //var response = ApiToSerialBridge.Execute(command);
-
-            //if (response is null)
-            //{
-            //    return;
-            //}
-
-            //if (!response.IsValid)
-            //{
-            //    return;
-            //}
-
-            //if (response.IsError)
-            //{
-            //    return;
-            //}
-
-            //var measuredPressure = response.Payload[0] << 8 | response.Payload[1];
-
-            //Pressure = (float)Math.Round(
-            //    (measuredPressure - DevicePressureMin) *
-            //    (OutputPressureMax - OutputPressureMin) /
-            //    (DevicePressureMax - DevicePressureMin) +
-            //    OutputPressureMin,
-            //    2);
-
-            //var measuredTemp = response.Payload[2] << 8 | response.Payload[3];
-
-            //Temperature = (float)Math.Round(
-            //    (measuredTemp - DeviceTempMin) *
-            //    (OutputTempMax - OutputTempMin) /
-            //    (DeviceTempMax - DeviceTempMin) +
-            //    OutputTempMin,
-            //    2);
         }
     }
 }

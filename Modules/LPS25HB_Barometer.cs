@@ -101,8 +101,6 @@ namespace Modules
             Reading0X28.Value = BitConverter.ToUInt64(mapped, 0);
         }
 
-        public override bool IsOutputValid => !Reading0X28.IsInputDirty;
-
         public override bool IsInputValid => !Reading0X28.IsInputDirty;
     }
 }

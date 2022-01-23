@@ -21,8 +21,8 @@ namespace Modules
         private readonly Register Digits = new(0x01, "Digits", 3);
 
         private BitSetting Digit0 => Digits.GetOrCreateSubRegister(8, 16, "Digit0");
-        private BitSetting Digit1 => Digits.GetOrCreateSubRegister(8, 8, "Digit0");
-        private BitSetting Digit2 => Digits.GetOrCreateSubRegister(8, 0, "Digit0");
+        private BitSetting Digit1 => Digits.GetOrCreateSubRegister(8, 8, "Digit1");
+        private BitSetting Digit2 => Digits.GetOrCreateSubRegister(8, 0, "Digit2");
 
         /// <summary>
         /// Register 0x09..0x0C
@@ -98,8 +98,6 @@ namespace Modules
         public static byte DefaultAddressValue => 0x00;
 
         public override byte DefaultAddress => DefaultAddressValue;
-
-        public override bool IsOutputValid => true; // TODO fix real value
 
         public As1115Module(IBridge apiToSerialBridge) : base(apiToSerialBridge)
         { }

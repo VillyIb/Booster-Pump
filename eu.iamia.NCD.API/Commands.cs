@@ -45,7 +45,7 @@ namespace eu.iamia.NCD.API
 
     public class CommandRead : CommandDevice
     {
-        public byte LengthRequested { get; set; }
+        public byte LengthRequested { get; }
 
         public CommandRead(byte deviceAddress, byte lengthRequested)
             : base(deviceAddress)

@@ -30,8 +30,6 @@ namespace Modules
 
         public override byte DefaultAddress => DefaultAddressValue;
 
-        public override bool IsOutputValid => true; // TODO fix real value
-
         private readonly Register Setting0X00 = new(0x00, "Open channels", 1);
 
         private BitSetting ChannelSelection => Setting0X00.GetOrCreateSubRegister(4, 0, "Open Channels");
