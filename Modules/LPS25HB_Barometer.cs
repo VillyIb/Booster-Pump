@@ -17,8 +17,13 @@ namespace Modules
 
         public static byte DefaultAddressValue => 0x5C;
 
+        #region Settings
+
         public override byte DefaultAddress => DefaultAddressValue;
 
+        /// <summary>
+        /// see: Description 8.5 Res_Conf Pressure and temperature resolution.
+        /// </summary>
         private readonly Register Settings0X10 = new(0X10, "RES_CONF", 1);
 
         /// <summary>
@@ -31,8 +36,10 @@ namespace Modules
         /// </summary>
         private BitSetting TemperatureResolution => Settings0X10.GetOrCreateSubRegister(2, 2, "Temperature Resolution");
 
-
-        private readonly Register Settings0X20 = new(0x20, "Control Register", 1);
+        /// <summary>
+        /// Control register 1
+        /// </summary>
+        private readonly Register Settings0X20 = new(0x20, "CTRL_REG1", 1);
 
         /// <summary>
         /// 0: Power Down, 1: Active Mode.
@@ -44,20 +51,31 @@ namespace Modules
         /// </summary>
         private BitSetting OutputDataRate => Settings0X20.GetOrCreateSubRegister(3, 4, "Output data rate.");
 
-        private readonly Register Reading0X28 = new(0x28, "Air Pressure & Temperature", 5);
+        #endregion
+
+        internal readonly Register Reading0X28 = new(0x28, "Air Pressure & Temperature", 5);
 
         private BitSetting PressureHex => Reading0X28.GetOrCreateSubRegister(24, 0, "Barometric Pressure");
 
         private BitSetting TemperatureHex => Reading0X28.GetOrCreateSubRegister(16, 24, "Air Temperature");
 
 
-        public double AirPressure => Reading0X28.IsInputDirty
-            ? double.NaN
-            : Math.Round(PressureHex.Value / 4096.0, 1);
+        public double AirPressure
+        {
+            get => Reading0X28.IsInputDirty
+                ? double.NaN
+                : Math.Round(PressureHex.Value / 4096.0, 1);
+            internal set => PressureHex.Value = (ulong)(value * 4096.0);
+        }
 
-        public double Temperature => Reading0X28.IsInputDirty
-            ? double.NaN
-            : Math.Round(42.5 + (short)TemperatureHex.Value / 480.0, 1);
+        public double Temperature
+        {
+            get => Reading0X28.IsInputDirty
+                    ? double.NaN
+                    : Math.Round(42.5 + (short)TemperatureHex.Value / 480.0, 1);
+
+            internal set => TemperatureHex.Value = (ulong)((value - 42.5) * 480.0);
+        }
 
         protected override IEnumerable<Register> Registers => new List<Register> { Settings0X20, Settings0X10, Reading0X28 };
 
