@@ -136,5 +136,14 @@ namespace eu.iamia.NCD.Shared
 
             return result.ToString();
         }
+
+        public static NcdApiProtocol WriteSuccess => new NcdApiProtocol(new byte[] { 0x55 });
+
+        public static NcdApiProtocol NoResponse => new NcdApiProtocol(new byte[] { 0xBC, 0x5A, 0xA5, 0x43 });
+
+        public static NcdApiProtocol Timeout => new NcdApiProtocol(new byte[] { 0xBC, 0x5B, 0xA4, 0x43 });
+
+        public static NcdApiProtocol InvalidAddress => new NcdApiProtocol(new byte[] { 0xBC, 0x5C, 0xA3, 0x43 });
+
     }
 }

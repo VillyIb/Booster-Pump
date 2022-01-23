@@ -1,4 +1,6 @@
-﻿using eu.iamia.NCD.Bridge;
+﻿using System.Collections.Generic;
+using BoosterPumpLibrary.ModuleBase;
+using eu.iamia.NCD.Bridge;
 using eu.iamia.NCD.Serial.Contract;
 using eu.iamia.NCD.Shared;
 using Modules;
@@ -19,6 +21,8 @@ namespace ModulesTest
         {
             _FakeGateway = Substitute.For<IGateway>();
             Sut = new(new ApiToSerialBridge(_FakeGateway));
+
+            _FakeGateway.Execute(Arg.Any<NcdApiProtocol>()).Returns(NcdApiProtocol.WriteSuccess);
         }
 
         [Fact]
@@ -62,8 +66,7 @@ namespace ModulesTest
         public void NotHaveValidOutputWhenCallingReadFromDeviceWithErrorCode()
         {
             // Returns: Pressure XL, L, H, Temperature L, H
-            var fakeReturnValueWithInvalidData = new NcdApiProtocol(0xAA, 4, new byte[] { 0xBC, 0x5A, 0xA5, 0x43 }, 0xAC);
-            _FakeGateway.Execute(Arg.Any<INcdApiProtocol>()).Returns(fakeReturnValueWithInvalidData);
+            _FakeGateway.Execute(Arg.Any<INcdApiProtocol>()).Returns(NcdApiProtocol.NoResponse);
 
             _FakeGateway.ClearReceivedCalls();
             Sut.ReadFromDevice();

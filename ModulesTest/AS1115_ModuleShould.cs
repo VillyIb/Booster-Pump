@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using BoosterPumpLibrary.ModuleBase;
 using eu.iamia.NCD.Bridge;
 using eu.iamia.NCD.Serial.Contract;
 using eu.iamia.NCD.Shared;
@@ -18,7 +19,7 @@ namespace ModulesTest
             FakeGateway = Substitute.For<IGateway>();
             Sut = new(new ApiToSerialBridge(FakeGateway));
 
-            var fakeReturnValue = new NcdApiProtocol(new List<byte> { 0x55 }); // OK successful transmission.
+            var fakeReturnValue = new NcdApiProtocol(new List<byte> { OutputModule.ResponseWriteSuccess }); // OK successful transmission.
             FakeGateway.Execute(Arg.Any<NcdApiProtocol>()).Returns(fakeReturnValue);
         }
 
