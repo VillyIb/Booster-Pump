@@ -5,7 +5,6 @@ namespace Modules
     using BoosterPumpLibrary.Settings;
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using eu.iamia.NCD.API;
     using eu.iamia.NCD.API.Contract;
 
@@ -52,11 +51,15 @@ namespace Modules
         private BitSetting TemperatureHex => Reading0X28.GetOrCreateSubRegister(16, 24, "Air Temperature");
 
 
-        public double AirPressure => Math.Round(PressureHex.Value / 4096.0, 1);
+        public double AirPressure => Reading0X28.IsInputDirty
+            ? double.NaN
+            : Math.Round(PressureHex.Value / 4096.0, 1);
 
-        public double Temperature => Math.Round(42.5 + (short)TemperatureHex.Value / 480.0, 1);
+        public double Temperature => Reading0X28.IsInputDirty
+            ? double.NaN
+            : Math.Round(42.5 + (short)TemperatureHex.Value / 480.0, 1);
 
-        protected override IEnumerable<Register> Registers => new List<Register> { Settings0X20, Settings0X10 };
+        protected override IEnumerable<Register> Registers => new List<Register> { Settings0X20, Settings0X10, Reading0X28 };
 
         public LPS25HB_Barometer(IBridge apiToSerialBridge) : base(apiToSerialBridge)
         { }
@@ -78,27 +81,7 @@ namespace Modules
         public override void ReadFromDevice()
         {
             Reading0X28.SetInputDirty();
-
-            SelectRegisterForReadingWithAutoIncrement(Reading0X28);
-            var readCommand = new CommandRead(DeviceAddress, (byte)Reading0X28.Size);
-            var readings = ApiToSerialBridge.Execute(readCommand);
-
-            //var readings = SerialPort.Execute(readCommand);
-            if (!readings.IsValid)
-            {
-                return;
-            }
-
-            if (readings.IsError)
-            {
-                return;
-            }
-
-            var length = readings.Payload.Count;
-
-            var mapped = new byte[8];
-            Array.Copy(readings.Payload.ToArray(), mapped, length);
-            Reading0X28.Value = BitConverter.ToUInt64(mapped, 0);
+            base.ReadFromDevice();
         }
 
         public override bool IsInputValid => !Reading0X28.IsInputDirty;

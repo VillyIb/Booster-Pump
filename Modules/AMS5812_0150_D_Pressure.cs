@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Xml;
 using BoosterPumpLibrary.ModuleBase;
 using BoosterPumpLibrary.Settings;
 using eu.iamia.NCD.API;
@@ -32,16 +33,26 @@ namespace Modules
         public virtual float OutputTempMin => -25f;
         public virtual float OutputTempMax => 85f;
 
-        public float Pressure { get; protected set; }
+        public float Pressure => Readings.IsInputDirty
+            ? float.NaN
+            : (float)Math.Round(
+                (PressureHex.Value - DevicePressureMin) *
+                (OutputPressureMax - OutputPressureMin) /
+                (DevicePressureMax - DevicePressureMin) +
+                OutputPressureMin,
+                2);
 
-        public float PressureCorrection { get; set; }
-
-        public float Temperature { get; protected set; }
+        public float Temperature => Readings.IsInputDirty
+            ? float.NaN
+            : (float)Math.Round(
+                (TemperatureHex.Value - DeviceTempMin) *
+                (OutputTempMax - OutputTempMin) /
+                (DeviceTempMax - DeviceTempMin) +
+                OutputTempMin,
+                2);
 
         private void Clear()
         {
-            Temperature = float.NaN;
-            Pressure = float.NaN;
             Readings.SetInputDirty();
         }
 
@@ -52,9 +63,9 @@ namespace Modules
             Readings
         };
 
-        private BitSetting TemperatureRegister => Readings.GetOrCreateSubRegister(16, 0, "Temperature");
+        private BitSetting TemperatureHex => Readings.GetOrCreateSubRegister(16, 0, "Temperature");
 
-        private BitSetting PressureRegister => Readings.GetOrCreateSubRegister(16, 16, "Pressure");
+        private BitSetting PressureHex => Readings.GetOrCreateSubRegister(16, 16, "Pressure");
 
         /// <summary>
         /// Pressure module
@@ -74,29 +85,10 @@ namespace Modules
             && Pressure.IsWithinRange(OutputPressureMin, OutputPressureMax)
             ;
 
-        public float ToOutputPressure(ulong measuredPressure) => (float)Math.Round(
-            (measuredPressure - DevicePressureMin) *
-            (OutputPressureMax - OutputPressureMin) /
-            (DevicePressureMax - DevicePressureMin) +
-            OutputPressureMin,
-            2);
-
-        public float ToOutputTemperature(ulong measuredTemperature) => (float)Math.Round(
-            (measuredTemperature - DeviceTempMin) *
-            (OutputTempMax - OutputTempMin) /
-            (DeviceTempMax - DeviceTempMin) +
-            OutputTempMin,
-            2);
-
-        // TODO 
         public override void ReadFromDevice()
         {
             Clear();
             base.ReadFromDevice();
-
-            Pressure = ToOutputPressure(PressureRegister.Value);
-            Temperature = ToOutputTemperature(TemperatureRegister.Value);
-
         }
     }
 }
