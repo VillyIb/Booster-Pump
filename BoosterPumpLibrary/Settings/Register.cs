@@ -60,16 +60,16 @@
         }
 
         /// <summary>
-        /// Defines a subview <em>size</em> bits long shifted <em>offset</em> bits with <em>description</em> as name.
+        /// Defines a subview <em>numberOfBits</em> bits long shifted <em>offsetInBits</em> bits with <em>description</em> as name.
         /// </summary>
-        /// <param name="size"></param>
-        /// <param name="offset"></param>
+        /// <param name="numberOfBits"></param>
+        /// <param name="offsetInBits"></param>
         /// <param name="description"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        public BitSetting GetOrCreateSubRegister(ushort size, ushort offset, string description = "")
+        public BitSetting GetOrCreateSubRegister(ushort numberOfBits, ushort offsetInBits, string description = "")
         {
-            var key = $"{offset}_{size}_{description}";
+            var key = $"{offsetInBits}_{numberOfBits}_{description}";
 
             if (SubRegisters.ContainsKey(key))
             {
@@ -78,12 +78,12 @@
 
             var max = Size * 8;
 
-            if (size + offset > max)
+            if (numberOfBits + offsetInBits > max)
             {
                 throw new ArgumentOutOfRangeException($"Size + offeset must be less or equal to {max}.");
             }
 
-            var result = new BitSetting(size, offset, this, description);
+            var result = new BitSetting(numberOfBits, offsetInBits, this, description);
             SubRegisters.Add(key, result);
             return result;
         }
@@ -133,14 +133,14 @@
             }
         }
 
-        public Register(byte registerAddress, string description, ushort byteCount) : this()
+        public Register(byte registerAddress, string description, ushort sizeInBytes) : this()
         {
             CheckRange(registerAddress, 0, 127, nameof(registerAddress));
-            CheckRange(byteCount, 1, MaxSize, nameof(byteCount));
+            CheckRange(sizeInBytes, 1, MaxSize, nameof(sizeInBytes));
 
             RegisterAddress = registerAddress;
             Description = description;
-            Size = byteCount;
+            Size = sizeInBytes;
         }
     }
 }
