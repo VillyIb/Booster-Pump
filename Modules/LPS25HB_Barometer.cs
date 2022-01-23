@@ -17,6 +17,66 @@ namespace Modules
 
         public static byte DefaultAddressValue => 0x5C;
 
+        #region Utils
+
+        private const double TemperatureSensitivity = 480.0;
+
+        private const double TemperatureOffset = 42.5; // from technical note.
+
+        internal static double MapTemperature(ulong hex)
+        {
+            var t1 = hex > (ushort)short.MaxValue
+                    ? (short)(hex - ushort.MaxValue)
+                    : (short)hex
+                ;
+
+            var result = TemperatureOffset + t1 / TemperatureSensitivity;
+            return result;
+        }
+
+        public static ulong MapTemperature(double temperature)
+        {
+            var h1 = (long)((temperature - TemperatureOffset) * TemperatureSensitivity);
+
+            var hex = h1 < 0
+                ? (ulong)(h1 + ushort.MaxValue)
+                : (ulong)h1;
+
+            return hex;
+        }
+
+        private const double PressureSensitivity = 4096.0;
+
+        private const double PressureOffset = 0;
+
+        private const uint MaxValue24bitSigned = 0x7F_FFFF;
+
+        private const uint MaxValue24bitUnsigned = 0xFF_FFFF;
+
+        internal static double MapPressure(ulong hex)
+        {
+            var t1 = hex > MaxValue24bitSigned
+                    ? (int)(hex - MaxValue24bitUnsigned)
+                    : (int)hex
+                ;
+
+            var result = PressureOffset + t1 / PressureSensitivity;
+            return result;
+        }
+
+        public static ulong MapPressure(double Pressure)
+        {
+            var h1 = (long)((Pressure - PressureOffset) * PressureSensitivity);
+
+            var hex = h1 < 0
+                ? (ulong)(h1 + MaxValue24bitUnsigned)
+                : (ulong)h1;
+
+            return hex;
+        }
+
+        #endregion
+
         #region Settings
 
         public override byte DefaultAddress => DefaultAddressValue;
@@ -63,18 +123,18 @@ namespace Modules
         public double AirPressure
         {
             get => Reading0X28.IsInputDirty
-                ? double.NaN
-                : Math.Round(PressureHex.Value / 4096.0, 1);
-            internal set => PressureHex.Value = (ulong)(value * 4096.0);
+                    ? double.NaN
+                    : Math.Round(MapPressure(PressureHex.Value), 2);
+            internal set => PressureHex.Value = MapPressure(value);
         }
 
         public double Temperature
         {
             get => Reading0X28.IsInputDirty
                     ? double.NaN
-                    : Math.Round(42.5 + (short)TemperatureHex.Value / 480.0, 1);
+                    : Math.Round(MapTemperature(TemperatureHex.Value),2);
 
-            internal set => TemperatureHex.Value = (ulong)((value - 42.5) * 480.0);
+            internal set => TemperatureHex.Value = MapTemperature(value);
         }
 
         protected override IEnumerable<Register> Registers => new List<Register> { Settings0X20, Settings0X10, Reading0X28 };

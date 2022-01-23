@@ -1,6 +1,8 @@
 ﻿// ReSharper disable InconsistentNaming
 // ReSharper disable UnusedVariable
 
+using System;
+
 namespace ModulesTest
 {
     using eu.iamia.NCD.Bridge;
@@ -44,8 +46,8 @@ namespace ModulesTest
             Sut.ReadFromDevice();
 
             Assert.True(Sut.IsInputValid);
-            Assert.Equal(1018.1, Sut.AirPressure);
-            Assert.Equal(97.4, Sut.Temperature);
+            Assert.Equal(1018.06, Sut.AirPressure);
+            Assert.Equal(97.41, Sut.Temperature);
         }
 
         [Fact]
@@ -72,28 +74,45 @@ namespace ModulesTest
 
         #endregion
 
-        [Fact]
-        public void ReturnSameTemperatureAsSet()
+        [Theory]
+        [InlineData(0.0)]
+        [InlineData(2000.0)]
+        public void ReturnSamePressureAsSet(double airPressure)
         {
-            const double temp = 100.0;
-            Sut.Temperature = temp;
-            Assert.Equal(temp, Sut.Temperature);
+            Sut.AirPressure = airPressure;
+            Assert.Equal(airPressure, Sut.AirPressure);
         }
 
-        [Fact]
-        public void ReturnSamePressureAsSet()
+        [Theory]
+        [InlineData(100.0, 1000.0, 0x6B_D03E_8000)]
+        public void ReturnRegisterValueForSpecificTempAndPressure(double temperature, double airPressure, ulong expected)
         {
-            const double pressure = 1000.0;
-            Sut.AirPressure = pressure;
-            Assert.Equal(pressure, Sut.AirPressure);
-        }
-
-        [Fact]
-        public void ReturnRegisterValueForSpecificTempAndPressure()
-        {
-            Sut.Temperature = 100.0;
-            Sut.AirPressure = 1000;
+            Sut.Temperature = temperature;
+            Sut.AirPressure = airPressure;
             var registerValue = Sut.Reading0X28.Value;
+            Assert.Equal(expected, registerValue);
+        }
+
+        [Theory]
+        [InlineData(110.76,  2048.0, 0x00_7FFF_7FFFFF)] // temp_pressure
+        [InlineData(-25.76, -2048.0, 0x00_8000_800000)] // temp_pressure
+        public void Reverse(double temperature, double airPressure, ulong hex)
+        {
+            Sut.Reading0X28.Value = hex;
+
+            Assert.Equal(temperature, Sut.Temperature);
+            Assert.Equal(airPressure, Sut.AirPressure);
+        }
+
+        [Theory]
+        [InlineData(-25.76)]
+        [InlineData(110.76)]
+        public void ReturnSameTemperatureAsSet(double temperature)
+        {
+            var hex = Sut.Temperature =temperature;
+            var temp = Sut.Temperature;
+
+            Assert.Equal(temperature, temp);
         }
     }
 }
