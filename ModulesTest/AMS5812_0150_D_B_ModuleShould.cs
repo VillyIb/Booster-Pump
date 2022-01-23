@@ -18,7 +18,10 @@ namespace ModulesTest
         public AMS5812_0150_D_B_ModuleShould()
         {
             _FakeGateway = Substitute.For<IGateway>();
-            _Sut = new( new ApiToSerialBridge(_FakeGateway));
+            _Sut = new AMS5812_0150_D_Pressure( new ApiToSerialBridge(_FakeGateway))
+            {
+                RetryCount = 1
+            };
         }
 
         [Fact]
@@ -47,16 +50,19 @@ namespace ModulesTest
         }
 
         [Fact]
-        public void ReturnForForNullResponse()
+        public void RetryForNullResponse()
         {
+            const int retryCount = 3;
             var fakeReturnValue = new NcdApiProtocol(new List<byte> { 0x3F, 0xEB, 0x36, 0xE2 }); // Defines Pressure and Temperature.
             _FakeGateway.Execute(Arg.Any<NcdApiProtocol>()).Returns((NcdApiProtocol)null);
+            _Sut.RetryCount = retryCount;
             _Sut.ReadFromDevice();
+            _FakeGateway.Received(retryCount).Execute(Arg.Is<NcdApiProtocol>(cmd => cmd.PayloadAsHex == "BF 78 04 "));
             Assert.False(_Sut.IsInputValid);
         }
 
         [Fact]
-        public void ReturnForForTooLowPressure()
+        public void ReturnsInvalidInputForTooLowPressure()
         {
             var fakeReturnValue = new NcdApiProtocol(new List<byte> { 0x0C, 0xCC, 0x36, 0xE2 }); // Defines Pressure and Temperature.
             _FakeGateway.Execute(Arg.Any<NcdApiProtocol>()).Returns(fakeReturnValue);
@@ -65,7 +71,7 @@ namespace ModulesTest
         }
 
         [Fact]
-        public void ReturnForForTooHighPressure()
+        public void ReturnsInvalidInputForTooHighPressure()
         {
             var fakeReturnValue = new NcdApiProtocol(new List<byte> { 0x73, 0x35, 0x36, 0xE2 }); // Defines Pressure and Temperature.
             _FakeGateway.Execute(Arg.Any<NcdApiProtocol>()).Returns(fakeReturnValue);
@@ -74,7 +80,7 @@ namespace ModulesTest
         }
 
         [Fact]
-        public void ReturnForForTooLowTemperature()
+        public void ReturnsInvalidInputForTooLowTemperature()
         {
             var fakeReturnValue = new NcdApiProtocol(new List<byte> { 0x3F, 0xEB, 0x0C, 0xCC }); // Defines Pressure and Temperature.
             _FakeGateway.Execute(Arg.Any<NcdApiProtocol>()).Returns(fakeReturnValue);
@@ -83,13 +89,12 @@ namespace ModulesTest
         }
 
         [Fact]
-        public void ReturnForForTooHighTemperature()
+        public void ReturnsInvalidInputForTooHighTemperature()
         {
             var fakeReturnValue = new NcdApiProtocol(new List<byte> { 0x3F, 0xEB, 0x73, 0x35 }); // Defines Pressure and Temperature.
             _FakeGateway.Execute(Arg.Any<NcdApiProtocol>()).Returns(fakeReturnValue);
             _Sut.ReadFromDevice();
             Assert.False(_Sut.IsInputValid);
         }
-
     }
 }

@@ -28,26 +28,27 @@ namespace Modules
 
         public virtual void ReadFromDevice()
         {
-            using ReadModuleEnumerator enumerator = GetReadEnumerator();
+            using var register = GetReadEnumerator();
             var currentRetryCount = RetryCount;
-            while (enumerator.MoveNext() && enumerator.Current != null)
+            while (register.MoveNext() && register.Current != null && currentRetryCount > 0)
             {
-                ICommand command = new CommandRead(enumerator.Current.RegisterAddress, (byte)enumerator.Current.Size);
+                var lengthRequested = (byte)register.Current.Size;
+                ICommand command = new CommandRead(register.Current.RegisterAddress, lengthRequested);
 
-                var fromDevice = ApiToSerialBridge.Execute(command);
+                var response = ApiToSerialBridge.Execute(command);
 
-                // ReSharper disable once ConditionIsAlwaysTrueOrFalse
                 if (
-                    currentRetryCount <= 0
-                    ||
-                    fromDevice.Payload.Count == 1
-                    &&
-                    fromDevice.Payload[0] == ResponseWriteSuccess)
+                    response.IsValid 
+                    &&  
+                    !response.IsError 
+                    && 
+                    response.ByteCount == lengthRequested
+                )
                 {
-                    enumerator.Current.Value = fromDevice.Value;
+                    register.Current.Value = response.Value;
                     continue;
                 }
-                enumerator.Reset();
+                register.Reset();
                 currentRetryCount--;
             }
         }
