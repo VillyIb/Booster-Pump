@@ -9,9 +9,9 @@ using Xunit;
 
 namespace BoosterPumpLibrary.UnitTest.ModuleBase
 {
-    public class BaseModuleTest : BaseModuleV2
+    public class OutputModuleTest : OutputModule
     {
-        public BaseModuleTest(IBridge apiToSerialBridge) : base(apiToSerialBridge)
+        public OutputModuleTest(IBridge apiToSerialBridge) : base(apiToSerialBridge)
         {
             Timestamp = DateTime.Now;
         }
@@ -37,18 +37,18 @@ namespace BoosterPumpLibrary.UnitTest.ModuleBase
 
         private readonly IBridge Bridge = Substitute.For<IBridge>();
 
-        public BaseModuleTest Sut { get; }
+        public OutputModuleTest Sut { get; }
 
         public BaseModuleShould()
         {
-            Sut = new BaseModuleTest(Bridge);
+            Sut = new OutputModuleTest(Bridge);
             Bridge.Execute(Arg.Any<ICommand>()).Returns(new NcdApiProtocol(ResponseWriteSuccess));
         }
 
         [Fact]
         public void ThrowExceptionForNullIBridgeInConstructor()
         {
-            Assert.Throws<ArgumentNullException>(() => new BaseModuleTest(null));
+            Assert.Throws<ArgumentNullException>(() => new OutputModuleTest(null));
         }
         #region SetAddressIncrement(int)
 

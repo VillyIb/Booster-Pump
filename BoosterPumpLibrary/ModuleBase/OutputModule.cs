@@ -11,7 +11,7 @@ using eu.iamia.Util.Extensions;
 
 namespace BoosterPumpLibrary.ModuleBase
 {
-    public abstract partial class BaseModuleV2
+    public abstract partial class OutputModule
     {
         public const int ResponseWriteSuccess = 0x55;
 
@@ -30,7 +30,7 @@ namespace BoosterPumpLibrary.ModuleBase
         /// </summary>
         public int RetryCount { get; set; } = 1;
 
-        protected BaseModuleV2(IBridge apiToSerialBridge)
+        protected OutputModule(IBridge apiToSerialBridge)
         {
             Ensure.That(apiToSerialBridge, nameof(apiToSerialBridge)).IsNotNull();
 
@@ -54,7 +54,7 @@ namespace BoosterPumpLibrary.ModuleBase
 
         protected abstract IEnumerable<Register> Registers { get; }
 
-        public virtual WriteModuleEnumerator GetEnumerator()
+        public virtual OutputModuleEnumerator GetEnumerator()
         {
             var registersToSend = Registers.Where(t => t.IsOutputDirty);
             return new(registersToSend, DeviceAddress);

@@ -10,9 +10,9 @@ using eu.iamia.NCD.API;
 
 namespace BoosterPumpLibrary.ModuleBase
 {
-    public abstract partial class BaseModuleV2
+    public abstract partial class OutputModule
     {
-        public class WriteModuleEnumerator : IEnumerator<CommandDevice?>
+        public class OutputModuleEnumerator : IEnumerator<CommandDevice?>
         {
             protected readonly byte DeviceAddress;
 
@@ -28,7 +28,7 @@ namespace BoosterPumpLibrary.ModuleBase
 
             public CommandWrite? CurrentWriteCommand => (CommandWrite?)Current;
 
-            public WriteModuleEnumerator(IEnumerable<Register> selectedRegisters, byte deviceAddress)
+            public OutputModuleEnumerator(IEnumerable<Register> selectedRegisters, byte deviceAddress)
             {
                 DeviceAddress = deviceAddress;
                 SelectedRegisters = selectedRegisters.ToList();

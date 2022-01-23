@@ -22,7 +22,7 @@ namespace Modules
     }
 
     // ReSharper disable once InconsistentNaming
-    public class TCA9546A_Multiplexer : BaseModuleV2
+    public class TCA9546A_Multiplexer : OutputModule
     {
         // See: https://media.ncd.io/sites/2/20170721134413/tca9546a.pdf
 

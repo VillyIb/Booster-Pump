@@ -10,7 +10,7 @@ using eu.iamia.Util.Extensions;
 namespace Modules
 {
     // ReSharper disable once InconsistentNaming
-    public class MCP4725_4_20mA_CurrentTransmitterV2 : BoosterPumpLibrary.ModuleBase.BaseModuleV2
+    public class MCP4725_4_20mA_CurrentTransmitterV2 : BoosterPumpLibrary.ModuleBase.OutputModule
     {
         // Product, see: https://store.ncd.io/product/1-channel-4-20ma-current-loop-transmitter-i2c-mini-module/
         // DataSheet see: https://media.ncd.io/sites/2/20170721135048/MCP4725.pdf

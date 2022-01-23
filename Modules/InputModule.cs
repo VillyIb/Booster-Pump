@@ -11,7 +11,7 @@ using eu.iamia.NCD.API.Contract;
 
 namespace Modules
 {
-    public abstract class InputModule : BaseModuleV2
+    public abstract class InputModule : OutputModule
     {
         protected InputModule(IBridge apiToSerialBridge) : base(apiToSerialBridge)
         { }
