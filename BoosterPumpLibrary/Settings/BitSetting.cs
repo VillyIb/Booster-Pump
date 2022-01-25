@@ -3,6 +3,7 @@ using System.Text;
 
 namespace BoosterPumpLibrary.Settings
 {
+    // TODO make generic on value
     public class BitSetting
     {
         /// <summary>

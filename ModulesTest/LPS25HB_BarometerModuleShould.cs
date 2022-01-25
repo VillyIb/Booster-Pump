@@ -1,8 +1,6 @@
 ﻿// ReSharper disable InconsistentNaming
 // ReSharper disable UnusedVariable
 
-using System;
-
 namespace ModulesTest
 {
     using eu.iamia.NCD.Bridge;
@@ -84,7 +82,10 @@ namespace ModulesTest
         }
 
         [Theory]
-        [InlineData(100.0, 1000.0, 0x6B_D03E_8000)]
+        [InlineData(100.0000, 1000.0, 0x00_6BD0_3E8000)] // temp_pressure
+        [InlineData(110.7600, 2048.0, 0x00_7FFC_800000)] // temp_pressure
+        [InlineData(42.5000, -2048.0, 0x00_0000_800000)] // temp_pressure
+        [InlineData(-25.765, -2048.0, 0x00_8001_800000)] // temp_pressure
         public void ReturnRegisterValueForSpecificTempAndPressure(double temperature, double airPressure, ulong expected)
         {
             Sut.Temperature = temperature;
@@ -95,7 +96,8 @@ namespace ModulesTest
 
         [Theory]
         [InlineData(110.76,  2048.0, 0x00_7FFF_7FFFFF)] // temp_pressure
-        [InlineData(-25.76, -2048.0, 0x00_8000_800000)] // temp_pressure
+        [InlineData(42.500, -2048.0, 0x00_FFFF_800000)] // temp_pressure
+        [InlineData(-25.77, -2048.0, 0x00_8000_800000)] // temp_pressure
         public void Reverse(double temperature, double airPressure, ulong hex)
         {
             Sut.Reading0X28.Value = hex;

@@ -1,5 +1,6 @@
 ﻿// ReSharper disable InconsistentNaming
 
+
 namespace Modules
 {
     using BoosterPumpLibrary.Settings;
@@ -7,6 +8,7 @@ namespace Modules
     using System.Collections.Generic;
     using eu.iamia.NCD.API;
     using eu.iamia.NCD.API.Contract;
+    using eu.iamia.Util.Extensions;
 
     public class LPS25HB_Barometer : InputModule
     {
@@ -23,25 +25,18 @@ namespace Modules
 
         private const double TemperatureOffset = 42.5; // from technical note.
 
-        internal static double MapTemperature(ulong hex)
+        internal static double MapTemperature(ushort hex)
         {
-            var t1 = hex > (ushort)short.MaxValue
-                    ? (short)(hex - ushort.MaxValue)
-                    : (short)hex
-                ;
+            var t1 = hex.ToInt16();
 
             var result = TemperatureOffset + t1 / TemperatureSensitivity;
             return result;
         }
 
-        public static ulong MapTemperature(double temperature)
+        public static ushort MapTemperature(double temperature)
         {
-            var h1 = (long)((temperature - TemperatureOffset) * TemperatureSensitivity);
-
-            var hex = h1 < 0
-                ? (ulong)(h1 + ushort.MaxValue)
-                : (ulong)h1;
-
+            var h1 = (short)((temperature - TemperatureOffset) * TemperatureSensitivity);
+            var hex = h1.ToUInt16();
             return hex;
         }
 
@@ -49,29 +44,18 @@ namespace Modules
 
         private const double PressureOffset = 0;
 
-        private const uint MaxValue24bitSigned = 0x7F_FFFF;
-
-        private const uint MaxValue24bitUnsigned = 0xFF_FFFF;
-
-        internal static double MapPressure(ulong hex)
+        internal static double MapPressure(uint hex)
         {
-            var t1 = hex > MaxValue24bitSigned
-                    ? (int)(hex - MaxValue24bitUnsigned)
-                    : (int)hex
-                ;
+            var t1 = hex.ToInt24();
 
             var result = PressureOffset + t1 / PressureSensitivity;
             return result;
         }
 
-        public static ulong MapPressure(double Pressure)
+        public static uint MapPressure(double Pressure)
         {
-            var h1 = (long)((Pressure - PressureOffset) * PressureSensitivity);
-
-            var hex = h1 < 0
-                ? (ulong)(h1 + MaxValue24bitUnsigned)
-                : (ulong)h1;
-
+            var h1 = (int)((Pressure - PressureOffset) * PressureSensitivity);
+            var hex = h1.ToUint24();
             return hex;
         }
 
@@ -124,7 +108,7 @@ namespace Modules
         {
             get => Reading0X28.IsInputDirty
                     ? double.NaN
-                    : Math.Round(MapPressure(PressureHex.Value), 2);
+                    : Math.Round(MapPressure((uint)PressureHex.Value), 2);
             internal set => PressureHex.Value = MapPressure(value);
         }
 
@@ -132,7 +116,7 @@ namespace Modules
         {
             get => Reading0X28.IsInputDirty
                     ? double.NaN
-                    : Math.Round(MapTemperature(TemperatureHex.Value),2);
+                    : Math.Round(MapTemperature((ushort)TemperatureHex.Value), 2);
 
             internal set => TemperatureHex.Value = MapTemperature(value);
         }
