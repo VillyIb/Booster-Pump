@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Xml;
-using BoosterPumpLibrary.ModuleBase;
 using BoosterPumpLibrary.Settings;
-using eu.iamia.NCD.API;
 using eu.iamia.NCD.API.Contract;
 using eu.iamia.Util.Extensions;
 
@@ -53,10 +50,10 @@ namespace Modules
 
         private void Clear()
         {
-            Readings.SetInputDirty();
+            Readings.IsInputDirty = true;
         }
 
-        private readonly Register Readings = new(0x78, "Readings", 4);
+        private readonly Register Readings = new(0x78, "Readings", 4, Direction.Input);
 
         protected override IEnumerable<Register> Registers => new[]
         {

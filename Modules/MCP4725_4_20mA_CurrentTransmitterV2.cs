@@ -19,7 +19,7 @@ namespace Modules
 
         public override byte DefaultAddress => DefaultAddressValue;
 
-        private readonly Register Setting = new(0, "Settings", 3);
+        private readonly Register Setting = new(0, "Settings", 3, Direction.Output);
 
         /// <summary>
         /// 0: normal mode, 1: 1 kOhm-, 2 100 kOmh-, 3: 500 kOhm resistor to ground.

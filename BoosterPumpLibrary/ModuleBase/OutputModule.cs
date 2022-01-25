@@ -54,15 +54,14 @@ namespace BoosterPumpLibrary.ModuleBase
 
         protected abstract IEnumerable<Register> Registers { get; }
 
-        public virtual OutputModuleEnumerator GetEnumerator()
+        public virtual OutputModuleEnumerator GetOutputEnumerator()
         {
-            var registersToSend = Registers.Where(t => t.IsOutputDirty);
+            var registersToSend = Registers.Where(register => register.IsOutput && register.IsOutputDirty);
             return new(registersToSend, DeviceAddress);
         }
 
-        public void Send()
+        public void Send(OutputModuleEnumerator enumerator)
         {
-            using var enumerator = GetEnumerator();
             var currentRetryCount = RetryCount;
             while (enumerator.MoveNext() && enumerator.Current != null)
             {
@@ -83,11 +82,18 @@ namespace BoosterPumpLibrary.ModuleBase
             }
         }
 
-        public void SelectRegisterForReadingWithAutoIncrement(Register register)
+        public void Send()
         {
-            var writeCommand = new CommandWrite(DeviceAddress, new[] { (byte)(register.RegisterAddress | 0x80) });
-            // ReSharper disable once UnusedVariable
-            var returnValue = ApiToSerialBridge.Execute(writeCommand);
+            using var enumerator = GetOutputEnumerator();
+            Send(enumerator);
+        }
+
+        public void SendSpecificRegister(Register register)
+        {
+            var registersToSend = new[] { register };
+            using var enumerator = new OutputModuleEnumerator(registersToSend, DeviceAddress);
+            Send(enumerator);
+
         }
     }
 }

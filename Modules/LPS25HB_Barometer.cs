@@ -84,7 +84,7 @@ namespace Modules
         /// <summary>
         /// see: Description 8.5 Res_Conf Pressure and temperature resolution.
         /// </summary>
-        private readonly Register Settings0X10 = new(0X10, "RES_CONF", 1);
+        private readonly Register Settings0X10 = new(0X10, "RES_CONF", 1, Direction.Output);
 
         /// <summary>
         /// 0: 8-, 1: 16, 2: 32, 3: 64 internal average.
@@ -99,7 +99,7 @@ namespace Modules
         /// <summary>
         /// Control register 1
         /// </summary>
-        private readonly Register Settings0X20 = new(0x20, "CTRL_REG1", 1);
+        private readonly Register Settings0X20 = new(0x20, "CTRL_REG1", 1, Direction.Output);
 
         /// <summary>
         /// 0: Power Down, 1: Active Mode.
@@ -113,7 +113,7 @@ namespace Modules
 
         #endregion
 
-        internal readonly Register Reading0X28 = new(0x28, "Air Pressure & Temperature", 5);
+        internal readonly Register Reading0X28 = new(0x28, "Air Pressure & Temperature", 5, Direction.Input);
 
         private BitSetting PressureHex => Reading0X28.GetOrCreateSubRegister(24, 0, "Barometric Pressure");
 
@@ -150,7 +150,7 @@ namespace Modules
             TemperatureResolution.Value = 2;
             Send();
 
-            SelectRegisterForReadingWithAutoIncrement(Reading0X28);
+            SendSpecificRegister(Reading0X28);
             var readCommand = new CommandRead(DeviceAddress, 5);
             // ReSharper disable once UnusedVariable
             var returnValue = ApiToSerialBridge.Execute(readCommand);
@@ -158,7 +158,7 @@ namespace Modules
 
         public override void ReadFromDevice()
         {
-            Reading0X28.SetInputDirty();
+            Reading0X28.IsInputDirty = true;
             base.ReadFromDevice();
         }
 

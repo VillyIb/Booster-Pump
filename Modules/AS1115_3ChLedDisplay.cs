@@ -18,7 +18,7 @@ namespace Modules
         // see:https://s3.amazonaws.com/controleverything.media/controleverything/Production%20Run%2013/45_AS1115_I2CL_3CE_AMB/Datasheets/AS1115_Datasheet_EN_v2.pdf
         // see:https://store.ncd.io/product/7-segment-3-character-led-display-i2c-mini-module/
 
-        private readonly Register Digits = new(0x01, "Digits", 3);
+        private readonly Register Digits = new(0x01, "Digits", 3, Direction.Output);
 
         private BitSetting Digit0 => Digits.GetOrCreateSubRegister(8, 16, "Digit0");
         private BitSetting Digit1 => Digits.GetOrCreateSubRegister(8, 8, "Digit1");
@@ -27,28 +27,28 @@ namespace Modules
         /// <summary>
         /// Register 0x09..0x0C
         /// </summary>
-        private readonly Register Setting0X09 = new(0x09, "Settings 0x09", 1);
+        private readonly Register Setting0X09 = new(0x09, "Settings 0x09", 1, Direction.Output);
 
         /// <summary>
         /// Number: 0..7 - then numbers binary representation 0b000..0b111 switch the digits on/off.
         /// </summary>
         private BitSetting DecodeMode => Setting0X09.GetOrCreateSubRegister(3, 0, "Decode Mode");
 
-        private readonly Register Setting0X0A = new(0x0A, "Settings 0x0A", 1);
+        private readonly Register Setting0X0A = new(0x0A, "Settings 0x0A", 1, Direction.Output);
 
         /// <summary>
         /// 0..15
         /// </summary>
         private BitSetting GlobalIntensity => Setting0X0A.GetOrCreateSubRegister(4, 0, "Global Intensity");
 
-        private readonly Register Setting0X0B = new(0x0B, "Settings 0x0B", 1);
+        private readonly Register Setting0X0B = new(0x0B, "Settings 0x0B", 1, Direction.Output);
 
         /// <summary>
         /// 0: Digit 0, 1: Digit 0..1, 2:Digit 0..2
         /// </summary>
         private BitSetting ScanLimit => Setting0X0B.GetOrCreateSubRegister(3, 0, "Scan digits");
 
-        private readonly Register Setting0X0C = new(0x0C, "Settings 0x0C", 1);
+        private readonly Register Setting0X0C = new(0x0C, "Settings 0x0C", 1, Direction.Output);
 
         /// <summary>
         /// 0x00: Shutdown Mode, reset feature registers.
@@ -61,7 +61,7 @@ namespace Modules
         /// <summary>
         /// 0x0E..0x11
         /// </summary>
-        private readonly Register Setting0X0E = new(0x0E, "Settings 0x0E", 1);
+        private readonly Register Setting0X0E = new(0x0E, "Settings 0x0E", 1, Direction.Output);
 
         /// <summary>
         /// 0: BCD decoding.
@@ -76,7 +76,7 @@ namespace Modules
         /// </summary>
         private BitSetting Blink => Setting0X0E.GetOrCreateSubRegister(2, 4, "Blink settings");
 
-        private readonly Register Setting0X10 = new(0x10, "Settings 0x10", 1);
+        private readonly Register Setting0X10 = new(0x10, "Settings 0x10", 1, Direction.Output);
 
         /// <summary>
         /// 0..15
@@ -88,7 +88,7 @@ namespace Modules
         /// </summary>
         private BitSetting Digit1Intensity => Setting0X10.GetOrCreateSubRegister(4, 4, "Digit 1 intensity");
 
-        private readonly Register Setting0X11 = new(0x11, "Settings 0x11", 1);
+        private readonly Register Setting0X11 = new(0x11, "Settings 0x11", 1, Direction.Output);
 
         /// <summary>
         /// 0..15
@@ -217,7 +217,7 @@ namespace Modules
 
             foreach (var register in registers)
             {
-                register.SetOutputDirty();
+                register.IsOutputDirty = true;
             }
         }
 

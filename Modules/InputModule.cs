@@ -20,15 +20,15 @@ namespace Modules
 
         public abstract bool IsInputValid { get; }
 
-        public  ReadModuleEnumerator GetReadEnumerator()
+        public  ReadModuleEnumerator GetInputEnumerator()
         {
-            var registersToSend = Registers.Where(t => t.IsInputDirty);
+            var registersToSend = Registers.Where(register => register.IsInput && register.IsInputDirty);
             return new ReadModuleEnumerator(registersToSend, DeviceAddress);
         }
 
         public virtual void ReadFromDevice()
         {
-            using var register = GetReadEnumerator();
+            using var register = GetInputEnumerator();
             var currentRetryCount = RetryCount;
             while (register.MoveNext() && register.Current != null && currentRetryCount > 0)
             {
@@ -64,7 +64,7 @@ namespace Modules
         {
             foreach (var current in SelectedRegisters)
             {
-                current.SetInputDirty();
+                current.IsInputDirty = true;
             }
         }
 
@@ -89,7 +89,7 @@ namespace Modules
         public  bool MoveNext()
         {
             Current = null;
-            if (!SelectedRegisters.Any(t => t.IsInputDirty)) { return false; }
+            if (!SelectedRegisters.Any(register => register.IsInput && register.IsInputDirty)) { return false; }
 
             Current = SelectedRegisters.First(current => current.IsInputDirty);
             return true;

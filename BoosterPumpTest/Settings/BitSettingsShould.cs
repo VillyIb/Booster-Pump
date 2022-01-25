@@ -10,7 +10,7 @@ namespace BoosterPumpLibrary.UnitTest.Settings
 
         public BitSettingsShould()
         {
-            ParentRegister = new Register(0x10, "_", 0x02);
+            ParentRegister = new Register(0x10, "_", 0x02, Direction.Output);
         }
 
         [Fact]

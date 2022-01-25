@@ -22,37 +22,44 @@
             }
         }
 
+        #region properties
+
+        /// <summary>
+        /// Information.
+        /// </summary>
+        public string Description { get; protected set; }
+
+        /// <summary>
+        /// Indicate the Register is read from an I2C Device
+        /// </summary>
+        public bool IsInput { get; }
+
+        /// <summary>
+        /// Indicate input data is valid.
+        /// </summary>
+        public bool IsInputDirty { get; set; }
+
+        /// <summary>
+        /// Indicate this Register is written to an I2C device.
+        /// </summary>
+        public bool IsOutput { get; }
+
+        /// <summary>
+        /// Indicate output data is valid.
+        /// </summary>
+        public bool IsOutputDirty { get; set; }
+
         /// <summary>
         /// Number of bytes this Register is managing {1..8}
         /// </summary>
         public ushort Size { get; protected set; }
 
-        public string Description { get; protected set; }
-
         public byte RegisterAddress { get; protected set; }
 
         protected Dictionary<string, BitSetting> SubRegisters { get; }
 
-        protected bool IsOutputDirtyField;
 
-        protected bool IsInputDirtyField;
-
-        /// <summary>
-        /// Indicate input data is valid.
-        /// </summary>
-        public bool IsOutputDirty => IsOutputDirtyField;
-
-        public bool IsInputDirty => IsInputDirtyField;
-
-        public void SetOutputDirty()
-        {
-            IsOutputDirtyField = true;
-        }
-
-        public void SetInputDirty()
-        {
-            IsInputDirtyField = true;
-        }
+        #endregion
 
         protected Register()
         {
@@ -112,7 +119,7 @@
         /// <returns></returns>
         public IEnumerable<byte> GetByteValuesToWriteToDevice()
         {
-            IsOutputDirtyField = false;
+            IsOutputDirty = false;
             var value = Value;
             var bytes = BitConverter.GetBytes(value);
             var reverse = bytes.Reverse().ToArray();
@@ -128,12 +135,12 @@
             set
             {
                 ValueField = value;
-                IsOutputDirtyField = true;
-                IsInputDirtyField = false;
+                IsOutputDirty = true; // TODO evaluate.
+                IsInputDirty = false;
             }
         }
 
-        public Register(byte registerAddress, string description, ushort sizeInBytes) : this()
+        public Register(byte registerAddress, string description, ushort sizeInBytes, Direction direction) : this()
         {
             CheckRange(registerAddress, 0, 127, nameof(registerAddress));
             CheckRange(sizeInBytes, 1, MaxSize, nameof(sizeInBytes));
@@ -141,6 +148,9 @@
             RegisterAddress = registerAddress;
             Description = description;
             Size = sizeInBytes;
+
+            IsInput = (direction & Direction.Input) == Direction.Input;
+            IsOutput = (direction & Direction.Output) == Direction.Output;
         }
     }
 }

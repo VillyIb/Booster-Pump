@@ -30,7 +30,7 @@ namespace Modules
 
         public override byte DefaultAddress => DefaultAddressValue;
 
-        private readonly Register Setting0X00 = new(0x00, "Open channels", 1);
+        private readonly Register Setting0X00 = new(0x00, "Open channels", 1, Direction.Output);
 
         private BitSetting ChannelSelection => Setting0X00.GetOrCreateSubRegister(4, 0, "Open Channels");
 

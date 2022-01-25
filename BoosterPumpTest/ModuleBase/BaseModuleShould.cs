@@ -18,8 +18,8 @@ namespace BoosterPumpLibrary.UnitTest.ModuleBase
 
         public override byte DefaultAddress => 0b00;
 
-        public Register Register1 = new Register(0x01, "Register1", 8);
-        public Register Register2 = new Register(0x02, "Register2", 8);
+        public Register Register1 = new Register(0x01, "Register1", 8, Direction.Output);
+        public Register Register2 = new Register(0x02, "Register2", 8, Direction.Output);
 
         protected override IEnumerable<Register> Registers => new List<Register>
         {
@@ -32,8 +32,8 @@ namespace BoosterPumpLibrary.UnitTest.ModuleBase
 
     public class BaseModuleShould
     {
-        private readonly byte[] ResponseWriteSuccess = { 0x55 };
-        private readonly byte[] ResponseError90 = { 0x5A };
+        //private readonly byte[] ResponseWriteSuccess = { 0x55 };
+        //private readonly byte[] ResponseError90 = { 0x5A };
 
         private readonly IBridge Bridge = Substitute.For<IBridge>();
 
@@ -42,7 +42,7 @@ namespace BoosterPumpLibrary.UnitTest.ModuleBase
         public BaseModuleShould()
         {
             Sut = new OutputModuleTest(Bridge);
-            Bridge.Execute(Arg.Any<ICommand>()).Returns(new NcdApiProtocol(ResponseWriteSuccess));
+            Bridge.Execute(Arg.Any<ICommand>()).Returns(NcdApiProtocol.WriteSuccess);
         }
 
         [Fact]
@@ -77,15 +77,15 @@ namespace BoosterPumpLibrary.UnitTest.ModuleBase
 
         #endregion
 
-        #region GetEnumerator()
+        #region GetOutputEnumerator()
 
         [Fact]
         public void HaveElementsInEnumerator()
         {
-            Sut.Register1.SetOutputDirty();
-            Sut.Register2.SetOutputDirty();
+            Sut.Register1.IsOutputDirty = true;
+            Sut.Register2.IsOutputDirty = true;
 
-            using var enumerator = Sut.GetEnumerator();
+            using var enumerator = Sut.GetOutputEnumerator();
 
             Assert.True(enumerator.MoveNext());
         }
@@ -108,8 +108,8 @@ namespace BoosterPumpLibrary.UnitTest.ModuleBase
         [Fact]
         public void CallExecuteForSend()
         {
-            Sut.Register1.SetOutputDirty();
-            Sut.Register2.SetOutputDirty();
+            Sut.Register1.IsOutputDirty = true;
+            Sut.Register2.IsOutputDirty = true;
             
             Sut.Send();
             Bridge.Received(1).Execute(Arg.Any<ICommand>());
@@ -121,12 +121,12 @@ namespace BoosterPumpLibrary.UnitTest.ModuleBase
         [Theory]
         [InlineData(1)]
         [InlineData(2)]
-        public void CallExecuteForSendWithRetry(int retryCount)
+        public void CallExecuteMultipleTimesForSendWithTimeout(int retryCount)
         {
-            Sut.Register1.SetOutputDirty();
-            Sut.Register2.SetOutputDirty();
+            Sut.Register1.IsOutputDirty = true;
+            Sut.Register2.IsOutputDirty = true;
 
-            Bridge.Execute(Arg.Any<ICommand>()).Returns(new NcdApiProtocol(ResponseError90));
+            Bridge.Execute(Arg.Any<ICommand>()).Returns(NcdApiProtocol.Timeout);
             
             Sut.RetryCount = retryCount;
             Sut.Send();
@@ -135,19 +135,18 @@ namespace BoosterPumpLibrary.UnitTest.ModuleBase
         }
         #endregion
 
-        #region SelectRegisterForReadingWithAutoIncrement
+        #region SendSpecificRegister
 
         [Fact]
-        public void NotClearIsOutputDirtyForExplisitSendRegister()
+        public void CallExecuteOnceForExplicitSendRegister()
         {
-            Sut.Register1.SetOutputDirty();
+            Sut.Register1.IsOutputDirty = true;
 
-            Bridge.Execute(Arg.Any<ICommand>()).Returns(new NcdApiProtocol(ResponseError90));
+            Bridge.Execute(Arg.Any<ICommand>()).Returns(NcdApiProtocol.WriteSuccess);
 
-            Sut.SelectRegisterForReadingWithAutoIncrement(Sut.Register1);
+            Sut.SendSpecificRegister(Sut.Register1);
 
             Bridge.Received(1).Execute(Arg.Any<ICommand>());
-            Assert.True(Sut.Register1.IsOutputDirty);
         }
 
         #endregion

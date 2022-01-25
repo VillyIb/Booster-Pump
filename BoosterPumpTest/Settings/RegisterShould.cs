@@ -26,7 +26,7 @@ namespace BoosterPumpLibrary.UnitTest.Settings
 
         public RegisterShould()
         {
-            Sut = new(0x00, "64 bit register", 8); // 0000_0000_1111_1111_2222_2222_3333_3333_4444_4444_5555_5555_6666_6666_7777_7777
+            Sut = new(0x00, "64 bit register", 8, Direction.Output); // 0000_0000_1111_1111_2222_2222_3333_3333_4444_4444_5555_5555_6666_6666_7777_7777
 
             // ReSharper disable once StringLiteralTypo
             OneBitOffset7 = Sut.GetOrCreateSubRegister(1, 7, "Alfa"); // 0
@@ -69,13 +69,13 @@ namespace BoosterPumpLibrary.UnitTest.Settings
         [Fact]
         public void ThrowExceptionForTooLargeRegister()
         {
-            Exception ex = Assert.Throws<ArgumentOutOfRangeException>(() => new Register(0x00, "Illegal", 9));
+            Exception ex = Assert.Throws<ArgumentOutOfRangeException>(() => new Register(0x00, "Illegal", 9, Direction.Output));
         }
 
         [Fact]
         public void ThrowExceptionForTooSmallRegister()
         {
-            Exception ex = Assert.Throws<ArgumentOutOfRangeException>(() => new Register(0x00, "Illegal", 0));
+            Exception ex = Assert.Throws<ArgumentOutOfRangeException>(() => new Register(0x00, "Illegal", 0, Direction.Output));
         }
 
         [Fact]
@@ -300,7 +300,7 @@ namespace BoosterPumpLibrary.UnitTest.Settings
         {
             Sut.GetByteValuesToWriteToDevice();
             Assert.False(Sut.IsOutputDirty);
-            Sut.SetOutputDirty();
+            Sut.IsOutputDirty = true;
             Assert.True(Sut.IsOutputDirty);
         }
         #endregion
@@ -317,7 +317,7 @@ namespace BoosterPumpLibrary.UnitTest.Settings
         public void NotHaveInputDirtyForSetValue()
         {
             Assert.False(Sut.IsInputDirty);
-            Sut.SetInputDirty();
+            Sut.IsInputDirty = true;
             Assert.True(Sut.IsInputDirty);
         }
         #endregion
