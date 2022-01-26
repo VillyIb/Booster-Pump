@@ -2,7 +2,18 @@
 {
     public static class ConvertExtensions
     {
-        public static short ToInt16(this ushort hex)
+        public static sbyte ToInt8(this byte hex)
+        {
+            return unchecked((sbyte)hex);
+        }
+
+        public static byte ToUInt8(this sbyte hex)
+        {
+            return unchecked((byte)hex);
+        }
+
+
+        public static short ToInt16(this ushort hex) 
         {
             return unchecked((short)hex);
         }
@@ -11,6 +22,7 @@
         {
             return unchecked((ushort)hex);
         }
+
 
         private const int Int24MaxValue = 0x7F_FFFF;
 

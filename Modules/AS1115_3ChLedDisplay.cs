@@ -20,9 +20,9 @@ namespace Modules
 
         private readonly Register Digits = new(0x01, "Digits", 3, Direction.Output);
 
-        private BitSetting Digit0 => Digits.GetOrCreateSubRegister(8, 16, "Digit0");
-        private BitSetting Digit1 => Digits.GetOrCreateSubRegister(8, 8, "Digit1");
-        private BitSetting Digit2 => Digits.GetOrCreateSubRegister(8, 0, "Digit2");
+        private UInt8BitSettingsWrapper Digit0 => new(Digits.GetOrCreateSubRegister(8, 16, "Digit0"));
+        private UInt8BitSettingsWrapper Digit1 => new(Digits.GetOrCreateSubRegister(8, 8, "Digit1"));
+        private UInt8BitSettingsWrapper Digit2 => new(Digits.GetOrCreateSubRegister(8, 0, "Digit2"));
 
         /// <summary>
         /// Register 0x09..0x0C
@@ -32,21 +32,21 @@ namespace Modules
         /// <summary>
         /// Number: 0..7 - then numbers binary representation 0b000..0b111 switch the digits on/off.
         /// </summary>
-        private BitSetting DecodeMode => Setting0X09.GetOrCreateSubRegister(3, 0, "Decode Mode");
+        private UInt8BitSettingsWrapper DecodeMode => new(Setting0X09.GetOrCreateSubRegister(3, 0, "Decode Mode"));
 
         private readonly Register Setting0X0A = new(0x0A, "Settings 0x0A", 1, Direction.Output);
 
         /// <summary>
         /// 0..15
         /// </summary>
-        private BitSetting GlobalIntensity => Setting0X0A.GetOrCreateSubRegister(4, 0, "Global Intensity");
+        private UInt8BitSettingsWrapper GlobalIntensity => new(Setting0X0A.GetOrCreateSubRegister(4, 0, "Global Intensity"));
 
         private readonly Register Setting0X0B = new(0x0B, "Settings 0x0B", 1, Direction.Output);
 
         /// <summary>
         /// 0: Digit 0, 1: Digit 0..1, 2:Digit 0..2
         /// </summary>
-        private BitSetting ScanLimit => Setting0X0B.GetOrCreateSubRegister(3, 0, "Scan digits");
+        private UInt8BitSettingsWrapper ScanLimit => new(Setting0X0B.GetOrCreateSubRegister(3, 0, "Scan digits"));
 
         private readonly Register Setting0X0C = new(0x0C, "Settings 0x0C", 1, Direction.Output);
 
@@ -56,7 +56,7 @@ namespace Modules
         /// 0x01: Normal Operation, reset feature registers to default settings.
         /// 0x71: Normal Operation, feature registers unchanged.
         /// </summary>
-        private BitSetting Shutdown => Setting0X0C.GetOrCreateSubRegister(8, 0, "Shutdown Mode");
+        private UInt8BitSettingsWrapper Shutdown => new(Setting0X0C.GetOrCreateSubRegister(8, 0, "Shutdown Mode"));
 
         /// <summary>
         /// 0x0E..0x11
@@ -67,33 +67,33 @@ namespace Modules
         /// 0: BCD decoding.
         /// 1: HEX decoding.
         /// </summary>
-        private BitSetting DecodeSelection => Setting0X0E.GetOrCreateSubRegister(1, 2, "Decode Dec/Hex");
+        private UInt8BitSettingsWrapper DecodeSelection => new(Setting0X0E.GetOrCreateSubRegister(1, 2, "Decode Dec/Hex"));
 
         /// <summary>
         /// 0bX0: no blinking
         /// 0b01: blinking with 1 Hz
         /// 0b11: blinking with 0.5 Hz
         /// </summary>
-        private BitSetting Blink => Setting0X0E.GetOrCreateSubRegister(2, 4, "Blink settings");
+        private UInt8BitSettingsWrapper Blink => new(Setting0X0E.GetOrCreateSubRegister(2, 4, "Blink settings"));
 
         private readonly Register Setting0X10 = new(0x10, "Settings 0x10", 1, Direction.Output);
 
         /// <summary>
         /// 0..15
         /// </summary>
-        private BitSetting Digit0Intensity => Setting0X10.GetOrCreateSubRegister(4, 0, "Digit 0 intensity");
+        private UInt8BitSettingsWrapper Digit0Intensity => new(Setting0X10.GetOrCreateSubRegister(4, 0, "Digit 0 intensity"));
 
         /// <summary>
         /// 0..15
         /// </summary>
-        private BitSetting Digit1Intensity => Setting0X10.GetOrCreateSubRegister(4, 4, "Digit 1 intensity");
+        private UInt8BitSettingsWrapper Digit1Intensity => new(Setting0X10.GetOrCreateSubRegister(4, 4, "Digit 1 intensity"));
 
         private readonly Register Setting0X11 = new(0x11, "Settings 0x11", 1, Direction.Output);
 
         /// <summary>
         /// 0..15
         /// </summary>
-        private BitSetting Digit2Intensity => Setting0X11.GetOrCreateSubRegister(4, 0, "Digit 2 intensity");
+        private UInt8BitSettingsWrapper Digit2Intensity => new(Setting0X11.GetOrCreateSubRegister(4, 0, "Digit 2 intensity"));
 
         public static byte DefaultAddressValue => 0x00;
 
@@ -192,7 +192,7 @@ namespace Modules
         /// <param name="value"></param>
         public void SetDigitsVisible(byte value)
         {
-            ScanLimit.Value = (ulong)(value - 1);
+            ScanLimit.Value = (byte)(value - 1);
         }
 
         public void SetShutdownModeNormalResetFeature()
@@ -229,7 +229,7 @@ namespace Modules
         public void SetBcdValue(float value)
         {
             // ReSharper disable once MergeIntoLogicalPattern
-            if(value.IsOutsideRange(-99, 999))
+            if (value.IsOutsideRange(-99, 999))
             {
                 Digit0.Value = 0x0B; // 'E'
                 Digit1.Value = 0x0B; // 'E'

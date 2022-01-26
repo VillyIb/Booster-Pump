@@ -18,17 +18,17 @@ namespace Modules
 
         public virtual byte LengthRequested => 0x04;
 
-        public static uint DevicePressureMin => 3277;
-        public static uint DevicePressureMax => 29491;
+        protected static uint DevicePressureMin => 3277;
+        protected static uint DevicePressureMax => 29491;
 
-        public virtual float OutputPressureMin => -1034f;
-        public virtual float OutputPressureMax => 1034f;
+        protected virtual float OutputPressureMin => -1034f;
+        protected virtual float OutputPressureMax => 1034f;
 
-        public static uint DeviceTempMin => 3277;
-        public static uint DeviceTempMax => 29491;
+        protected static uint DeviceTempMin => 3277;
+        protected static uint DeviceTempMax => 29491;
 
-        public virtual float OutputTempMin => -25f;
-        public virtual float OutputTempMax => 85f;
+        protected virtual float OutputTempMin => -25f;
+        protected virtual float OutputTempMax => 85f;
 
         public float Pressure => Readings.IsInputDirty
             ? float.NaN
@@ -60,9 +60,9 @@ namespace Modules
             Readings
         };
 
-        private BitSetting TemperatureHex => Readings.GetOrCreateSubRegister(16, 0, "Temperature");
+        private Int16BitSettingsWrapper TemperatureHex => new(Readings.GetOrCreateSubRegister(16, 0, "Temperature"));
 
-        private BitSetting PressureHex => Readings.GetOrCreateSubRegister(16, 16, "Pressure");
+        private Int16BitSettingsWrapper PressureHex => new(Readings.GetOrCreateSubRegister(16, 16, "Pressure"));
 
         /// <summary>
         /// Pressure module

@@ -53,7 +53,6 @@ namespace ModulesTest
         public void RetryForNullResponse()
         {
             const int retryCount = 3;
-            var fakeReturnValue = new NcdApiProtocol(new List<byte> { 0x3F, 0xEB, 0x36, 0xE2 }); // Defines Pressure and Temperature.
             _FakeGateway.Execute(Arg.Any<NcdApiProtocol>()).Returns((NcdApiProtocol)null);
             _Sut.RetryCount = retryCount;
             _Sut.ReadFromDevice();
@@ -82,7 +81,7 @@ namespace ModulesTest
         [Fact]
         public void ReturnsInvalidInputForTooLowTemperature()
         {
-            var fakeReturnValue = new NcdApiProtocol(new List<byte> { 0x3F, 0xEB, 0x0C, 0xCC }); // Defines Pressure and Temperature.
+            var fakeReturnValue = new NcdApiProtocol(new List<byte> { 0x3F, 0xEB, 0x0C, 0xCB }); // Defines Pressure and Temperature.
             _FakeGateway.Execute(Arg.Any<NcdApiProtocol>()).Returns(fakeReturnValue);
             _Sut.ReadFromDevice();
             Assert.False(_Sut.IsInputValid); 
