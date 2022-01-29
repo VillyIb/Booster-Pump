@@ -52,6 +52,16 @@ namespace Modules
                 currentRetryCount--;
             }
         }
+
+        public void SetInputRegistersDirty()
+        {
+            foreach (var register in Registers)
+            {
+                if(!register.IsInput){continue;}
+
+                register.IsInputDirty = true;
+            }
+        }
     }
 
     public class ReadModuleEnumerator : IEnumerator<Register?>

@@ -88,12 +88,15 @@ namespace Modules
 
         #endregion
 
+        #region Readings 0x28
+
         internal readonly Register Reading0X28 = new(0x28, "Air Pressure & Temperature", 5, Direction.Input);
 
         private Int24BitSettingsWrapper PressureHex => new(Reading0X28.GetOrCreateSubRegister(24, 0, "Barometric Pressure"));
 
         private Int16BitSettingsWrapper TemperatureHex => new(Reading0X28.GetOrCreateSubRegister(16, 24, "Air Temperature"));
 
+        #endregion
 
         public double AirPressure
         {

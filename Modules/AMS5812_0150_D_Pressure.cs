@@ -53,16 +53,20 @@ namespace Modules
             Readings.IsInputDirty = true;
         }
 
+        #region Feature Setting 0xx78 (input)
+
         private readonly Register Readings = new(0x78, "Readings", 4, Direction.Input);
+
+        private Int16BitSettingsWrapper TemperatureHex => new(Readings.GetOrCreateSubRegister(16, 0, "Temperature"));
+
+        private Int16BitSettingsWrapper PressureHex => new(Readings.GetOrCreateSubRegister(16, 16, "Pressure"));
+
+        #endregion
 
         protected override IEnumerable<Register> Registers => new[]
         {
             Readings
         };
-
-        private Int16BitSettingsWrapper TemperatureHex => new(Readings.GetOrCreateSubRegister(16, 0, "Temperature"));
-
-        private Int16BitSettingsWrapper PressureHex => new(Readings.GetOrCreateSubRegister(16, 16, "Pressure"));
 
         /// <summary>
         /// Pressure module

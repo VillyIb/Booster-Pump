@@ -93,7 +93,15 @@ namespace BoosterPumpLibrary.ModuleBase
             var registersToSend = new[] { register };
             using var enumerator = new OutputModuleEnumerator(registersToSend, DeviceAddress);
             Send(enumerator);
+        }
 
+        public void SetOutputRegistersDirty()
+        {
+            foreach (var register in Registers)
+            {
+                if(!register.IsOutput) {continue;}
+                register.IsOutputDirty = true;
+            }
         }
     }
 }

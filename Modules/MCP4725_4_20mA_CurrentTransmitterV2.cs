@@ -3,9 +3,8 @@ using System;
 using System.Collections.Generic;
 using eu.iamia.NCD.API.Contract;
 using eu.iamia.Util.Extensions;
-
-// ReSharper disable CommentTypo
-// ReSharper disable StringLiteralTypo
+// ReSharper disable UnusedMember.Global
+// ReSharper disable InconsistentNaming
 
 namespace Modules
 {
@@ -19,65 +18,66 @@ namespace Modules
 
         public override byte DefaultAddress => DefaultAddressValue;
 
+        #region Setting 0x00,.., 0x02
+
+        public enum PowerDownSettings
+        {
+            NormalMode = 0b00,
+            Resistor1k = 0b01,
+            Resistor100k = 0b10,
+            Resistor500k = 0b11
+        }
+
         private readonly Register Setting = new(0, "Settings", 3, Direction.Output);
+
+        // Values acording to figure 6-2
+        // 1.byte is ignored (protocol level)
+        // 2 byte: Register offset 16
+        // 3 byte: Register offset 8
+        // 4 byte: Register offset 0
 
         /// <summary>
         /// 0: normal mode, 1: 1 kOhm-, 2 100 kOmh-, 3: 500 kOhm resistor to ground.
         /// See table 5-2
         /// </summary>
-        private BitSetting PowerDown => Setting.GetOrCreateSubRegister(1, 1 + 16, "Power Down");
+        public EnumBitSettings<PowerDownSettings> PowerDown => new(Setting.GetOrCreateSubRegister(2, 1 + 16, "Power Down"));
 
-        /// <summary>
-        /// C0 and C1, 0: or 1: FastMode (not supported), 2: Write to DAC register. 3: Write to DAC register and EEPROM.
-        /// See table 6-2
-        /// </summary>
-        // ReSharper disable once IdentifierTypo
-        private BitSetting WriteToDacOrEeprom => Setting.GetOrCreateSubRegister(2, 5 + 16, "Write to DAC or EEPROM");
+        public enum WriteCommandType
+        {
+            DacOnly = 0b010,
+            DacAndEEProm = 0b011
+        }
+
+        private EnumBitSettings<WriteCommandType> WriteToDacOrEEPROM => new(Setting.GetOrCreateSubRegister(3, 5 + 16, "Write to DAC or EEPROM"));
 
         /// <summary>
         /// 12 bit floating point value. (0..4095).
         /// </summary>
         private BitSetting Speed => Setting.GetOrCreateSubRegister(12, 4, "Speed");
 
-        protected override IEnumerable<Register> Registers => new[] { Setting };
+        #endregion
+
+        protected override IEnumerable<Register> Registers => new[]
+        {
+            Setting
+        };
 
         public virtual void Init()
         {
-            SetNormalPower();
+            PowerDown.Value = PowerDownSettings.NormalMode;
             SetSpeedPersistent(0.50f);
         }
 
         public MCP4725_4_20mA_CurrentTransmitterV2(IBridge apiToSerialBridge) : base(apiToSerialBridge)
         { }
 
-        public void SetNormalPower()
-        {
-            PowerDown.Value = 0;
-        }
-
         /// <summary>
-        /// Grounds output with 1k resistor.
+        /// Range 0..4095, by overflow is set 4095.
         /// </summary>
-        public void SetPowerDown()
-        {
-            PowerDown.Value = 1;
-            Send();
-        }
-
-        protected void WriteToDacOnly()
-        {
-            WriteToDacOrEeprom.Value = 2;
-        }
-
-        // ReSharper disable once IdentifierTypo
-        protected void WriteToDacAndEeprom()
-        {
-            WriteToDacOrEeprom.Value = 3;
-        }
-
+        /// <param name="speed"></param>
         protected void SetSpeed(ulong speed)
         {
-            Speed.Value = speed;
+            Speed.Value = Math.Min(4095, speed);
             Send();
         }
 
@@ -87,7 +87,7 @@ namespace Modules
         /// <param name="speed"></param>
         public void SetSpeed(float speed)
         {
-            WriteToDacOnly();
+            WriteToDacOrEEPROM.Value = WriteCommandType.DacOnly;
             SetSpeed((ulong)GetIntValue(speed));
         }
 
@@ -97,12 +97,12 @@ namespace Modules
         /// <param name="speed"></param>
         public void SetSpeedPersistent(float speed)
         {
-            WriteToDacAndEeprom();
+            WriteToDacOrEEPROM.Value = WriteCommandType.DacAndEEProm;
             var speedMapped = (ulong)GetIntValue(speed);
             SetSpeed(speedMapped);
         }
 
-        public float GetPctValue(int value)
+        internal float GetPctValue(int value)
         {
             if (value.IsOutsideRange(0, 4096)) { throw new ArgumentOutOfRangeException(nameof(value), value, "Valid: [0...4096[ (int)"); }
 
@@ -110,9 +110,9 @@ namespace Modules
             return dec;
         }
 
-        public int GetIntValue(float value)
+        internal int GetIntValue(float value)
         {
-            if (value.IsOutsideRange(0.0f, 1.0f) ) { throw new ArgumentOutOfRangeException(nameof(value), value, "Valid: [0...1[ (float)"); }
+            if (value.IsOutsideRange(0.0f, 1.0f)) { throw new ArgumentOutOfRangeException(nameof(value), value, "Valid: [0...1[ (float)"); }
 
             return (int)Math.Round(value * 4096f, 0);
         }
