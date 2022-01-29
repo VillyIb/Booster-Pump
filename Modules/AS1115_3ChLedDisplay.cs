@@ -18,11 +18,51 @@ namespace Modules
         // see:https://s3.amazonaws.com/controleverything.media/controleverything/Production%20Run%2013/45_AS1115_I2CL_3CE_AMB/Datasheets/AS1115_Datasheet_EN_v2.pdf
         // see:https://store.ncd.io/product/7-segment-3-character-led-display-i2c-mini-module/
 
+        public enum Level0xF
+        {
+            Level0,
+            Level1,
+            Level2,
+            Level3,
+            Level4,
+            Level5,
+            Level6,
+            Level7,
+            Level8,
+            Level9,
+            LevelA,
+            LevelB,
+            LevelC,
+            LevelD,
+            LevelE,
+            LevelF
+        }
+
+        #region Feature Register 0x01 .. 0x02
+
         private readonly Register Digits = new(0x01, "Digits", 3, Direction.Output);
 
         private UInt8BitSettingsWrapper Digit0 => new(Digits.GetOrCreateSubRegister(8, 16, "Digit0"));
         private UInt8BitSettingsWrapper Digit1 => new(Digits.GetOrCreateSubRegister(8, 8, "Digit1"));
         private UInt8BitSettingsWrapper Digit2 => new(Digits.GetOrCreateSubRegister(8, 0, "Digit2"));
+
+        #endregion
+
+        #region Feature Register 0x09
+
+        /// <summary>
+        /// Off: 8 bits maps to individual line segments (table 11)
+        /// On:  7 bits is decoded as BCD or Hex + comma (table 9 or 10)
+        /// </summary>
+        [Flags]
+        public enum DecodeModeSettings
+        {
+            AllDigitsOff = 0x00,
+            Digit1On = 0b0000_0001,
+            Digit2On = 0b0000_0010,
+            Digit3On = 0b0000_0100,
+            AllDigitsOn = 0b0000_0111
+        }
 
         /// <summary>
         /// Register 0x09..0x0C
@@ -32,31 +72,94 @@ namespace Modules
         /// <summary>
         /// Number: 0..7 - then numbers binary representation 0b000..0b111 switch the digits on/off.
         /// </summary>
-        private UInt8BitSettingsWrapper DecodeMode => new(Setting0X09.GetOrCreateSubRegister(3, 0, "Decode Mode"));
+        public EnumBitSettings<DecodeModeSettings> DecodeMode => new(Setting0X09.GetOrCreateSubRegister(3, 0, "Decode Mode"));
+
+        #endregion
+
+        #region Feature Register 0x0A
 
         private readonly Register Setting0X0A = new(0x0A, "Settings 0x0A", 1, Direction.Output);
 
         /// <summary>
         /// 0..15
         /// </summary>
-        private UInt8BitSettingsWrapper GlobalIntensity => new(Setting0X0A.GetOrCreateSubRegister(4, 0, "Global Intensity"));
+        public EnumBitSettings<Level0xF> GlobalIntensity => new(Setting0X0A.GetOrCreateSubRegister(4, 0, "Global Intensity"));
+
+        #endregion
+
+        #region Feature Register 0x0B
 
         private readonly Register Setting0X0B = new(0x0B, "Settings 0x0B", 1, Direction.Output);
 
+        public enum ActiveDigits
+        {
+            First = 0,
+            FirstToSecond = 1,
+            FirstToThird = 2
+
+        }
         /// <summary>
         /// 0: Digit 0, 1: Digit 0..1, 2:Digit 0..2
         /// </summary>
-        private UInt8BitSettingsWrapper ScanLimit => new(Setting0X0B.GetOrCreateSubRegister(3, 0, "Scan digits"));
+        public EnumBitSettings<ActiveDigits> ScanLimit => new(Setting0X0B.GetOrCreateSubRegister(3, 0, "Scan digits"));
+
+        #endregion
+
+        #region Feature Register 0x0C
 
         private readonly Register Setting0X0C = new(0x0C, "Settings 0x0C", 1, Direction.Output);
 
+        public enum ShutdownRegisterSettings
+        {
+            ShutdownModeResetFeatureRegisterToDefaultSettings = 0x00,
+
+            ShutdownModeFeatureRegisterUnchanged = 0x80,
+
+            NormalOperationResetFeatureRegisterToDefaultSettings = 0x01,
+
+            NormalOperationFeatureRegisterUnchanged = 0x81
+        }
+
         /// <summary>
-        /// 0x00: Shutdown Mode, reset feature registers.
-        /// 0x70: Shutdown Mode, feature registers unchanged.
+        /// 0x00: ShutdownRegister Mode, reset feature registers.
+        /// 0x70: ShutdownRegister Mode, feature registers unchanged.
         /// 0x01: Normal Operation, reset feature registers to default settings.
         /// 0x71: Normal Operation, feature registers unchanged.
         /// </summary>
-        private UInt8BitSettingsWrapper Shutdown => new(Setting0X0C.GetOrCreateSubRegister(8, 0, "Shutdown Mode"));
+        public EnumBitSettings<ShutdownRegisterSettings> ShutdownRegister => new(Setting0X0C.GetOrCreateSubRegister(8, 0, "ShutdownRegister Mode"));
+
+
+        #endregion
+
+        #region Feature Register 0x0E
+
+        /// <summary>
+        /// { BCD | HEX }
+        /// </summary>
+        public enum Decoding
+        {
+            BCD = 0,
+
+            HEX = 1
+        }
+
+        /// <summary>
+        /// {NoFlash | Flash1H | Flash05hz }
+        /// </summary>
+        public enum FlashMode
+        {
+            NoFlash = 0,
+
+            /// <summary>
+            /// 1 Hz.
+            /// </summary>
+            FlashFast = 1,
+
+            /// <summary>
+            /// 0.5 Hz.
+            /// </summary>
+            FlashSlow = 3
+        }
 
         /// <summary>
         /// 0x0E..0x11
@@ -67,33 +170,37 @@ namespace Modules
         /// 0: BCD decoding.
         /// 1: HEX decoding.
         /// </summary>
-        private UInt8BitSettingsWrapper DecodeSelection => new(Setting0X0E.GetOrCreateSubRegister(1, 2, "Decode Dec/Hex"));
+        public EnumBitSettings<Decoding> DecodingSetting => new(Setting0X0E.GetOrCreateSubRegister(1, 2, "Decode Dec/Hex"));
 
         /// <summary>
         /// 0bX0: no blinking
         /// 0b01: blinking with 1 Hz
         /// 0b11: blinking with 0.5 Hz
         /// </summary>
-        private UInt8BitSettingsWrapper Blink => new(Setting0X0E.GetOrCreateSubRegister(2, 4, "Blink settings"));
+        public EnumBitSettings<FlashMode> Blink => new(Setting0X0E.GetOrCreateSubRegister(2, 4, "Blink settings"));
 
-        private readonly Register Setting0X10 = new(0x10, "Settings 0x10", 1, Direction.Output);
+        #endregion
 
-        /// <summary>
-        /// 0..15
-        /// </summary>
-        private UInt8BitSettingsWrapper Digit0Intensity => new(Setting0X10.GetOrCreateSubRegister(4, 0, "Digit 0 intensity"));
+        #region Feature Register 0x10, 0x11
 
-        /// <summary>
-        /// 0..15
-        /// </summary>
-        private UInt8BitSettingsWrapper Digit1Intensity => new(Setting0X10.GetOrCreateSubRegister(4, 4, "Digit 1 intensity"));
-
-        private readonly Register Setting0X11 = new(0x11, "Settings 0x11", 1, Direction.Output);
+        private readonly Register Setting0X10 = new(0x10, "Settings 0x10", 2, Direction.Output);
 
         /// <summary>
         /// 0..15
         /// </summary>
-        private UInt8BitSettingsWrapper Digit2Intensity => new(Setting0X11.GetOrCreateSubRegister(4, 0, "Digit 2 intensity"));
+        public EnumBitSettings<Level0xF> Digit0Intensity => new(Setting0X10.GetOrCreateSubRegister(4, 0, "Digit 0 intensity"));
+
+        /// <summary>
+        /// 0..15
+        /// </summary>
+        public EnumBitSettings<Level0xF> Digit1Intensity => new(Setting0X10.GetOrCreateSubRegister(4, 4, "Digit 1 intensity"));
+
+        /// <summary>
+        /// 0..15
+        /// </summary>
+        public EnumBitSettings<Level0xF> Digit2Intensity => new(Setting0X10.GetOrCreateSubRegister(4, 8, "Digit 2 intensity"));
+
+        #endregion
 
         public static byte DefaultAddressValue => 0x00;
 
@@ -112,97 +219,17 @@ namespace Modules
             Setting0X0B,
 
             Setting0X10,
-            Setting0X11,
             Digits
         };
 
         public virtual void Init()
         {
+            DecodeMode.Value = DecodeModeSettings.AllDigitsOn;
             SetPrimarySettingsDirty();
-            SetShutdownModeNormalResetFeature();
-            SetBcdDecoding();
-            SetGlobalIntensity(15);
-            SetDigitsVisible(3);
-        }
-
-        protected void SetAllDecodeOn()
-        {
-            DecodeMode.Value = 0b111;
-        }
-
-        public void SetNoDecoding()
-        {
-            DecodeMode.Value = 0b000;
-        }
-
-        public void SetBcdDecoding()
-        {
-            SetAllDecodeOn();
-            DecodeSelection.Value = 0;
-        }
-
-        public void SetHexDecoding()
-        {
-            SetAllDecodeOn();
-            DecodeSelection.Value = 1;
-        }
-
-        public void BlinkFast()
-        {
-            Blink.Value = 0b01;
-        }
-
-        public void BlinkOff()
-        {
-            Blink.Value = 0b00;
-        }
-
-        public void BlinkSlow()
-        {
-            Blink.Value = 0b11;
-        }
-
-        /// <summary>
-        /// Set intensity value, range 0x00 ... 0x0F.
-        /// </summary>
-        /// <param name="value"></param>
-        public void SetGlobalIntensity(byte value)
-        {
-            GlobalIntensity.Value = value;
-        }
-
-        public void SetDigit0Intensity(byte value)
-        {
-            Digit0Intensity.Value = value;
-        }
-
-        public void SetDigit1Intensity(byte value)
-        {
-            Digit1Intensity.Value = value;
-        }
-
-        public void SetDigit2Intensity(byte value)
-        {
-            Digit2Intensity.Value = value;
-        }
-
-        /// <summary>
-        /// Number of visible digits 1..3
-        /// </summary>
-        /// <param name="value"></param>
-        public void SetDigitsVisible(byte value)
-        {
-            ScanLimit.Value = (byte)(value - 1);
-        }
-
-        public void SetShutdownModeNormalResetFeature()
-        {
-            Shutdown.Value = 0x01;
-        }
-
-        public void SetShutdownModeDown()
-        {
-            Shutdown.Value = 0x00;
+            ShutdownRegister.Value = ShutdownRegisterSettings.NormalOperationResetFeatureRegisterToDefaultSettings;
+            DecodingSetting.Value = Decoding.BCD;
+            GlobalIntensity.Value = Level0xF.LevelF;
+            ScanLimit.Value = ActiveDigits.FirstToThird;
         }
 
         public void SetPrimarySettingsDirty()

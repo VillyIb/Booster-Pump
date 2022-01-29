@@ -33,10 +33,10 @@ namespace ModulesTest
 
             Received.InOrder(() =>
             {
-                FakeGateway.Received(1).Execute(Arg.Is<NcdApiProtocol>(c => c.PayloadAsHex == "BE 00 0C 01 "));
-                FakeGateway.Received(1).Execute(Arg.Is<NcdApiProtocol>(c => c.PayloadAsHex == "BE 00 0E 00 "));
+                FakeGateway.Received(1).Execute(Arg.Is<NcdApiProtocol>(c => c.PayloadAsHex == "BE 00 0C 01 ")); // ShutdownRegisterSettings.NormalOperationResetFeatureRegisterToDefaultSettings
+                FakeGateway.Received(1).Execute(Arg.Is<NcdApiProtocol>(c => c.PayloadAsHex == "BE 00 0E 00 ")); // Decoding.BCD
                 //                                                                                    98 0A 0B
-                FakeGateway.Received(1).Execute(Arg.Is<NcdApiProtocol>(c => c.PayloadAsHex == "BE 00 09 07 0F 02 "));
+                FakeGateway.Received(1).Execute(Arg.Is<NcdApiProtocol>(c => c.PayloadAsHex == "BE 00 09 07 0F 02 ")); // DecodeModeSettings.AllDigitsOn
             });
         }
 
@@ -117,34 +117,34 @@ namespace ModulesTest
         [Fact]
         public void SettingDigit0Intensity()
         {
-            Sut.SetDigit0Intensity(0x0B);
+            Sut.Digit0Intensity.Value = As1115Module.Level0xF.LevelB;
             Sut.Send();
             FakeGateway.Received(1).Execute(Arg.Any<NcdApiProtocol>());
-            FakeGateway.Received(1).Execute(Arg.Is<NcdApiProtocol>(c => c.PayloadAsHex == "BE 00 10 0B "));
+            FakeGateway.Received(1).Execute(Arg.Is<NcdApiProtocol>(c => c.PayloadAsHex == "BE 00 10 00 0B ")); // {digit3 & digit2} {digit1 & digit0}
         }
 
         [Fact]
         public void SettingDigit1Intensity()
         {
-            Sut.SetDigit1Intensity(0x0C);
+            Sut.Digit1Intensity.Value = As1115Module.Level0xF.LevelC;
             Sut.Send();
             FakeGateway.Received(1).Execute(Arg.Any<NcdApiProtocol>());
-            FakeGateway.Received(1).Execute(Arg.Is<NcdApiProtocol>(c => c.PayloadAsHex == "BE 00 10 C0 "));
+            FakeGateway.Received(1).Execute(Arg.Is<NcdApiProtocol>(c => c.PayloadAsHex == "BE 00 10 00 C0 "));
         }
 
         [Fact]
         public void SettingDigit2Intensity()
         {
-            Sut.SetDigit2Intensity(0x0D);
+            Sut.Digit2Intensity.Value = As1115Module.Level0xF.LevelD;
             Sut.Send();
             FakeGateway.Received(1).Execute(Arg.Any<NcdApiProtocol>());
-            FakeGateway.Received(1).Execute(Arg.Is<NcdApiProtocol>(c => c.PayloadAsHex == "BE 00 11 0D "));
+            FakeGateway.Received(1).Execute(Arg.Is<NcdApiProtocol>(c => c.PayloadAsHex == "BE 00 10 0D 00 "));
         }
 
         [Fact]
         public void SetAllDecodeOff()
         {
-            Sut.SetNoDecoding();
+            Sut.DecodeMode.Value = As1115Module.DecodeModeSettings.AllDigitsOff;
             Sut.Send();
             FakeGateway.Received(1).Execute(Arg.Any<NcdApiProtocol>());
             FakeGateway.Received().Execute(Arg.Is<NcdApiProtocol>(c => c.PayloadAsHex == "BE 00 09 00 "));
@@ -153,7 +153,8 @@ namespace ModulesTest
         [Fact]
         public void SetHexDecoding()
         {
-            Sut.SetHexDecoding();
+            Sut.DecodeMode.Value = As1115Module.DecodeModeSettings.AllDigitsOn;
+            Sut.DecodingSetting.Value = As1115Module.Decoding.HEX;
             Sut.Send();
 
             FakeGateway.Received(2).Execute(Arg.Any<NcdApiProtocol>());
@@ -168,7 +169,8 @@ namespace ModulesTest
         [Fact]
         public void SetBcdDecoding()
         {
-            Sut.SetBcdDecoding();
+            Sut.DecodeMode.Value = As1115Module.DecodeModeSettings.AllDigitsOn;
+            Sut.DecodingSetting.Value = As1115Module.Decoding.BCD;
             Sut.Send();
 
             FakeGateway.Received(2).Execute(Arg.Any<NcdApiProtocol>());
@@ -183,7 +185,7 @@ namespace ModulesTest
         [Fact]
         public void BlinkFast()
         {
-            Sut.BlinkFast();
+            Sut.Blink.Value = As1115Module.FlashMode.FlashFast;
             Sut.Send();
             FakeGateway.Received(1).Execute(Arg.Any<NcdApiProtocol>());
             FakeGateway.Received(1).Execute(Arg.Is<NcdApiProtocol>(c => c.PayloadAsHex == "BE 00 0E 10 "));
@@ -192,7 +194,7 @@ namespace ModulesTest
         [Fact]
         public void BlinkOff()
         {
-            Sut.BlinkOff();
+            Sut.Blink.Value = As1115Module.FlashMode.NoFlash;
             Sut.Send();
             FakeGateway.Received(1).Execute(Arg.Any<NcdApiProtocol>());
             FakeGateway.Received(1).Execute(Arg.Is<NcdApiProtocol>(c => c.PayloadAsHex == "BE 00 0E 00 "));
@@ -201,7 +203,7 @@ namespace ModulesTest
         [Fact]
         public void BlinkSlow()
         {
-            Sut.BlinkSlow();
+            Sut.Blink.Value = As1115Module.FlashMode.FlashSlow;
             Sut.Send();
             FakeGateway.Received(1).Execute(Arg.Any<NcdApiProtocol>());
             FakeGateway.Received(1).Execute(Arg.Is<NcdApiProtocol>(c => c.PayloadAsHex == "BE 00 0E 30 "));
@@ -210,7 +212,7 @@ namespace ModulesTest
         [Fact]
         public void SetShutdownModeDown()
         {
-            Sut.SetShutdownModeDown();
+            Sut.ShutdownRegister.Value = As1115Module.ShutdownRegisterSettings.ShutdownModeResetFeatureRegisterToDefaultSettings;
             Sut.Send();
             FakeGateway.Received(1).Execute(Arg.Any<NcdApiProtocol>());
             FakeGateway.Received(1).Execute(Arg.Is<NcdApiProtocol>(c => c.PayloadAsHex == "BE 00 0C 00 "));
@@ -219,7 +221,7 @@ namespace ModulesTest
         [Fact]
         public void SetShutdownModeNormalResetFeature()
         {
-            Sut.SetShutdownModeNormalResetFeature();
+            Sut.ShutdownRegister.Value = As1115Module.ShutdownRegisterSettings.NormalOperationResetFeatureRegisterToDefaultSettings;
             Sut.Send();
             FakeGateway.Received(1).Execute(Arg.Any<NcdApiProtocol>());
             FakeGateway.Received(1).Execute(Arg.Is<NcdApiProtocol>(c => c.PayloadAsHex == "BE 00 0C 01 "));
