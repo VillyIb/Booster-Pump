@@ -1,4 +1,7 @@
-﻿using eu.iamia.Util.Extensions;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using eu.iamia.Util.Extensions;
 
 namespace BoosterPumpLibrary.Settings
 {
@@ -57,6 +60,18 @@ namespace BoosterPumpLibrary.Settings
         {
             get => ((uint)Server.Value).ToInt24();
             set => Server.Value = value.ToUint24();
+        }
+    }
+
+    public class EnumBitSettings<T> : BitSettingsWrapperBase where T : Enum
+    {
+        public EnumBitSettings(BitSetting server) : base(server)
+        { }
+
+        public T Value
+        {
+            get => ((T[])Enum.GetValues(typeof(T))).FirstOrDefault(current => Convert.ToUInt64(current) == Server.Value);
+            set => Server.Value = Convert.ToUInt64(value);
         }
     }
 }
