@@ -13,7 +13,7 @@
         }
 
 
-        public static short ToInt16(this ushort hex) 
+        public static short ToInt16(this ushort hex)
         {
             return unchecked((short)hex);
         }
@@ -24,22 +24,36 @@
         }
 
 
-        private const int Int24MaxValue = 0x7F_FFFF;
+        internal const int Int24MaxValue = 0x7F_FFFF;
 
-        private const uint UInt24MaxValue = 0x0100_0000;
+        internal const uint UInt24Converter = 0x0100_0000;
 
+        /// <summary>
+        /// Convert from 24bit 2'c complement uint to int.
+        /// </summary>
+        /// <param name="hex"></param>
+        /// <returns></returns>
         public static int ToInt24(this uint hex)
         {
-            return hex > Int24MaxValue
-                ? (int)(hex - UInt24MaxValue)
-                : (int)hex;
+            return (int)
+                (hex > Int24MaxValue
+                    ? hex - UInt24Converter
+                    : hex
+                );
         }
 
+        /// <summary>
+        /// Convert from int to 24bit 2'c complement 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public static uint ToUint24(this int value)
         {
-            return value < 0
-                ? (uint)(value + UInt24MaxValue)
-                : (uint)value;
+            return (uint)
+                (value < 0
+                    ? value + UInt24Converter
+                    : value
+                );
         }
     }
 }
