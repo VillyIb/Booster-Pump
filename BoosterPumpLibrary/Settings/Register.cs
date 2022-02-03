@@ -54,7 +54,7 @@
         /// </summary>
         public ushort Size { get; protected set; }
 
-        public byte RegisterAddress { get; protected set; }
+        public byte RegisterAddress { get; protected internal set; }
 
         protected Dictionary<string, BitSetting> SubRegisters { get; }
 

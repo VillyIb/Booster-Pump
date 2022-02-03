@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using BoosterPumpLibrary.Settings;
-using EnsureThat;
-using eu.iamia.NCD.API;
 using eu.iamia.NCD.API.Contract;
 using eu.iamia.Util.Extensions;
 
@@ -11,50 +9,45 @@ using eu.iamia.Util.Extensions;
 
 namespace BoosterPumpLibrary.ModuleBase
 {
-    public abstract partial class OutputModule
+    public interface IOutputModule
     {
-        public const int ResponseWriteSuccess = 0x55;
+        /// <summary>
+        /// Default value: 1.
+        /// </summary>
+        public int RetryCount { get; set; }
 
-        protected readonly IBridge ApiToSerialBridge;
+        Guid Id { get; }
 
-        public Guid Id { get; }
+        byte DefaultAddress { get; }
 
-        public abstract byte DefaultAddress { get; }
+        ByteExtension AddressIncrement { get; }
 
-        public ByteExtension AddressIncrement { get; protected set; }
+        byte DeviceAddress { get; }
 
-        public byte DeviceAddress => DefaultAddress + (AddressIncrement ?? new ByteExtension(0));
+        public void Send(OutputModule.OutputModuleEnumerator enumerator);
 
+        public void Send();
+
+        public void SendSpecificRegister(Register register);
+
+        public void SetOutputRegistersDirty();
+
+        public void SetAddressIncrement(int value);
+    }
+
+    public abstract partial class OutputModule : ModuleBase, IOutputModule
+    {
         /// <summary>
         /// Default value: 1.
         /// </summary>
         public int RetryCount { get; set; } = 1;
 
-        protected OutputModule(IBridge apiToSerialBridge)
-        {
-            Ensure.That(apiToSerialBridge, nameof(apiToSerialBridge)).IsNotNull();
-
-            ApiToSerialBridge = apiToSerialBridge;
-            AddressIncrement = null;
-            Id = Guid.NewGuid();
-            Console.WriteLine($"{GetType().Name}: {Id}");
-        }
-
-        // TODO NOT generic - valid value range is independent for each module.
-        /// <summary>
-        /// Adds the specified value to the DefaultAddress, legal values: {0|1}.
-        /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        public void SetAddressIncrement(int value)
-        {
-            if (value.IsOutsideRange(0, 1)) { throw new ArgumentOutOfRangeException(nameof(value), value, "Valid: {0:1}"); }
-            AddressIncrement = value;
-        }
+        protected OutputModule(IBridge apiToSerialBridge) : base(apiToSerialBridge)
+        { }
 
         protected abstract IEnumerable<Register> Registers { get; }
 
-        public virtual OutputModuleEnumerator GetOutputEnumerator()
+        private OutputModuleEnumerator GetOutputEnumerator()
         {
             var registersToSend = Registers.Where(register => register.IsOutput && register.IsOutputDirty);
             return new(registersToSend, DeviceAddress);
@@ -77,6 +70,7 @@ namespace BoosterPumpLibrary.ModuleBase
                 {
                     continue;
                 }
+
                 enumerator.Reset();
                 currentRetryCount--;
             }
@@ -99,7 +93,11 @@ namespace BoosterPumpLibrary.ModuleBase
         {
             foreach (var register in Registers)
             {
-                if(!register.IsOutput) {continue;}
+                if (!register.IsOutput)
+                {
+                    continue;
+                }
+
                 register.IsOutputDirty = true;
             }
         }

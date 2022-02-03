@@ -4,14 +4,39 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using BoosterPumpLibrary.ModuleBase;
 using BoosterPumpLibrary.Settings;
 using eu.iamia.NCD.API;
 using eu.iamia.NCD.API.Contract;
 
-namespace Modules
+namespace BoosterPumpLibrary.ModuleBase
 {
-    public abstract class InputModule : OutputModule
+    // TODO create OutputInputModule implement Send+Read on same register.
+
+    public interface IInputModule
+    {
+        bool IsInputValid { get; }
+
+        Guid Id { get; }
+
+        byte DefaultAddress { get; }
+
+        ByteExtension AddressIncrement { get; }
+
+        byte DeviceAddress { get; }
+
+        /// <summary>
+        /// Default value: 1.
+        /// </summary>
+        int RetryCount { get; set; }
+
+        void ReadFromDevice();
+
+        void SetInputRegistersDirty();
+
+        void SetAddressIncrement(int value);
+    }
+
+    public abstract class InputModule : OutputModule, IInputModule
     {
         protected InputModule(IBridge apiToSerialBridge) : base(apiToSerialBridge)
         { }
@@ -20,7 +45,7 @@ namespace Modules
 
         public abstract bool IsInputValid { get; }
 
-        public  ReadModuleEnumerator GetInputEnumerator()
+        private ReadModuleEnumerator GetInputEnumerator()
         {
             var registersToSend = Registers.Where(register => register.IsInput && register.IsInputDirty);
             return new ReadModuleEnumerator(registersToSend, DeviceAddress);
@@ -38,10 +63,10 @@ namespace Modules
                 var response = ApiToSerialBridge.Execute(command);
 
                 if (
-                    response.IsValid 
-                    &&  
-                    !response.IsError 
-                    && 
+                    response.IsValid
+                    &&
+                    !response.IsError
+                    &&
                     response.ByteCount == lengthRequested
                 )
                 {
@@ -57,7 +82,7 @@ namespace Modules
         {
             foreach (var register in Registers)
             {
-                if(!register.IsInput){continue;}
+                if (!register.IsInput) { continue; }
 
                 register.IsInputDirty = true;
             }
@@ -78,10 +103,10 @@ namespace Modules
             }
         }
 
-        [ExcludeFromCodeCoverage] 
+        [ExcludeFromCodeCoverage]
         object? IEnumerator.Current => Current;
 
-        
+
         /// <summary>
         /// CommandWrite or CommandRead
         /// </summary>
@@ -96,7 +121,7 @@ namespace Modules
             Current = null;
         }
 
-        public  bool MoveNext()
+        public bool MoveNext()
         {
             Current = null;
             if (!SelectedRegisters.Any(register => register.IsInput && register.IsInputDirty)) { return false; }

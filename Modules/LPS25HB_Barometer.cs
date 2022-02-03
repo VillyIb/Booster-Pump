@@ -1,6 +1,8 @@
 ﻿// ReSharper disable InconsistentNaming
 
 
+using BoosterPumpLibrary.ModuleBase;
+
 namespace Modules
 {
     using BoosterPumpLibrary.Settings;
