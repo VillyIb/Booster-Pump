@@ -8,11 +8,11 @@ using BoosterPumpLibrary.Settings;
 
 namespace eu.iamia.BaseModule
 {
-    public class InputModuleEnumerator : IEnumerator<Register?>, IInputModuleEnumerator
+    public class InputModuleEnumerator : IEnumerator<IRegister?>, IInputModuleEnumerator
     {
         protected readonly byte DeviceAddress;
 
-        protected List<Register> SelectedRegisters { get; }
+        protected List<IRegister> SelectedRegisters { get; }
 
         public void Reset()
         {
@@ -28,9 +28,9 @@ namespace eu.iamia.BaseModule
         /// <summary>
         /// CommandWrite or CommandRead
         /// </summary>
-        public Register? Current { get; set; }
+        public IRegister? Current { get; set; }
 
-        public InputModuleEnumerator(IEnumerable<Register> selectedRegisters, byte deviceAddress)
+        public InputModuleEnumerator(IEnumerable<IRegister> selectedRegisters, byte deviceAddress)
         {
             DeviceAddress = deviceAddress;
             SelectedRegisters = selectedRegisters.ToList();

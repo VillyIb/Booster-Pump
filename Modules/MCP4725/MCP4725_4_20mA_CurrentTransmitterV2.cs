@@ -55,7 +55,7 @@ namespace Modules.MCP4725
         /// <summary>
         /// 12 bit floating point value. (0..4095).
         /// </summary>
-        private BitSetting Speed => Setting.GetOrCreateSubRegister(12, 4, "Speed");
+        private IBitSetting Speed => Setting.GetOrCreateSubRegister(12, 4, "Speed");
 
         #endregion
 

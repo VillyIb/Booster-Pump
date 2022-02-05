@@ -7,7 +7,7 @@
     using System.Text;
     using eu.iamia.Util.Extensions;
 
-    public class Register
+    public class Register : IRegister
     {
         /// <summary>
         /// Maximum number of bytes matching in register.
@@ -74,7 +74,7 @@
         /// <param name="description"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        public BitSetting GetOrCreateSubRegister(ushort numberOfBits, ushort offsetInBits, string description = "")
+        public IBitSetting GetOrCreateSubRegister(ushort numberOfBits, ushort offsetInBits, string description = "")
         {
             var key = $"{offsetInBits}_{numberOfBits}_{description}";
 

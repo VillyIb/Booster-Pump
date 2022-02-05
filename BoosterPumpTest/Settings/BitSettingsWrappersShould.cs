@@ -19,7 +19,7 @@ namespace BoosterPumpLibrary.UnitTest.Settings
     {
         private static readonly Register Register = new Register(0x0a, "Test", 4, Direction.InputAndOutput);
 
-        private static readonly BitSetting TreeBit = Register.GetOrCreateSubRegister(3, 0, "3bit");
+        private static readonly IBitSetting TreeBit = Register.GetOrCreateSubRegister(3, 0, "3bit");
 
         private static readonly EnumBitSettings<MyEnum> Sut = new EnumBitSettings<MyEnum>(TreeBit);
 

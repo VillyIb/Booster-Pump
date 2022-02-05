@@ -17,7 +17,7 @@ namespace eu.iamia.BaseModule
 
         public abstract byte DefaultAddress { get; }
 
-        public ByteWrapper AddressIncrement { get; protected set; }
+        public ByteWrapper AddressIncrement { get; protected set; } // TODO right to use here? high coupling :(
 
         public byte DeviceAddress => DefaultAddress + AddressIncrement;
 

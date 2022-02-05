@@ -11,18 +11,18 @@ namespace BoosterPumpLibrary.UnitTest.Settings
     {
         public Register Sut;
 
-        public BitSetting OneBitOffset7;
-        public BitSetting TwoBitsOffset6;
-        public BitSetting TreeBitsOffset5;
-        public BitSetting FourBitsOffset4;
-        public BitSetting FiveBitsOffset3;
-        public BitSetting SixBitsOffset2;
-        public BitSetting GolfSetting;
-        public BitSetting EightBitsOffset0;
-        public BitSetting SixteenBitsOffset4;
-        public BitSetting TwentyFourBitsOffset2;
-        public BitSetting ThirtyTwoBitsOffset0;
-        public BitSetting SixtyFourBitsOffset0;
+        public IBitSetting OneBitOffset7;
+        public IBitSetting TwoBitsOffset6;
+        public IBitSetting TreeBitsOffset5;
+        public IBitSetting FourBitsOffset4;
+        public IBitSetting FiveBitsOffset3;
+        public IBitSetting SixBitsOffset2;
+        public IBitSetting GolfSetting;
+        public IBitSetting EightBitsOffset0;
+        public IBitSetting SixteenBitsOffset4;
+        public IBitSetting TwentyFourBitsOffset2;
+        public IBitSetting ThirtyTwoBitsOffset0;
+        public IBitSetting SixtyFourBitsOffset0;
 
         public RegisterShould()
         {

@@ -23,7 +23,7 @@ namespace BoosterPumpLibrary.ModuleBase
 
         public void Send();
 
-        public void SendSpecificRegister(Register register);
+        public void SendSpecificRegister(IRegister register);
 
         public void SetOutputRegistersDirty();
 

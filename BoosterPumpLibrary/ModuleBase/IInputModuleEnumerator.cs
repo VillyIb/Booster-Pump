@@ -10,7 +10,7 @@ public interface IInputModuleEnumerator : IDisposable
     /// <summary>
     /// CommandWrite or CommandRead
     /// </summary>
-    Register? Current { get; set; }
+    IRegister? Current { get; set; }
 
     bool MoveNext();
 }

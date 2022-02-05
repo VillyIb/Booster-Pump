@@ -33,7 +33,7 @@ namespace Modules.TCA9546A
 
         private readonly Register Setting0X00 = new(0x00, "Open channels", 1, Direction.Output);
 
-        private BitSetting ChannelSelection => Setting0X00.GetOrCreateSubRegister(4, 0, "Open Channels");
+        private IBitSetting ChannelSelection => Setting0X00.GetOrCreateSubRegister(4, 0, "Open Channels");
 
         protected override IEnumerable<Register> Registers => new List<Register> { Setting0X00 };
 

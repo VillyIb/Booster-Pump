@@ -18,7 +18,7 @@ namespace eu.iamia.BaseModule
         protected OutputModule(IBridge apiToSerialBridge) : base(apiToSerialBridge)
         { }
 
-        protected abstract IEnumerable<Register> Registers { get; }
+        protected abstract IEnumerable<IRegister> Registers { get; }
 
         private IOutputModuleEnumerator GetOutputEnumerator()
         {
@@ -55,7 +55,7 @@ namespace eu.iamia.BaseModule
             Send(enumerator);
         }
 
-        public void SendSpecificRegister(Register register)
+        public void SendSpecificRegister(IRegister register)
         {
             var registersToSend = new[] { register };
             using var enumerator = new OutputModuleEnumerator(registersToSend, DeviceAddress);

@@ -6,9 +6,9 @@ namespace BoosterPumpLibrary.Settings
 {
     public abstract class BitSettingsWrapperBase
     {
-        protected readonly BitSetting Server;
+        protected readonly IBitSetting Server;
 
-        protected BitSettingsWrapperBase(BitSetting server)
+        protected BitSettingsWrapperBase(IBitSetting server)
         {
             Server = server;
         }
@@ -16,7 +16,7 @@ namespace BoosterPumpLibrary.Settings
 
     public class Int8BitSettingsWrapper : BitSettingsWrapperBase
     {
-        public Int8BitSettingsWrapper(BitSetting server) : base(server)
+        public Int8BitSettingsWrapper(IBitSetting server) : base(server)
         { }
 
         public sbyte Value
@@ -28,7 +28,7 @@ namespace BoosterPumpLibrary.Settings
 
     public class UInt8BitSettingsWrapper : BitSettingsWrapperBase
     {
-        public UInt8BitSettingsWrapper(BitSetting server) : base(server)
+        public UInt8BitSettingsWrapper(IBitSetting server) : base(server)
         { }
 
         public byte Value
@@ -40,7 +40,7 @@ namespace BoosterPumpLibrary.Settings
 
     public class Int16BitSettingsWrapper : BitSettingsWrapperBase
     {
-        public Int16BitSettingsWrapper(BitSetting server) : base(server)
+        public Int16BitSettingsWrapper(IBitSetting server) : base(server)
         { }
 
         public short Value
@@ -52,7 +52,7 @@ namespace BoosterPumpLibrary.Settings
 
     public class Int24BitSettingsWrapper : BitSettingsWrapperBase
     {
-        public Int24BitSettingsWrapper(BitSetting server) : base(server)
+        public Int24BitSettingsWrapper(IBitSetting server) : base(server)
         { }
 
         public int Value
@@ -64,7 +64,7 @@ namespace BoosterPumpLibrary.Settings
 
     public class EnumBitSettings<T> : BitSettingsWrapperBase where T : Enum
     {
-        public EnumBitSettings(BitSetting server) : base(server)
+        public EnumBitSettings(IBitSetting server) : base(server)
         { }
 
         public T Value

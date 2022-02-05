@@ -17,7 +17,7 @@ namespace eu.iamia.BaseModule
         {
             protected readonly byte DeviceAddress;
 
-            protected List<Register> SelectedRegisters { get; }
+            protected List<IRegister> SelectedRegisters { get; }
 
             /// <summary>
             /// CommandWrite or CommandRead
@@ -29,7 +29,7 @@ namespace eu.iamia.BaseModule
 
             public CommandWrite? CurrentWriteCommand => (CommandWrite?)Current;
 
-            public OutputModuleEnumerator(IEnumerable<Register> selectedRegisters, byte deviceAddress)
+            public OutputModuleEnumerator(IEnumerable<IRegister> selectedRegisters, byte deviceAddress)
             {
                 DeviceAddress = deviceAddress;
                 SelectedRegisters = selectedRegisters.ToList();

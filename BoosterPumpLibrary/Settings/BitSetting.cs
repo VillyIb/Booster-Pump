@@ -3,12 +3,12 @@ using System.Text;
 
 namespace BoosterPumpLibrary.Settings
 {
-    public class BitSetting
+    public class BitSetting : IBitSetting
     {
         /// <summary>
         /// 
         /// </summary>
-        protected internal ulong Mask => Size < 64 ? (1UL << Size) - 1 : ulong.MaxValue;
+        public ulong Mask => Size < 64 ? (1UL << Size) - 1 : ulong.MaxValue;
 
         /// <summary>
         /// BitSetting start position value: 0..N where N = 
@@ -31,7 +31,7 @@ namespace BoosterPumpLibrary.Settings
 
         public string Description { get; protected set; }
 
-        private Register ParentRegister { get; }
+        private IRegister ParentRegister { get; }
 
         private void CheckRange(ulong value)
         {
