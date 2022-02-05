@@ -1,16 +1,15 @@
 ﻿// ReSharper disable InconsistentNaming
 
 
+using System;
+using System.Collections.Generic;
 using BoosterPumpLibrary.ModuleBase;
+using BoosterPumpLibrary.Settings;
+using eu.iamia.NCD.API;
+using eu.iamia.NCD.API.Contract;
 
-namespace Modules
+namespace Modules.LPS25HB
 {
-    using BoosterPumpLibrary.Settings;
-    using System;
-    using System.Collections.Generic;
-    using eu.iamia.NCD.API;
-    using eu.iamia.NCD.API.Contract;
-
     public class LPS25HB_Barometer : InputModule
     {
         // see: https://store.ncd.io/product/lps25hb-mems-pressure-sensor-260-1260-hpa-absolute-digital-output-barometer-i2c-mini-module/

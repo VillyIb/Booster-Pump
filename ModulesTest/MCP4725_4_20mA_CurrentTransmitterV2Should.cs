@@ -5,6 +5,8 @@ using eu.iamia.NCD.Shared;
 using NSubstitute;
 using Xunit;
 using Modules;
+using Modules.MCP4725;
+
 // ReSharper disable InconsistentNaming
 // ReSharper disable CommentTypo
 

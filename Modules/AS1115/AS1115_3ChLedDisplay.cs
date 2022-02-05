@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using BoosterPumpLibrary.ModuleBase;
+using BoosterPumpLibrary.Settings;
 using EnsureThat;
 using eu.iamia.NCD.API.Contract;
 using eu.iamia.Util.Extensions;
 
-namespace Modules
+namespace Modules.AS1115
 {
-    using BoosterPumpLibrary.ModuleBase;
-    using BoosterPumpLibrary.Settings;
-
     /// <summary>
     /// Display module 3 digits
     /// </summary>

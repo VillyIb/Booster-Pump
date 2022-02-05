@@ -1,6 +1,6 @@
 ﻿using eu.iamia.NCD.API.Contract;
 
-namespace Modules
+namespace Modules.AMS5812
 {
     // ReSharper disable once InconsistentNaming
     // ReSharper disable once UnusedMember.Global

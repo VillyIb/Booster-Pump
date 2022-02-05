@@ -1,6 +1,8 @@
 ﻿// ReSharper disable InconsistentNaming
 // ReSharper disable UnusedVariable
 
+using Modules.LPS25HB;
+
 namespace ModulesTest
 {
     using eu.iamia.NCD.Bridge;

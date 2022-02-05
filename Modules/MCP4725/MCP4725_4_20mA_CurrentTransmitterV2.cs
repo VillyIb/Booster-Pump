@@ -1,12 +1,13 @@
-﻿using BoosterPumpLibrary.Settings;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using BoosterPumpLibrary.Settings;
 using eu.iamia.NCD.API.Contract;
 using eu.iamia.Util.Extensions;
+
 // ReSharper disable UnusedMember.Global
 // ReSharper disable InconsistentNaming
 
-namespace Modules
+namespace Modules.MCP4725
 {
     // ReSharper disable once InconsistentNaming
     public class MCP4725_4_20mA_CurrentTransmitterV2 : BoosterPumpLibrary.ModuleBase.OutputModule

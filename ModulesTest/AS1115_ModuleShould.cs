@@ -6,6 +6,7 @@ using eu.iamia.NCD.Shared;
 using NSubstitute;
 using Xunit;
 using Modules;
+using Modules.AS1115;
 
 namespace ModulesTest
 {

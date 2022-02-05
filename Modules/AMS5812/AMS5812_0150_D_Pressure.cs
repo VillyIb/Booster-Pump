@@ -5,7 +5,7 @@ using BoosterPumpLibrary.Settings;
 using eu.iamia.NCD.API.Contract;
 using eu.iamia.Util.Extensions;
 
-namespace Modules
+namespace Modules.AMS5812
 {
     // ReSharper disable once UnusedMember.Global
     // ReSharper disable once InconsistentNaming

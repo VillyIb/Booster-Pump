@@ -12,6 +12,10 @@ using BoosterPumpConfiguration;
 using eu.iamia.NCD.API;
 using eu.iamia.NCD.API.Contract;
 using eu.iamia.NCD.Serial.Contract;
+using Modules.AMS5812;
+using Modules.AS1115;
+using Modules.LPS25HB;
+using Modules.MCP4725;
 
 namespace BoosterPumpApplication
 {
