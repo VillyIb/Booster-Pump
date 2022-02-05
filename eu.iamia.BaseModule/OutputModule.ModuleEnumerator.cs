@@ -1,18 +1,19 @@
 ﻿#nullable enable
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-
+using BoosterPumpLibrary.ModuleBase;
 using BoosterPumpLibrary.Settings;
 using eu.iamia.NCD.API;
 
-namespace BoosterPumpLibrary.ModuleBase
+namespace eu.iamia.BaseModule
 {
     public abstract partial class OutputModule
     {
-        public class OutputModuleEnumerator : IEnumerator<CommandDevice?>
+        public class OutputModuleEnumerator : IEnumerator<CommandDevice?>, IOutputModuleEnumerator
         {
             protected readonly byte DeviceAddress;
 

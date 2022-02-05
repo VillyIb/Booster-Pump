@@ -1,41 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using BoosterPumpLibrary.ModuleBase;
 using BoosterPumpLibrary.Settings;
-using BoosterPumpLibrary.Util;
 using eu.iamia.NCD.API.Contract;
-using eu.iamia.Util.Extensions;
 
 // ReSharper disable UnusedMember.Global
 
-namespace BoosterPumpLibrary.ModuleBase
+namespace eu.iamia.BaseModule
 {
-    public interface IOutputModule
-    {
-        /// <summary>
-        /// Default value: 1.
-        /// </summary>
-        public int RetryCount { get; set; }
-
-        Guid Id { get; }
-
-        byte DefaultAddress { get; }
-
-        ByteWrapper AddressIncrement { get; }
-
-        byte DeviceAddress { get; }
-
-        public void Send(OutputModule.OutputModuleEnumerator enumerator);
-
-        public void Send();
-
-        public void SendSpecificRegister(Register register);
-
-        public void SetOutputRegistersDirty();
-
-        public void SetAddressIncrement(int value);
-    }
-
     public abstract partial class OutputModule : ModuleBase, IOutputModule
     {
         /// <summary>
@@ -48,13 +20,13 @@ namespace BoosterPumpLibrary.ModuleBase
 
         protected abstract IEnumerable<Register> Registers { get; }
 
-        private OutputModuleEnumerator GetOutputEnumerator()
+        private IOutputModuleEnumerator GetOutputEnumerator()
         {
             var registersToSend = Registers.Where(register => register.IsOutput && register.IsOutputDirty);
-            return new(registersToSend, DeviceAddress);
+            return new OutputModuleEnumerator(registersToSend, DeviceAddress);
         }
 
-        public void Send(OutputModuleEnumerator enumerator)
+        public void Send(IOutputModuleEnumerator enumerator)
         {
             var currentRetryCount = RetryCount;
             while (enumerator.MoveNext() && enumerator.Current != null)

@@ -2,7 +2,6 @@
 using eu.iamia.NCD.Bridge;
 using eu.iamia.NCD.Serial.Contract;
 using eu.iamia.NCD.Shared;
-using Modules;
 using Modules.TCA9546A;
 using NSubstitute;
 using Xunit;

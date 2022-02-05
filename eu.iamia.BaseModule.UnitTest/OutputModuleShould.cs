@@ -7,7 +7,7 @@ using eu.iamia.NCD.Shared;
 using NSubstitute;
 using Xunit;
 
-namespace BoosterPumpLibrary.UnitTest.ModuleBase
+namespace eu.iamia.BaseModule.UnitTest
 {
     public class OutputModuleTest : OutputModule
     {

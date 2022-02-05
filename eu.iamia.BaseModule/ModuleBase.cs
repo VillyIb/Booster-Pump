@@ -1,30 +1,12 @@
 ﻿using System;
+using BoosterPumpLibrary.ModuleBase;
 using BoosterPumpLibrary.Util;
 using EnsureThat;
 using eu.iamia.NCD.API.Contract;
 using eu.iamia.Util.Extensions;
 
-namespace BoosterPumpLibrary.ModuleBase
+namespace eu.iamia.BaseModule
 {
-    public interface IModuleBase
-    {
-        Guid Id { get; }
-
-        byte DefaultAddress { get; }
-
-        ByteWrapper AddressIncrement { get; }
-
-        byte DeviceAddress { get; }
-
-        /// <summary>
-        /// Adds the specified value to the DefaultAddress, legal values: {0|1}. // TODO some modules can add up to 7
-        /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        public void SetAddressIncrement(int value);
-
-    }
-
     public abstract class ModuleBase : IModuleBase
     {
         public const int ResponseWriteSuccess = 0x55;
@@ -37,14 +19,14 @@ namespace BoosterPumpLibrary.ModuleBase
 
         public ByteWrapper AddressIncrement { get; protected set; }
 
-        public byte DeviceAddress => DefaultAddress + (AddressIncrement ?? new ByteWrapper(0));
+        public byte DeviceAddress => DefaultAddress + AddressIncrement;
 
         protected ModuleBase(IBridge apiToSerialBridge)
         {
             Ensure.That(apiToSerialBridge, nameof(apiToSerialBridge)).IsNotNull();
 
             ApiToSerialBridge = apiToSerialBridge;
-            AddressIncrement = null;
+            AddressIncrement = 0;
             Id = Guid.NewGuid();
             Console.WriteLine($"{GetType().Name}: {Id}");
         }

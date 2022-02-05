@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
-using BoosterPumpLibrary.ModuleBase;
+using eu.iamia.BaseModule;
 using eu.iamia.NCD.Bridge;
 using eu.iamia.NCD.Serial.Contract;
 using eu.iamia.NCD.Shared;
 using NSubstitute;
 using Xunit;
-using Modules;
 using Modules.AS1115;
 
 namespace ModulesTest

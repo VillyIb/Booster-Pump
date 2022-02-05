@@ -3,11 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using BoosterPumpLibrary.ModuleBase;
 using BoosterPumpLibrary.Settings;
 
-namespace BoosterPumpLibrary.ModuleBase
+namespace eu.iamia.BaseModule
 {
-    public class InputModuleEnumerator : IEnumerator<Register?>
+    public class InputModuleEnumerator : IEnumerator<Register?>, IInputModuleEnumerator
     {
         protected readonly byte DeviceAddress;
 
@@ -24,13 +25,10 @@ namespace BoosterPumpLibrary.ModuleBase
         [ExcludeFromCodeCoverage]
         object? IEnumerator.Current => Current;
 
-
         /// <summary>
         /// CommandWrite or CommandRead
         /// </summary>
         public Register? Current { get; set; }
-
-        public Register? CurrentReadCommand => (Register?)Current;
 
         public InputModuleEnumerator(IEnumerable<Register> selectedRegisters, byte deviceAddress)
         {

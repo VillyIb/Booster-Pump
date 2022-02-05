@@ -47,6 +47,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eu.iamia.NCD.Shared", "eu.i
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eu.iamia.NCD.Shared.UnitTest", "eu.iamia.NCD.Shared.Test\eu.iamia.NCD.Shared.UnitTest.csproj", "{39AF78E1-2CA3-48F2-A6CC-C23F66F9C15E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eu.iamia.BaseModule", "eu.iamia.BaseModule\eu.iamia.BaseModule.csproj", "{A2368949-C152-4535-A8DE-FCF0B5D70851}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eu.iamia.BaseModule.UnitTest", "eu.iamia.BaseModule.UnitTest\eu.iamia.BaseModule.UnitTest.csproj", "{EF8DE63B-BC04-490F-93DC-956F0CD1C348}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -141,6 +145,14 @@ Global
 		{39AF78E1-2CA3-48F2-A6CC-C23F66F9C15E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{39AF78E1-2CA3-48F2-A6CC-C23F66F9C15E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{39AF78E1-2CA3-48F2-A6CC-C23F66F9C15E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A2368949-C152-4535-A8DE-FCF0B5D70851}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A2368949-C152-4535-A8DE-FCF0B5D70851}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A2368949-C152-4535-A8DE-FCF0B5D70851}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A2368949-C152-4535-A8DE-FCF0B5D70851}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EF8DE63B-BC04-490F-93DC-956F0CD1C348}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF8DE63B-BC04-490F-93DC-956F0CD1C348}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EF8DE63B-BC04-490F-93DC-956F0CD1C348}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EF8DE63B-BC04-490F-93DC-956F0CD1C348}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

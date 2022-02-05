@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using BoosterPumpLibrary.Settings;
+﻿using BoosterPumpLibrary.Settings;
 using Xunit;
 
 namespace BoosterPumpLibrary.UnitTest.Settings

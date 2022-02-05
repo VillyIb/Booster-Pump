@@ -4,7 +4,6 @@ using eu.iamia.NCD.Serial.Contract;
 using eu.iamia.NCD.Shared;
 using NSubstitute;
 using Xunit;
-using Modules;
 using Modules.MCP4725;
 
 // ReSharper disable InconsistentNaming

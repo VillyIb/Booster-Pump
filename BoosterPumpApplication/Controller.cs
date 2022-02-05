@@ -4,8 +4,6 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.DependencyInjection;
-
-using Modules;
 using eu.iamia.Util;
 using BoosterPumpLibrary.Logger;
 using BoosterPumpConfiguration;

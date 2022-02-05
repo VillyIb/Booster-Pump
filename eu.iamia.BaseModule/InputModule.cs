@@ -1,37 +1,12 @@
 ﻿#nullable enable
-using System;
 using System.Linq;
-using BoosterPumpLibrary.Util;
+using BoosterPumpLibrary.ModuleBase;
 using eu.iamia.NCD.API;
 using eu.iamia.NCD.API.Contract;
 
-namespace BoosterPumpLibrary.ModuleBase
+namespace eu.iamia.BaseModule
 {
     // TODO create OutputInputModule implement Send+Read on same register.
-
-    public interface IInputModule
-    {
-        bool IsInputValid { get; }
-
-        Guid Id { get; }
-
-        byte DefaultAddress { get; }
-
-        ByteWrapper AddressIncrement { get; }
-
-        byte DeviceAddress { get; }
-
-        /// <summary>
-        /// Default value: 1.
-        /// </summary>
-        int RetryCount { get; set; }
-
-        void ReadFromDevice();
-
-        void SetInputRegistersDirty();
-
-        void SetAddressIncrement(int value);
-    }
 
     public abstract class InputModule : OutputModule, IInputModule
     {
@@ -41,6 +16,8 @@ namespace BoosterPumpLibrary.ModuleBase
         //public abstract void ReadFromDevice();
 
         public abstract bool IsInputValid { get; }
+
+      
 
         private InputModuleEnumerator GetInputEnumerator()
         {

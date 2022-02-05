@@ -1,11 +1,11 @@
-﻿namespace BoosterPumpLibrary.UnitTest.ModuleBase
-{
-    using System;
-    using eu.iamia.NCD.API.Contract;
-    using NSubstitute;
-    using Xunit;
+﻿using System;
+using eu.iamia.NCD.API.Contract;
+using NSubstitute;
+using Xunit;
 
-    public class ModuleBaseTests : BoosterPumpLibrary.ModuleBase.ModuleBase
+namespace eu.iamia.BaseModule.UnitTest
+{
+    public class ModuleBaseTests : ModuleBase
     {
         public ModuleBaseTests(IBridge apiToSerialBridge) : base(apiToSerialBridge)
         { }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using BoosterPumpLibrary.ModuleBase;
 using BoosterPumpLibrary.Settings;
+using eu.iamia.BaseModule;
 using eu.iamia.NCD.API.Contract;
 using eu.iamia.Util.Extensions;
 

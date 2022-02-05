@@ -1,13 +1,13 @@
-﻿namespace BoosterPumpLibrary.UnitTest.ModuleBase
-{
-    using System;
-    using NSubstitute;
-    using Xunit;
-    using System.Collections.Generic;
-    using BoosterPumpLibrary.ModuleBase;
-    using BoosterPumpLibrary.Settings;
-    using eu.iamia.NCD.API.Contract;
+﻿using System;
+using System.Collections.Generic;
+using BoosterPumpLibrary.ModuleBase;
+using BoosterPumpLibrary.Settings;
+using eu.iamia.NCD.API.Contract;
+using NSubstitute;
+using Xunit;
 
+namespace eu.iamia.BaseModule.UnitTest
+{
     public class InputModuleTest : InputModule
     {
         public override byte DefaultAddress => 0x00;
