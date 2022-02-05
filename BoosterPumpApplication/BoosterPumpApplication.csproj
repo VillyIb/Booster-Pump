@@ -25,6 +25,7 @@
     <ProjectReference Include="..\eu.iamia.Configuration\eu.iamia.Configuration.csproj" />
     <ProjectReference Include="..\eu.iamia.NCD.API.Contract\eu.iamia.NCD.API.Contract.csproj" />
     <ProjectReference Include="..\eu.iamia.NCD.API\eu.iamia.NCD.API.csproj" />
+    <ProjectReference Include="..\eu.iamia.NCD.Bridge\eu.iamia.NCD.Bridge.csproj" />
     <ProjectReference Include="..\eu.iamia.NCD.Serial\eu.iamia.NCD.Serial.csproj" />
     <ProjectReference Include="..\eu.iamia.ReliableSerialPort\eu.iamia.ReliableSerialPort.csproj" />
     <ProjectReference Include="..\Modules\Modules.csproj" />

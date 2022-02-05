@@ -21,7 +21,6 @@
     <ProjectReference Include="..\eu.iamia.BaseModule\eu.iamia.BaseModule.csproj" />
     <ProjectReference Include="..\eu.iamia.NCD.API.Contract\eu.iamia.NCD.API.Contract.csproj" />
     <ProjectReference Include="..\eu.iamia.NCD.API\eu.iamia.NCD.API.csproj" />
-    <ProjectReference Include="..\eu.iamia.NCD.Bridge\eu.iamia.NCD.Bridge.csproj" />
   </ItemGroup>
 
 </Project>
