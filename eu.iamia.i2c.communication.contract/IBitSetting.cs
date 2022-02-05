@@ -1,4 +1,4 @@
-﻿namespace BoosterPumpLibrary.Settings;
+﻿namespace eu.iamia.i2c.communication.contract;
 
 public interface IBitSetting
 {

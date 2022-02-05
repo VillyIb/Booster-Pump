@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using BoosterPumpLibrary.Settings;
 using eu.iamia.BaseModule;
+using eu.iamia.i2c.communication.contract;
 using eu.iamia.NCD.API.Contract;
 using eu.iamia.Util.Extensions;
 
@@ -42,7 +43,7 @@ namespace Modules.MCP4725
         /// 0: normal mode, 1: 1 kOhm-, 2 100 kOmh-, 3: 500 kOhm resistor to ground.
         /// See table 5-2
         /// </summary>
-        public EnumBitSettings<PowerDownSettings> PowerDown => new(Setting.GetOrCreateSubRegister(2, 1 + 16, "Power Down"));
+        public EnumBitSettings<PowerDownSettings> PowerDown => new (Setting.GetOrCreateSubRegister(2, 1 + 16, "Power Down"));
 
         public enum WriteCommandType
         {
@@ -50,6 +51,7 @@ namespace Modules.MCP4725
             DacAndEEProm = 0b011
         }
 
+        // ReSharper disable once StringLiteralTypo
         private EnumBitSettings<WriteCommandType> WriteToDacOrEEPROM => new(Setting.GetOrCreateSubRegister(3, 5 + 16, "Write to DAC or EEPROM"));
 
         /// <summary>
@@ -59,7 +61,7 @@ namespace Modules.MCP4725
 
         #endregion
 
-        protected override IEnumerable<Register> Registers => new[]
+        protected override IEnumerable<IRegister> Registers => new[]
         {
             Setting
         };

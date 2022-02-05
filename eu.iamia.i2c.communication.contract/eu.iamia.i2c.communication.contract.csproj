@@ -13,7 +13,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Ensure.That" Version="10.1.0" />
+    <ProjectReference Include="..\eu.iamia.NCD.API.Contract\eu.iamia.NCD.API.Contract.csproj" />
   </ItemGroup>
 
 </Project>

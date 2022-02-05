@@ -1,16 +1,16 @@
 ﻿using System;
-using eu.iamia.NCD.API;
+using eu.iamia.NCD.API.Contract;
 
-namespace BoosterPumpLibrary.ModuleBase;
+namespace eu.iamia.i2c.communication.contract;
 
 public interface IOutputModuleEnumerator : IDisposable
 {
     /// <summary>
     /// CommandWrite or CommandRead
     /// </summary>
-    CommandDevice? Current { get; set; }
+    ICommand? Current { get; set; }
 
-    CommandWrite? CurrentWriteCommand { get; }
+    ICommand? CurrentWriteCommand { get; }
 
     void Reset();
 

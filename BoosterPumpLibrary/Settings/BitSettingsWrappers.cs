@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using eu.iamia.i2c.communication.contract;
 using eu.iamia.Util.Extensions;
 
 namespace BoosterPumpLibrary.Settings

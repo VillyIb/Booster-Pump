@@ -1,7 +1,6 @@
 ﻿using System;
-using BoosterPumpLibrary.Settings;
 
-namespace BoosterPumpLibrary.ModuleBase;
+namespace eu.iamia.i2c.communication.contract;
 
 public interface IInputModuleEnumerator : IDisposable
 {

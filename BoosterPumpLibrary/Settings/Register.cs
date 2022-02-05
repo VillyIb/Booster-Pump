@@ -1,4 +1,6 @@
-﻿namespace BoosterPumpLibrary.Settings
+﻿using eu.iamia.i2c.communication.contract;
+
+namespace BoosterPumpLibrary.Settings
 {
     using System;
     using System.Collections.Generic;
@@ -56,7 +58,7 @@
 
         public byte RegisterAddress { get; protected internal set; }
 
-        protected Dictionary<string, BitSetting> SubRegisters { get; }
+        protected Dictionary<string, IBitSetting> SubRegisters { get; }
 
 
         #endregion

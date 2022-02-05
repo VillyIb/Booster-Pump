@@ -1,6 +1,6 @@
 ﻿#nullable enable
 using System.Linq;
-using BoosterPumpLibrary.ModuleBase;
+using eu.iamia.i2c.communication.contract;
 using eu.iamia.NCD.API;
 using eu.iamia.NCD.API.Contract;
 

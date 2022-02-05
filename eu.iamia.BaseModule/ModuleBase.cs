@@ -1,7 +1,6 @@
 ﻿using System;
-using BoosterPumpLibrary.ModuleBase;
-using BoosterPumpLibrary.Util;
 using EnsureThat;
+using eu.iamia.i2c.communication.contract;
 using eu.iamia.NCD.API.Contract;
 using eu.iamia.Util.Extensions;
 
@@ -17,9 +16,9 @@ namespace eu.iamia.BaseModule
 
         public abstract byte DefaultAddress { get; }
 
-        public ByteWrapper AddressIncrement { get; protected set; } // TODO right to use here? high coupling :(
+        public byte AddressIncrement { get; protected set; } 
 
-        public byte DeviceAddress => DefaultAddress + AddressIncrement;
+        public byte DeviceAddress => (byte)(DefaultAddress + AddressIncrement);
 
         protected ModuleBase(IBridge apiToSerialBridge)
         {
@@ -44,7 +43,7 @@ namespace eu.iamia.BaseModule
                 throw new ArgumentOutOfRangeException(nameof(value), value, "Valid: {0:1}");
             }
 
-            AddressIncrement = value;
+            AddressIncrement = (byte)value;
         }
 
 

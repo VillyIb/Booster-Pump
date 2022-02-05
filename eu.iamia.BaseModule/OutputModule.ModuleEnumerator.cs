@@ -5,15 +5,15 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using BoosterPumpLibrary.ModuleBase;
-using BoosterPumpLibrary.Settings;
+using eu.iamia.i2c.communication.contract;
 using eu.iamia.NCD.API;
+using eu.iamia.NCD.API.Contract;
 
 namespace eu.iamia.BaseModule
 {
     public abstract partial class OutputModule
     {
-        public class OutputModuleEnumerator : IEnumerator<CommandDevice?>, IOutputModuleEnumerator
+        public class OutputModuleEnumerator : IEnumerator<ICommand?>, IOutputModuleEnumerator
         {
             protected readonly byte DeviceAddress;
 
@@ -22,12 +22,12 @@ namespace eu.iamia.BaseModule
             /// <summary>
             /// CommandWrite or CommandRead
             /// </summary>
-            public CommandDevice? Current { get; set; }
+            public ICommand? Current { get; set; }
 
             [ExcludeFromCodeCoverage]
             object? IEnumerator.Current => Current;
 
-            public CommandWrite? CurrentWriteCommand => (CommandWrite?)Current;
+            public ICommand? CurrentWriteCommand => (CommandWrite?)Current;
 
             public OutputModuleEnumerator(IEnumerable<IRegister> selectedRegisters, byte deviceAddress)
             {

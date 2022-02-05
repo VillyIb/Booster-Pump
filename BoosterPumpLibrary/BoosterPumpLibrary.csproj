@@ -24,9 +24,14 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BoosterPumpConfiguration\BoosterPumpConfiguration.csproj" />
+    <ProjectReference Include="..\eu.iamia.i2c.communication.contract\eu.iamia.i2c.communication.contract.csproj" />
     <ProjectReference Include="..\eu.iamia.NCD.API.Contract\eu.iamia.NCD.API.Contract.csproj" />
     <ProjectReference Include="..\eu.iamia.NCD.API\eu.iamia.NCD.API.csproj" />
     <ProjectReference Include="..\eu.iamia.Util\eu.iamia.Util.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="ModuleBase\" />
   </ItemGroup>
 
 </Project>

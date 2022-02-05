@@ -1,6 +1,8 @@
 ﻿// ReSharper disable UnusedVariable
 // ReSharper disable IdentifierTypo
 
+using eu.iamia.i2c.communication.contract;
+
 namespace BoosterPumpLibrary.UnitTest.Settings
 {
     using System;

@@ -1,8 +1,6 @@
 ﻿using System;
-using BoosterPumpLibrary.Settings;
-using BoosterPumpLibrary.Util;
 
-namespace BoosterPumpLibrary.ModuleBase
+namespace eu.iamia.i2c.communication.contract
 {
     public interface IOutputModule
     {
@@ -15,7 +13,7 @@ namespace BoosterPumpLibrary.ModuleBase
 
         byte DefaultAddress { get; }
 
-        ByteWrapper AddressIncrement { get; }
+        byte AddressIncrement { get; }
 
         byte DeviceAddress { get; }
 

@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using BoosterPumpLibrary.ModuleBase;
-using BoosterPumpLibrary.Settings;
+using eu.iamia.i2c.communication.contract;
 using eu.iamia.NCD.API.Contract;
 
 // ReSharper disable UnusedMember.Global
