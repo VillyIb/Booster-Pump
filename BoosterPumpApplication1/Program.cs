@@ -4,13 +4,10 @@ using System.Threading;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using BoosterPumpApplication;
-using BoosterPumpConfiguration;
 using BoosterPumpLibrary.Logger;
 using eu.iamia.Configuration;
 using eu.iamia.NCD.API;
 using eu.iamia.NCD.API.Contract;
-using eu.iamia.ReliableSerialPort;
-using Microsoft.Extensions.Options;
 
 namespace BoosterPumpApplication1
 {

@@ -22,10 +22,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BoosterPumpConfiguration\BoosterPumpConfiguration.csproj" />
     <ProjectReference Include="..\BoosterPumpLibrary\BoosterPumpLibrary.csproj" />
     <ProjectReference Include="..\eu.iamia.Util\eu.iamia.Util.csproj" />
-    <ProjectReference Include="..\Modules\Modules.csproj" />
   </ItemGroup>
 
 </Project>
