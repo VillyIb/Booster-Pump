@@ -1,15 +1,15 @@
-﻿using BoosterPumpLibrary.ModuleBase;
-using BoosterPumpLibrary.Util;
+﻿using BoosterPumpLibrary.Util;
 using Xunit;
+
 // ReSharper disable SuggestVarOrType_SimpleTypes
 
-namespace BoosterPumpLibrary.UnitTest.ModuleBase
+namespace BoosterPumpLibrary.UnitTest.Util
 {
-    public class ByteExtensionShould
+    public class ByteWrapperShould
     {
         private ByteWrapper Sut { get; }
 
-        public ByteExtensionShould()
+        public ByteWrapperShould()
         {
             Sut = new ByteWrapper(0x33);
         }
