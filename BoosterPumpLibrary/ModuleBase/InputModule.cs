@@ -46,10 +46,10 @@ namespace BoosterPumpLibrary.ModuleBase
 
         public abstract bool IsInputValid { get; }
 
-        private ReadModuleEnumerator GetInputEnumerator()
+        private InputModuleEnumerator GetInputEnumerator()
         {
             var registersToSend = Registers.Where(register => register.IsInput && register.IsInputDirty);
-            return new ReadModuleEnumerator(registersToSend, DeviceAddress);
+            return new InputModuleEnumerator(registersToSend, DeviceAddress);
         }
 
         public virtual void ReadFromDevice()
@@ -90,7 +90,7 @@ namespace BoosterPumpLibrary.ModuleBase
         }
     }
 
-    public class ReadModuleEnumerator : IEnumerator<Register?>
+    public class InputModuleEnumerator : IEnumerator<Register?>
     {
         protected readonly byte DeviceAddress;
 
@@ -115,7 +115,7 @@ namespace BoosterPumpLibrary.ModuleBase
 
         public Register? CurrentReadCommand => (Register?)Current;
 
-        public ReadModuleEnumerator(IEnumerable<Register> selectedRegisters, byte deviceAddress)
+        public InputModuleEnumerator(IEnumerable<Register> selectedRegisters, byte deviceAddress)
         {
             DeviceAddress = deviceAddress;
             SelectedRegisters = selectedRegisters.ToList();

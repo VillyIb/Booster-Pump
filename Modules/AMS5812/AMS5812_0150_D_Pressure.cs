@@ -11,7 +11,7 @@ namespace Modules.AMS5812
     // ReSharper disable once InconsistentNaming
     // see: https://store.ncd.io/product/ams5812-0150-d-b-amplified-pressure-sensor-1034-to-1034-mbar-15-to-15-psi-i2c-mini-module/
 
-    public class AMS5812_0150_D_Pressure : InputModule
+    public class AMS5812_0150_D_Pressure : InputModule  // TODO should not extend but reference by interfae
     {
         public static byte DefaultAddressValue => 0x78;
 
