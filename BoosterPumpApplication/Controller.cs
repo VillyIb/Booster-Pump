@@ -16,6 +16,7 @@ using Modules.AMS5812;
 using Modules.AS1115;
 using Modules.LPS25HB;
 using Modules.MCP4725;
+using Modules.TCA9546A;
 
 namespace BoosterPumpApplication
 {

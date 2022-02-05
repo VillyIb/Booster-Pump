@@ -4,9 +4,10 @@ using System.Linq;
 using BoosterPumpLibrary.ModuleBase;
 using BoosterPumpLibrary.Settings;
 using eu.iamia.NCD.API.Contract;
+
 // ReSharper disable UnusedMember.Global
 
-namespace Modules
+namespace Modules.TCA9546A
 {
     /// <summary>
     /// Select one or more concatenating with '|' [None|Channel0|Channel1|Channel2|Channel3]
