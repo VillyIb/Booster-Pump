@@ -1,44 +1,43 @@
 ﻿using System;
 
-namespace BoosterPumpLibrary.ModuleBase
+namespace BoosterPumpLibrary.Util
 {
     /// <summary>
-    /// Enables operator overloading for + and = making an int assignable to a byte.
+    /// Wraps a byte in an invariable class and enables operator overloading for + and = making an int assignable to a byte.
     /// </summary>
-   public class ByteExtension : IEquatable<ByteExtension>
+    public class ByteWrapper : IEquatable<ByteWrapper>
     {
-        private readonly byte Payload;
+        public readonly byte Payload;
 
-        public ByteExtension(int value)
+        public ByteWrapper(int value)
         {
             Payload = (byte)value;
         }
-
-        public static ByteExtension operator +(ByteExtension first, ByteExtension second)
-        {
-            return new(first.Payload + second.Payload);
-        }
-
-        public static ByteExtension operator +(ByteExtension first, byte second)
-        {
-            return new(first.Payload + second);
-        }
-
-        public static implicit operator byte(ByteExtension value)
-        {
-            return value.Payload;
-        }
-
-        public static implicit operator ByteExtension(int value)
-        {
-            return new(value);
-        }
-
-        public bool Equals(ByteExtension? other)
+        public bool Equals(ByteWrapper? other)
         {
             if (other is null) return false;
 
             return Payload == other.Payload;
+        }
+
+        public static ByteWrapper operator +(ByteWrapper first, ByteWrapper second)
+        {
+            return new(first.Payload + second.Payload);
+        }
+
+        public static ByteWrapper operator +(ByteWrapper first, byte second)
+        {
+            return new(first.Payload + second);
+        }
+
+        public static implicit operator byte(ByteWrapper value)
+        {
+            return value.Payload;
+        }
+
+        public static implicit operator ByteWrapper(int value)
+        {
+            return new(value);
         }
     }
 }

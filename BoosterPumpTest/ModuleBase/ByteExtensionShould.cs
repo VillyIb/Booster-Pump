@@ -1,4 +1,5 @@
 ﻿using BoosterPumpLibrary.ModuleBase;
+using BoosterPumpLibrary.Util;
 using Xunit;
 // ReSharper disable SuggestVarOrType_SimpleTypes
 
@@ -6,11 +7,11 @@ namespace BoosterPumpLibrary.UnitTest.ModuleBase
 {
     public class ByteExtensionShould
     {
-        private ByteExtension Sut { get; }
+        private ByteWrapper Sut { get; }
 
         public ByteExtensionShould()
         {
-            Sut = new ByteExtension(0x33);
+            Sut = new ByteWrapper(0x33);
         }
 
         [Fact]
@@ -23,17 +24,17 @@ namespace BoosterPumpLibrary.UnitTest.ModuleBase
         [Fact]
         public void ReturnByteExtensionForAssignToByteExtension()
         {
-            ByteExtension actual = 0x33;
+            ByteWrapper actual = 0x33;
             Assert.Equal(Sut, actual);
         }
 
         [Fact]
         public void ReturnByteExtensionForAdditionOfTwoByteExtensions()
         {
-            ByteExtension first = 0x11;
-            ByteExtension second = 0x22;
+            ByteWrapper first = 0x11;
+            ByteWrapper second = 0x22;
 
-            ByteExtension actual = first + second;
+            ByteWrapper actual = first + second;
 
             Assert.Equal(Sut, actual);
         }
@@ -41,9 +42,9 @@ namespace BoosterPumpLibrary.UnitTest.ModuleBase
         [Fact]
         public void ReturnByteExtensionForAdditionOfByteExtensionAndByte()
         {
-            ByteExtension first = 0x11;
+            ByteWrapper first = 0x11;
 
-            ByteExtension actual = first + (byte)0x22;
+            ByteWrapper actual = first + (byte)0x22;
 
             Assert.Equal(Sut, actual);
         }

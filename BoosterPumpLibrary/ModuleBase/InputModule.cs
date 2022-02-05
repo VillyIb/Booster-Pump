@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using BoosterPumpLibrary.Settings;
+using BoosterPumpLibrary.Util;
 using eu.iamia.NCD.API;
 using eu.iamia.NCD.API.Contract;
 
@@ -20,7 +21,7 @@ namespace BoosterPumpLibrary.ModuleBase
 
         byte DefaultAddress { get; }
 
-        ByteExtension AddressIncrement { get; }
+        ByteWrapper AddressIncrement { get; }
 
         byte DeviceAddress { get; }
 

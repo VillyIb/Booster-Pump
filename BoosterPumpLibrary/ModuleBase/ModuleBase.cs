@@ -1,4 +1,5 @@
 ﻿using System;
+using BoosterPumpLibrary.Util;
 using EnsureThat;
 using eu.iamia.NCD.API.Contract;
 using eu.iamia.Util.Extensions;
@@ -11,7 +12,7 @@ namespace BoosterPumpLibrary.ModuleBase
 
         byte DefaultAddress { get; }
 
-        ByteExtension AddressIncrement { get; }
+        ByteWrapper AddressIncrement { get; }
 
         byte DeviceAddress { get; }
 
@@ -34,9 +35,9 @@ namespace BoosterPumpLibrary.ModuleBase
 
         public abstract byte DefaultAddress { get; }
 
-        public ByteExtension AddressIncrement { get; protected set; }
+        public ByteWrapper AddressIncrement { get; protected set; }
 
-        public byte DeviceAddress => DefaultAddress + (AddressIncrement ?? new ByteExtension(0));
+        public byte DeviceAddress => DefaultAddress + (AddressIncrement ?? new ByteWrapper(0));
 
         protected ModuleBase(IBridge apiToSerialBridge)
         {
