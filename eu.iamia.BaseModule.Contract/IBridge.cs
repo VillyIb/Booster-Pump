@@ -1,7 +1,6 @@
 ﻿using System;
-using eu.iamia.NCD.Shared;
 
-namespace eu.iamia.NCD.API.Contract
+namespace eu.iamia.BaseModule.Contract
 {
     public interface IBridge : IDisposable
     {
