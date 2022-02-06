@@ -51,7 +51,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eu.iamia.BaseModule", "eu.i
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eu.iamia.BaseModule.UnitTest", "eu.iamia.BaseModule.UnitTest\eu.iamia.BaseModule.UnitTest.csproj", "{EF8DE63B-BC04-490F-93DC-956F0CD1C348}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eu.iamia.i2c.communication.contract", "eu.iamia.i2c.communication.contract\eu.iamia.i2c.communication.contract.csproj", "{ADEEEE35-1897-4D1A-9CBB-E5D08E3551A5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eu.iamia.i2c.communication.contract", "eu.iamia.i2c.communication.contract\eu.iamia.i2c.communication.contract.csproj", "{ADEEEE35-1897-4D1A-9CBB-E5D08E3551A5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eu.iamia.BaseModule.Contract", "eu.iamia.BaseModule.Contract\eu.iamia.BaseModule.Contract.csproj", "{C69B0DC4-775D-4542-8F5E-43AF254BDC24}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -159,6 +161,10 @@ Global
 		{ADEEEE35-1897-4D1A-9CBB-E5D08E3551A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ADEEEE35-1897-4D1A-9CBB-E5D08E3551A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ADEEEE35-1897-4D1A-9CBB-E5D08E3551A5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C69B0DC4-775D-4542-8F5E-43AF254BDC24}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C69B0DC4-775D-4542-8F5E-43AF254BDC24}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C69B0DC4-775D-4542-8F5E-43AF254BDC24}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C69B0DC4-775D-4542-8F5E-43AF254BDC24}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
