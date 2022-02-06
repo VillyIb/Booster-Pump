@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace eu.iamia.i2c.communication.contract
 {
@@ -7,24 +8,19 @@ namespace eu.iamia.i2c.communication.contract
         /// <summary>
         /// Default value: 1.
         /// </summary>
-        public int RetryCount { get; set; }
+        int RetryCount { get; set; }
 
         Guid Id { get; }
 
-        byte DefaultAddress { get; }
-
-        byte AddressIncrement { get; }
-
         byte DeviceAddress { get; }
 
-        public void Send(IOutputModuleEnumerator enumerator);
+        void Send();
 
-        public void Send();
+        void SendSpecificRegister(IRegister register);
 
-        public void SendSpecificRegister(IRegister register);
+        void SetOutputRegistersDirty();
 
-        public void SetOutputRegistersDirty();
+        void SetupOnlyOnce(IEnumerable<IRegister> registers, byte deviceAddress);
 
-        public void SetAddressIncrement(int value);
     }
 }

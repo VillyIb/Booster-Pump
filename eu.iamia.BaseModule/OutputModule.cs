@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using eu.iamia.i2c.communication.contract;
 using eu.iamia.NCD.API.Contract;
 
@@ -16,16 +15,14 @@ namespace eu.iamia.BaseModule
 
         protected OutputModule(IBridge apiToSerialBridge) : base(apiToSerialBridge)
         { }
-
-        protected abstract IEnumerable<IRegister> Registers { get; }
-
+        
         private IOutputModuleEnumerator GetOutputEnumerator()
         {
             var registersToSend = Registers.Where(register => register.IsOutput && register.IsOutputDirty);
             return new OutputModuleEnumerator(registersToSend, DeviceAddress);
         }
 
-        public void Send(IOutputModuleEnumerator enumerator)
+        private void Send(IOutputModuleEnumerator enumerator)
         {
             var currentRetryCount = RetryCount;
             while (enumerator.MoveNext() && enumerator.Current != null)

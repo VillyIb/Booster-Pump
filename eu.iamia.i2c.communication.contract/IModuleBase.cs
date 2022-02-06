@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace eu.iamia.i2c.communication.contract
 {
@@ -6,18 +7,11 @@ namespace eu.iamia.i2c.communication.contract
     {
         Guid Id { get; }
 
-        byte DefaultAddress { get; }
-
-        byte AddressIncrement { get; }
-
         byte DeviceAddress { get; }
 
-        /// <summary>
-        /// Adds the specified value to the DefaultAddress, legal values: {0|1}. // TODO some modules can add up to 7
-        /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        public void SetAddressIncrement(int value);
+        public IEnumerable<IRegister> Registers { get; }
+
+        void SetupOnlyOnce(IEnumerable<IRegister> registers, byte deviceAddress);
 
     }
 }

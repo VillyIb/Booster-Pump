@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace eu.iamia.i2c.communication.contract
 {
@@ -7,10 +8,6 @@ namespace eu.iamia.i2c.communication.contract
         bool IsInputValid { get; }
 
         Guid Id { get; }
-
-        byte DefaultAddress { get; }
-
-        byte AddressIncrement { get; }
 
         byte DeviceAddress { get; }
 
@@ -23,6 +20,7 @@ namespace eu.iamia.i2c.communication.contract
 
         void SetInputRegistersDirty();
 
-        void SetAddressIncrement(int value);
+        void SetupOnlyOnce(IEnumerable<IRegister> registers, byte deviceAddress);
+
     }
 }

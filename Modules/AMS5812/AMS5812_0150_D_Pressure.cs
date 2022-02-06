@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using BoosterPumpLibrary.Settings;
 using eu.iamia.BaseModule;
+using eu.iamia.i2c.communication.contract;
 using eu.iamia.NCD.API.Contract;
 using eu.iamia.Util.Extensions;
 
@@ -11,11 +12,13 @@ namespace Modules.AMS5812
     // ReSharper disable once InconsistentNaming
     // see: https://store.ncd.io/product/ams5812-0150-d-b-amplified-pressure-sensor-1034-to-1034-mbar-15-to-15-psi-i2c-mini-module/
 
-    public class AMS5812_0150_D_Pressure : InputModule  // TODO should not extend but reference by interfae
+    public class AMS5812_0150_D_Pressure //: InputModule  // TODO should not extend but reference by interface
     {
+        private readonly IInputModule ComModule;
+
         public static byte DefaultAddressValue => 0x78;
 
-        public override byte DefaultAddress => DefaultAddressValue;
+        public  byte DefaultAddress => DefaultAddressValue;
 
         public virtual byte LengthRequested => 0x04;
 
@@ -64,7 +67,7 @@ namespace Modules.AMS5812
 
         #endregion
 
-        protected override IEnumerable<Register> Registers => new[]
+        protected  IEnumerable<Register> Registers => new[]
         {
             Readings
         };
@@ -73,12 +76,15 @@ namespace Modules.AMS5812
         /// Pressure module
         /// </summary>
         /// <param name="apiToSerialBridge"></param>
-        public AMS5812_0150_D_Pressure(IBridge apiToSerialBridge) : base(apiToSerialBridge)
+        public AMS5812_0150_D_Pressure(IBridge apiToSerialBridge, IInputModule comModule) //: base(apiToSerialBridge)
         {
+            ComModule = comModule;
+            ComModule.Registers.Add(Readings); // provide method Setup(Registers, DeviceAddress)
+            ComModule.DeviceAddress = DefaultAddress;
             Clear();
         }
 
-        public override bool IsInputValid =>
+        public  bool IsInputValid =>
             float.IsFinite(Temperature)
             &&
             Temperature.IsWithinRange(OutputTempMin, OutputTempMax)
@@ -87,10 +93,10 @@ namespace Modules.AMS5812
             && Pressure.IsWithinRange(OutputPressureMin, OutputPressureMax)
             ;
 
-        public override void ReadFromDevice()
+        public  void ReadFromDevice()
         {
             Clear();
-            base.ReadFromDevice();
+            ComModule.ReadFromDevice();
         }
     }
 }

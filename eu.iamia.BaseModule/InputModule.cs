@@ -13,11 +13,7 @@ namespace eu.iamia.BaseModule
         protected InputModule(IBridge apiToSerialBridge) : base(apiToSerialBridge)
         { }
 
-        //public abstract void ReadFromDevice();
-
         public abstract bool IsInputValid { get; }
-
-      
 
         private InputModuleEnumerator GetInputEnumerator()
         {

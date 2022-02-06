@@ -1,8 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using EnsureThat;
 using eu.iamia.i2c.communication.contract;
 using eu.iamia.NCD.API.Contract;
-using eu.iamia.Util.Extensions;
 
 namespace eu.iamia.BaseModule
 {
@@ -14,38 +15,34 @@ namespace eu.iamia.BaseModule
 
         public Guid Id { get; }
 
-        public abstract byte DefaultAddress { get; }
+        public byte DeviceAddress { get; private set; }
 
-        public byte AddressIncrement { get; protected set; } 
+        public IEnumerable<IRegister> Registers { get; private set; }
 
-        public byte DeviceAddress => (byte)(DefaultAddress + AddressIncrement);
+        public void SetupOnlyOnce(IEnumerable<IRegister> registers, byte deviceAddress)
+        {
+            if (!Registers.Any())
+            {
+                throw new ArgumentOutOfRangeException(nameof(registers), "Collection can not be empty");
+            }
+
+            if (Registers.Any())
+            {
+                throw new InvalidOperationException("Setup can only be called once.");
+            }
+
+            Registers = registers;
+            DeviceAddress = deviceAddress;
+        }
 
         protected ModuleBase(IBridge apiToSerialBridge)
         {
             Ensure.That(apiToSerialBridge, nameof(apiToSerialBridge)).IsNotNull();
 
+            Registers = new List<IRegister>();
             ApiToSerialBridge = apiToSerialBridge;
-            AddressIncrement = 0;
             Id = Guid.NewGuid();
             Console.WriteLine($"{GetType().Name}: {Id}");
         }
-
-        // TODO NOT generic - valid value range is independent for each module.
-        /// <summary>
-        /// Adds the specified value to the DefaultAddress, legal values: {0|1}. // TODO some modules can add up to 7
-        /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        public void SetAddressIncrement(int value)
-        {
-            if (value.IsOutsideRange(0, 1))
-            {
-                throw new ArgumentOutOfRangeException(nameof(value), value, "Valid: {0:1}");
-            }
-
-            AddressIncrement = (byte)value;
-        }
-
-
     }
 }
