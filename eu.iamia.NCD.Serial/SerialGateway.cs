@@ -5,7 +5,6 @@ using eu.iamia.BaseModule.Contract;
 using eu.iamia.NCD.Serial.Contract;
 using eu.iamia.NCD.Shared;
 using eu.iamia.ReliableSerialPort;
-using eu.iamia.Util;
 
 namespace eu.iamia.NCD.Serial
 {
@@ -116,24 +115,15 @@ namespace eu.iamia.NCD.Serial
 
         public INcdApiProtocol Execute(INcdApiProtocol i2CCommand)
         {
-            var timer = EasyStopwatch.StartMs();
-            try
-            {
-                Init();
+            Init();
 
-                SerialPort.Write(i2CCommand.GetApiEncodedData());
+            SerialPort.Write(i2CCommand.GetApiEncodedData());
 
-                //Thread.Sleep(100);
+            //Thread.Sleep(100);
 
-                if (WaitForResultToBeReady())
-                    return new NcdApiProtocol(Header, ByteCount, Payload, Checksum);
-                else
-                    return (NcdApiProtocol)null;
-            }
-            finally
-            {
-                //Console.WriteLine($"Execute took: {timer.Stop()} ms");
-            }
+            if (WaitForResultToBeReady()) { return new NcdApiProtocol(Header, ByteCount, Payload, Checksum); }
+
+            return null;
         }
     }
 

@@ -1,4 +1,5 @@
-﻿using eu.iamia.BaseModule.Contract;
+﻿using System;
+using eu.iamia.BaseModule.Contract;
 
 namespace eu.iamia.NCD.Bridge
 {
@@ -21,7 +22,7 @@ namespace eu.iamia.NCD.Bridge
             Gateway = gateway;
         }
 
-        internal INcdApiProtocol GetI2CCommand(ICommand command)
+        internal static INcdApiProtocol GetI2CCommand(ICommand command)
         {
             var payload = new List<byte> { (byte)command.GetI2CCommandCode };
             payload.AddRange(command.I2C_Data());
@@ -35,7 +36,7 @@ namespace eu.iamia.NCD.Bridge
             var i2CResponse = Gateway.Execute(i2CCommand);
 
             return i2CResponse is null
-                ? new NcdApiProtocol(0, 0, new byte[0], 1)
+                ? new NcdApiProtocol(0, 0, Array.Empty<byte>(), 1)
                 : new NcdApiProtocol(i2CResponse.Header, i2CResponse.ByteCount, i2CResponse.Payload, i2CResponse.Checksum);
         }
 

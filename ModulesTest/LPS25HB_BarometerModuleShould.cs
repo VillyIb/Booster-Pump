@@ -19,16 +19,14 @@ namespace ModulesTest
     {
         private readonly LPS25HB_Barometer Sut;
         private readonly IGateway _FakeGateway;
-        private readonly IBridge _FakeBridge;
-        private readonly IInputModule ComModule;
 
         public LPS25HB_BarometerModuleShould()
         {
             _FakeGateway = Substitute.For<IGateway>();
-            _FakeBridge = Substitute.For<IBridge>();
-            ComModule = new InputModule(_FakeBridge);
+            var bridge = new ApiToSerialBridge(_FakeGateway);
+            IInputModule comModule = new InputModule(bridge);
 
-            Sut = new LPS25HB_Barometer(ComModule);
+            Sut = new LPS25HB_Barometer(comModule);
 
             _FakeGateway.Execute(Arg.Any<NcdApiProtocol>()).Returns(NcdApiProtocol.WriteSuccess);
         }
@@ -37,7 +35,15 @@ namespace ModulesTest
         public void CallGatewayExecuteWhenCallingInit()
         {
             Sut.Init();
-            _FakeGateway.Received(1).Execute(Arg.Is<NcdApiProtocol>(c => c.PayloadAsHex == "BF 5C 05 "));
+
+            _FakeGateway.Received(3).Execute(Arg.Any<NcdApiProtocol>());
+
+            Received.InOrder(() =>
+            {
+                _FakeGateway.Received(1).Execute(Arg.Is<NcdApiProtocol>(c => c.PayloadAsHex == "BE 5C 20 90 "));
+                _FakeGateway.Received(1).Execute(Arg.Is<NcdApiProtocol>(c => c.PayloadAsHex == "BE 5C 10 0A "));
+                _FakeGateway.Received(1).Execute(Arg.Is<NcdApiProtocol>(c => c.PayloadAsHex == "BF 28 05 "));
+            });
         }
 
         #region ReadFromDevice()
@@ -104,7 +110,7 @@ namespace ModulesTest
         }
 
         [Theory]
-        [InlineData(110.76,  2048.0, 0x00_7FFF_7FFFFF)] // temp_pressure
+        [InlineData(110.76, 2048.0, 0x00_7FFF_7FFFFF)] // temp_pressure
         [InlineData(42.500, -2048.0, 0x00_FFFF_800000)] // temp_pressure
         [InlineData(-25.77, -2048.0, 0x00_8000_800000)] // temp_pressure
         public void Reverse(double temperature, double airPressure, ulong hex)
@@ -120,7 +126,7 @@ namespace ModulesTest
         [InlineData(110.76)]
         public void ReturnSameTemperatureAsSet(double temperature)
         {
-            var hex = Sut.Temperature =temperature;
+            var hex = Sut.Temperature = temperature;
             var temp = Sut.Temperature;
 
             Assert.Equal(temperature, temp);

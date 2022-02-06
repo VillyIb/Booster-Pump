@@ -87,7 +87,7 @@ namespace eu.iamia.NCD.Bridge.UnitTest
         public void ReturnRightCommandCodeFromFirstByteInPayload(ICommand command, byte expectedI2CommandCode)
         {
             Init();
-            var actual = Sut.GetI2CCommand(command);
+            var actual = ApiToSerialBridge.GetI2CCommand(command);
             var actualCommandCode = actual.Payload.First();
             Assert.Equal(expectedI2CommandCode, actualCommandCode);
         }

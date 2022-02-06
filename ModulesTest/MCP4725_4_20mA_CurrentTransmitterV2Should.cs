@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using eu.iamia.BaseModule;
-using eu.iamia.BaseModule.Contract;
 using eu.iamia.i2c.communication.contract;
+using eu.iamia.NCD.Bridge;
 using eu.iamia.NCD.Serial.Contract;
 using eu.iamia.NCD.Shared;
 using NSubstitute;
@@ -16,21 +16,20 @@ namespace ModulesTest
     public class MCP4725_4_20mA_CurrentTransmitterV2Should
     {
         private readonly MCP4725_4_20mA_CurrentTransmitterV2 Sut;
-        private readonly IGateway FakeGateway;
-        private readonly IBridge _FakeBridge;
+        private readonly IGateway _FakeGateway;
 
         public MCP4725_4_20mA_CurrentTransmitterV2Should()
         {
-            FakeGateway = Substitute.For<IGateway>();
+            _FakeGateway = Substitute.For<IGateway>();
 
-            _FakeBridge = Substitute.For<IBridge>();
+            var bridge = new ApiToSerialBridge(_FakeGateway);
 
-            IOutputModule _ComModule = new OutputModule(_FakeBridge);
+            IOutputModule _ComModule = new OutputModule(bridge);
 
             Sut = new MCP4725_4_20mA_CurrentTransmitterV2(_ComModule);
 
             var fakeReturnValue = new NcdApiProtocol(new List<byte> { 0x55 }); // OK successful transmission.
-            FakeGateway.Execute(Arg.Any<NcdApiProtocol>()).Returns(fakeReturnValue);
+            _FakeGateway.Execute(Arg.Any<NcdApiProtocol>()).Returns(fakeReturnValue);
         }
 
         [Fact]
@@ -43,7 +42,7 @@ namespace ModulesTest
             // PowerDown              x
             var expected = "BE 60 00 60 80 00 ";
             Sut.Init();
-            FakeGateway.Received(1).Execute(Arg.Is<NcdApiProtocol>(c => c.PayloadAsHex == expected));
+            _FakeGateway.Received(1).Execute(Arg.Is<NcdApiProtocol>(c => c.PayloadAsHex == expected));
         }
 
         [Fact]
@@ -54,7 +53,7 @@ namespace ModulesTest
 
             Sut.SetSpeed(speedPct);
 
-            FakeGateway.Received(1).Execute(Arg.Is<NcdApiProtocol>(c => c.PayloadAsHex == "BE 60 00 40 AA 50 "));
+            _FakeGateway.Received(1).Execute(Arg.Is<NcdApiProtocol>(c => c.PayloadAsHex == "BE 60 00 40 AA 50 "));
         }
 
         [Fact]
@@ -62,8 +61,8 @@ namespace ModulesTest
         {
             Sut.PowerDown.Value = MCP4725_4_20mA_CurrentTransmitterV2.PowerDownSettings.Resistor1k;
             Sut.Send();
-            FakeGateway.Received(1).Execute(Arg.Any<NcdApiProtocol>());
-            FakeGateway.Received(1).Execute(Arg.Is<NcdApiProtocol>(c => c.PayloadAsHex == "BE 60 00 02 00 00 "));
+            _FakeGateway.Received(1).Execute(Arg.Any<NcdApiProtocol>());
+            _FakeGateway.Received(1).Execute(Arg.Is<NcdApiProtocol>(c => c.PayloadAsHex == "BE 60 00 02 00 00 "));
         }
 
         [Fact]
@@ -76,7 +75,7 @@ namespace ModulesTest
             Sut.SetSpeedPersistent(speedPct);
 
             // expected 011x_x00x, 1010_1010, 0101_xxxx => 60 AA 50
-            FakeGateway.Received(1).Execute(Arg.Is<NcdApiProtocol>(c => c.PayloadAsHex == "BE 60 00 60 AA 50 "));
+            _FakeGateway.Received(1).Execute(Arg.Is<NcdApiProtocol>(c => c.PayloadAsHex == "BE 60 00 60 AA 50 "));
         }
 
         [Fact]

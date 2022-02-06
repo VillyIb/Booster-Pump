@@ -1,11 +1,9 @@
 ﻿// ReSharper disable InconsistentNaming
 
-
 using System;
 using System.Collections.Generic;
 using BoosterPumpLibrary.Settings;
 using eu.iamia.i2c.communication.contract;
-using eu.iamia.NCD.API;
 
 namespace Modules.LPS25HB
 {
@@ -114,7 +112,12 @@ namespace Modules.LPS25HB
             internal set => TemperatureHex.Value = MapTemperature(value);
         }
 
-        protected IEnumerable<Register> Registers => new List<Register> { Settings0X20, Settings0X10, Reading0X28 };
+        protected IEnumerable<Register> Registers => new List<Register>
+        {
+            Settings0X20,
+            Settings0X10,
+            Reading0X28
+        };
 
         public LPS25HB_Barometer(IInputModule comModule)
         {
@@ -128,23 +131,20 @@ namespace Modules.LPS25HB
             OutputDataRate.Value = 1;
             PressureResolution.Value = 2;
             TemperatureResolution.Value = 2;
+
             ComModule.Send();
 
-            ComModule.SendSpecificRegister(Reading0X28);
-            
             // TODO ADD DELAY
 
-            // todo FIX
             ReadFromDevice();
-            //var returnValue = ApiToSerialBridge.Execute(readCommand);
         }
 
-        public  void ReadFromDevice()
+        public void ReadFromDevice()
         {
             Reading0X28.IsInputDirty = true;
             ComModule.ReadFromDevice();
         }
 
-        public  bool IsInputValid => !Reading0X28.IsInputDirty;
+        public bool IsInputValid => !Reading0X28.IsInputDirty;
     }
 }

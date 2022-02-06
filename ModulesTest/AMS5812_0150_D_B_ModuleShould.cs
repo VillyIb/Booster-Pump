@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using eu.iamia.BaseModule;
-using eu.iamia.BaseModule.Contract;
 using eu.iamia.i2c.communication.contract;
 using eu.iamia.NCD.API.Contract;
+using eu.iamia.NCD.Bridge;
 using eu.iamia.NCD.Serial.Contract;
 using eu.iamia.NCD.Shared;
 using NSubstitute;
@@ -17,14 +17,13 @@ namespace ModulesTest
     {
         private readonly AMS5812_0150_D_Pressure _Sut;
         private readonly IGateway _FakeGateway;
-        private readonly IBridge _FakeBridge;
         private readonly IInputModule _ComModule;
 
         public AMS5812_0150_D_B_ModuleShould()
         {
             _FakeGateway = Substitute.For<IGateway>();
-            _FakeBridge = Substitute.For<IBridge>();
-            _ComModule = new InputModule(_FakeBridge);
+            var bridge = new ApiToSerialBridge(_FakeGateway);
+            _ComModule = new InputModule(bridge);
             _Sut = new AMS5812_0150_D_Pressure(_ComModule);
 
             _ComModule.RetryCount = 1;
@@ -91,7 +90,7 @@ namespace ModulesTest
             var fakeReturnValue = new NcdApiProtocol(new List<byte> { 0x3F, 0xEB, 0x0C, 0xCB }); // Defines Pressure and Temperature.
             _FakeGateway.Execute(Arg.Any<NcdApiProtocol>()).Returns(fakeReturnValue);
             _Sut.ReadFromDevice();
-            Assert.False(_Sut.IsInputValid); 
+            Assert.False(_Sut.IsInputValid);
         }
 
         [Fact]

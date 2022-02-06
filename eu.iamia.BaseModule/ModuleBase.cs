@@ -21,7 +21,7 @@ namespace eu.iamia.BaseModule
 
         public void SetupOnlyOnce(IEnumerable<IRegister> registers, byte deviceAddress)
         {
-            if (!Registers.Any())
+            if (Registers.Any())
             {
                 throw new ArgumentOutOfRangeException(nameof(registers), "Collection can not be empty");
             }
