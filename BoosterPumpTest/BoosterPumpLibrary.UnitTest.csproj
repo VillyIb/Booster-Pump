@@ -32,6 +32,7 @@
   <ItemGroup>
     <ProjectReference Include="..\BoosterPumpLibrary\BoosterPumpLibrary.csproj" />
     <ProjectReference Include="..\eu.iamia.i2c.communication.contract\eu.iamia.i2c.communication.contract.csproj" />
+    <ProjectReference Include="..\eu.iamia.NCD.API.Contract\eu.iamia.NCD.API.Contract.csproj" />
     <ProjectReference Include="..\eu.iamia.Util\eu.iamia.Util.csproj" />
   </ItemGroup>
 

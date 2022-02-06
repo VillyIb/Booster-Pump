@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using BoosterPumpConfiguration;
-using eu.iamia.Configuration;
 using Xunit;
 
 namespace eu.iamia.ReliableSerialPort.SystemTest

@@ -7,9 +7,8 @@ using Microsoft.Extensions.DependencyInjection;
 using eu.iamia.Util;
 using BoosterPumpLibrary.Logger;
 using BoosterPumpConfiguration;
-using eu.iamia.BaseModule.Contract;
 using eu.iamia.NCD.API;
-using eu.iamia.NCD.Serial.Contract;
+using eu.iamia.NCD.API.Contract;
 using Modules.AMS5812;
 using Modules.AS1115;
 using Modules.LPS25HB;
@@ -48,7 +47,7 @@ namespace BoosterPumpApplication
         private AMS5812_0150_D_Pressure FlowSouthEast;
         private AMS5812_0300_A_Pressure SystemPressure;
         private LPS25HB_Barometer BarometerModule1;
-        private LPS25HB_Barometer BarometerModule2;
+        //private LPS25HB_Barometer BarometerModule2;
         private TCA9546A_Multiplexer Multiplexer;
         private MCP4725_4_20mA_CurrentTransmitterV2 SpeedController;
         private System.Collections.Generic.Queue<double> FlowNorthWestStack;
@@ -191,8 +190,8 @@ namespace BoosterPumpApplication
                             , Speed2 * 100.0f,
                             (SpeedCurrent - Speed2) * 100.0f,
                             (float) BarometerModule1.AirPressure,
-                            (float) BarometerModule2.AirPressure,
-                            (float) BarometerModule2.Temperature,
+                            //(float) BarometerModule2.AirPressure,
+                            //(float) BarometerModule2.Temperature,
                             (float) BarometerModule1.Temperature,
                             ManifoldPressureDifference.Temperature,
                             FlowNorthWest.Temperature,

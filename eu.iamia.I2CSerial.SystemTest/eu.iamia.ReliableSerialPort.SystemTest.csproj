@@ -43,7 +43,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BoosterPumpConfiguration\BoosterPumpConfiguration.csproj" />
-    <ProjectReference Include="..\eu.iamia.Configuration\eu.iamia.Configuration.csproj" />
     <ProjectReference Include="..\eu.iamia.ReliableSerialPort\eu.iamia.ReliableSerialPort.csproj" />
   </ItemGroup>
 

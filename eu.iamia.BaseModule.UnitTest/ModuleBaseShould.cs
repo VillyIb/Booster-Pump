@@ -1,9 +1,9 @@
-﻿using eu.iamia.BaseModule.Contract;
-using NSubstitute;
-using Xunit;
-
-namespace eu.iamia.BaseModule.UnitTest
+﻿namespace eu.iamia.BaseModule.UnitTest
 {
+    using NSubstitute;
+    using Xunit;
+    using eu.iamia.NCD.API.Contract;
+
     public class ModuleBaseTests : ModuleBase
     {
         public ModuleBaseTests(IBridge apiToSerialBridge) : base(apiToSerialBridge)

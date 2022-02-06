@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
-using eu.iamia.BaseModule.Contract;
-using eu.iamia.NCD.Serial.Contract;
 using eu.iamia.NCD.Shared;
 using eu.iamia.ReliableSerialPort;
+using eu.iamia.NCD.API.Contract;
 
 namespace eu.iamia.NCD.Serial
 {
-    public class SerialGateway : IGateway
+    public class SerialGateway : IGateway 
     {
         private static TimeSpan ReadTimeout => TimeSpan.FromSeconds(10); // TODO move to settings.
 
@@ -118,7 +117,7 @@ namespace eu.iamia.NCD.Serial
 
             //Thread.Sleep(100);
 
-            if (WaitForResultToBeReady()) { return new NcdApiProtocol(Header, ByteCount, Payload, Checksum); }
+            if (WaitForResultToBeReady()) { eu.iamia.NCD.API.Contract.INcdApiProtocol result = new NcdApiProtocol(Header, ByteCount, Payload, Checksum); }
 
             return null;
         }

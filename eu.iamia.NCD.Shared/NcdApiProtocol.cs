@@ -5,7 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using EnsureThat;
-using eu.iamia.BaseModule.Contract;
+using eu.iamia.NCD.API.Contract;
 
 namespace eu.iamia.NCD.Shared
 {

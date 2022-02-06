@@ -1,9 +1,9 @@
 ﻿using System;
 
-namespace eu.iamia.BaseModule.Contract
+namespace eu.iamia.NCD.API.Contract
 {
     public interface IBridge : IDisposable
     {
-        public INcdApiProtocol Execute(eu.iamia.NCD.API.Contract.ICommand command);
+        public INcdApiProtocol Execute(ICommand command);
     }
 }

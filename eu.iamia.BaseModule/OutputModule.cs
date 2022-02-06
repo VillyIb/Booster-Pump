@@ -1,6 +1,6 @@
 ﻿using System.Linq;
-using eu.iamia.BaseModule.Contract;
 using eu.iamia.i2c.communication.contract;
+using eu.iamia.NCD.API.Contract;
 
 // ReSharper disable UnusedMember.Global
 

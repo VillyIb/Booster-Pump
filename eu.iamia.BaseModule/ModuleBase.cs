@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using EnsureThat;
-using eu.iamia.BaseModule.Contract;
 using eu.iamia.i2c.communication.contract;
+using eu.iamia.NCD.API.Contract;
 
 namespace eu.iamia.BaseModule
 {

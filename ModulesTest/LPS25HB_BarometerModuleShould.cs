@@ -2,14 +2,13 @@
 // ReSharper disable UnusedVariable
 
 using eu.iamia.BaseModule;
-using eu.iamia.BaseModule.Contract;
 using eu.iamia.i2c.communication.contract;
+using eu.iamia.NCD.API.Contract;
 using Modules.LPS25HB;
 
 namespace ModulesTest
 {
     using eu.iamia.NCD.Bridge;
-    using eu.iamia.NCD.Serial.Contract;
     using eu.iamia.NCD.Shared;
     using NSubstitute;
     using Xunit;

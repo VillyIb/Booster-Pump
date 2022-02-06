@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using eu.iamia.BaseModule.Contract;
 using Xunit;
+using eu.iamia.NCD.API.Contract;
 
 namespace eu.iamia.NCD.Shared.UnitTest
 {

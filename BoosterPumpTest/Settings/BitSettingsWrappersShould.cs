@@ -1,5 +1,5 @@
 ﻿using BoosterPumpLibrary.Settings;
-using eu.iamia.BaseModule.Contract;
+using eu.iamia.i2c.communication.contract;
 using Xunit;
 
 namespace BoosterPumpLibrary.UnitTest.Settings

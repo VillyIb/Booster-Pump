@@ -31,8 +31,8 @@
   <ItemGroup>
     <ProjectReference Include="..\BoosterPumpLibrary\BoosterPumpLibrary.csproj" />
     <ProjectReference Include="..\eu.iamia.BaseModule\eu.iamia.BaseModule.csproj" />
+    <ProjectReference Include="..\eu.iamia.NCD.API.Contract\eu.iamia.NCD.API.Contract.csproj" />
     <ProjectReference Include="..\eu.iamia.NCD.Bridge\eu.iamia.NCD.Bridge.csproj" />
-    <ProjectReference Include="..\eu.iamia.NCD.DeviceCommunication.Contract\eu.iamia.NCD.Serial.Contract.csproj" />
     <ProjectReference Include="..\eu.iamia.NCD.Serial\eu.iamia.NCD.Serial.csproj" />
     <ProjectReference Include="..\Modules\Modules.csproj" />
   </ItemGroup>

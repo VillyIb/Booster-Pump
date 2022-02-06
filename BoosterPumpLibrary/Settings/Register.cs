@@ -1,4 +1,4 @@
-﻿using eu.iamia.BaseModule.Contract;
+﻿using eu.iamia.i2c.communication.contract;
 
 namespace BoosterPumpLibrary.Settings
 {

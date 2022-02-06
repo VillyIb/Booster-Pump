@@ -1,12 +1,10 @@
 ﻿using System;
-using eu.iamia.BaseModule.Contract;
 
 namespace eu.iamia.NCD.Bridge
 {
     using System.Collections.Generic;
     using EnsureThat;
     using API.Contract;
-    using Serial.Contract;
     using Shared;
 
     /// <summary>
@@ -26,7 +24,7 @@ namespace eu.iamia.NCD.Bridge
         {
             var payload = new List<byte> { (byte)command.GetI2CCommandCode };
             payload.AddRange(command.I2C_Data());
-            var result = new NcdApiProtocol(payload);
+            INcdApiProtocol result = new NcdApiProtocol(payload);
             return result;
         }
 

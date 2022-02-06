@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using eu.iamia.NCD.Serial.Contract;
+using eu.iamia.NCD.API.Contract;
 using eu.iamia.NCD.Shared;
 using eu.iamia.ReliableSerialPort;
 using NSubstitute;

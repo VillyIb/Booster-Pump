@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using BoosterPumpLibrary.Settings;
-using eu.iamia.BaseModule.Contract;
 using eu.iamia.i2c.communication.contract;
 using eu.iamia.NCD.API.Contract;
 using eu.iamia.NCD.Shared;

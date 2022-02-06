@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using BoosterPumpLibrary.Settings;
 using EnsureThat;
-using eu.iamia.BaseModule.Contract;
 using eu.iamia.i2c.communication.contract;
 using eu.iamia.Util.Extensions;
 

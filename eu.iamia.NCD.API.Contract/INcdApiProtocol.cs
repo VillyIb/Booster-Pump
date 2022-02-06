@@ -3,7 +3,7 @@ using System.Collections.Immutable;
 
 // ReSharper disable InvalidXmlDocComment
 
-namespace eu.iamia.BaseModule.Contract
+namespace eu.iamia.NCD.API.Contract
 {
     /// <summary>
     /// NCD API Format: {Header, ByteCount, Payload, Checksum}

@@ -1,7 +1,6 @@
 ﻿using System;
-using eu.iamia.BaseModule.Contract;
 
-namespace eu.iamia.NCD.Serial.Contract
+namespace eu.iamia.NCD.API.Contract
 {
     public interface IGateway : IDisposable
     {
