@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using eu.iamia.NCD.API.Contract;
-using eu.iamia.NCD.Shared;
 using Xunit;
 
 // ReSharper disable InconsistentNaming

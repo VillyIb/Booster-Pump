@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using BoosterPumpLibrary.Settings;
 using eu.iamia.BaseModule.Contract;
 using eu.iamia.i2c.communication.contract;

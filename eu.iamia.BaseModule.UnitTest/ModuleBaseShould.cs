@@ -1,5 +1,4 @@
-﻿using System;
-using eu.iamia.BaseModule.Contract;
+﻿using eu.iamia.BaseModule.Contract;
 using NSubstitute;
 using Xunit;
 

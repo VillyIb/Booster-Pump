@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text;
 using EnsureThat;
 using eu.iamia.NCD.API.Contract;
-using eu.iamia.NCD.Shared;
 
 namespace eu.iamia.NCD.API
 {

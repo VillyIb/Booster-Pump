@@ -9,7 +9,6 @@ using BoosterPumpLibrary.Logger;
 using BoosterPumpConfiguration;
 using eu.iamia.BaseModule.Contract;
 using eu.iamia.NCD.API;
-using eu.iamia.NCD.API.Contract;
 using eu.iamia.NCD.Serial.Contract;
 using Modules.AMS5812;
 using Modules.AS1115;

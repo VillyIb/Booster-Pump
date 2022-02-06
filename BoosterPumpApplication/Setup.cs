@@ -4,7 +4,6 @@ using BoosterPumpConfiguration;
 using BoosterPumpLibrary.Logger;
 using System.Diagnostics.CodeAnalysis;
 using eu.iamia.BaseModule.Contract;
-using eu.iamia.NCD.API.Contract;
 using eu.iamia.NCD.Bridge;
 using eu.iamia.NCD.Serial;
 using eu.iamia.NCD.Serial.Contract;
