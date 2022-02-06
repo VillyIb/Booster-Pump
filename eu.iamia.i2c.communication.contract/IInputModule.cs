@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using eu.iamia.BaseModule.Contract;
 
 namespace eu.iamia.i2c.communication.contract
 {

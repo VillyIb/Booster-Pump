@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace eu.iamia.BaseModule.Contract;
+namespace eu.iamia.i2c.communication.contract;
 
 public interface IRegister
 {

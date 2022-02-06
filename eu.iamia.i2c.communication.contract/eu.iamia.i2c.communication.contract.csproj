@@ -13,7 +13,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\eu.iamia.BaseModule.Contract\eu.iamia.BaseModule.Contract.csproj" />
     <ProjectReference Include="..\eu.iamia.NCD.API.Contract\eu.iamia.NCD.API.Contract.csproj" />
   </ItemGroup>
 
