@@ -1,5 +1,6 @@
 ﻿#nullable enable
 using System.Linq;
+using eu.iamia.BaseModule.Contract;
 using eu.iamia.i2c.communication.contract;
 using eu.iamia.NCD.API;
 using eu.iamia.NCD.API.Contract;
@@ -8,12 +9,12 @@ namespace eu.iamia.BaseModule
 {
     // TODO create OutputInputModule implement Send+Read on same register.
 
-    public abstract class InputModule : OutputModule, IInputModule
+    public class InputModule : OutputModule, IInputModule
     {
-        protected InputModule(IBridge apiToSerialBridge) : base(apiToSerialBridge)
+        public InputModule(IBridge apiToSerialBridge) : base(apiToSerialBridge)
         { }
 
-        public abstract bool IsInputValid { get; }
+        public  bool IsInputValid { get; }
 
         private InputModuleEnumerator GetInputEnumerator()
         {

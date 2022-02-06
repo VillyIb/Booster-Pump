@@ -1,4 +1,4 @@
-﻿namespace eu.iamia.i2c.communication.contract;
+﻿namespace eu.iamia.BaseModule.Contract;
 
 public interface IBitSetting
 {

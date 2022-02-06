@@ -1,19 +1,19 @@
 ﻿using System.Linq;
+using eu.iamia.BaseModule.Contract;
 using eu.iamia.i2c.communication.contract;
-using eu.iamia.NCD.API.Contract;
 
 // ReSharper disable UnusedMember.Global
 
 namespace eu.iamia.BaseModule
 {
-    public abstract partial class OutputModule : ModuleBase, IOutputModule
+    public partial class OutputModule : ModuleBase, IOutputModule
     {
         /// <summary>
         /// Default value: 1.
         /// </summary>
         public int RetryCount { get; set; } = 1;
 
-        protected OutputModule(IBridge apiToSerialBridge) : base(apiToSerialBridge)
+        public OutputModule(IBridge apiToSerialBridge) : base(apiToSerialBridge)
         { }
         
         private IOutputModuleEnumerator GetOutputEnumerator()

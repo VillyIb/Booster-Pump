@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using BoosterPumpLibrary.Settings;
-using eu.iamia.BaseModule;
+using eu.iamia.BaseModule.Contract;
 using eu.iamia.i2c.communication.contract;
-using eu.iamia.NCD.API.Contract;
 using eu.iamia.Util.Extensions;
 
 // ReSharper disable UnusedMember.Global
@@ -12,14 +11,13 @@ using eu.iamia.Util.Extensions;
 namespace Modules.MCP4725
 {
     // ReSharper disable once InconsistentNaming
-    public class MCP4725_4_20mA_CurrentTransmitterV2 : OutputModule
+    public class MCP4725_4_20mA_CurrentTransmitterV2
     {
+        private readonly IOutputModule ComModule;
         // Product, see: https://store.ncd.io/product/1-channel-4-20ma-current-loop-transmitter-i2c-mini-module/
         // DataSheet see: https://media.ncd.io/sites/2/20170721135048/MCP4725.pdf
 
         public static byte DefaultAddressValue => 0x60; // Optional 0x61
-
-        public override byte DefaultAddress => DefaultAddressValue;
 
         #region Setting 0x00,.., 0x02
 
@@ -43,7 +41,7 @@ namespace Modules.MCP4725
         /// 0: normal mode, 1: 1 kOhm-, 2 100 kOmh-, 3: 500 kOhm resistor to ground.
         /// See table 5-2
         /// </summary>
-        public EnumBitSettings<PowerDownSettings> PowerDown => new (Setting.GetOrCreateSubRegister(2, 1 + 16, "Power Down"));
+        public EnumBitSettings<PowerDownSettings> PowerDown => new(Setting.GetOrCreateSubRegister(2, 1 + 16, "Power Down"));
 
         public enum WriteCommandType
         {
@@ -61,7 +59,7 @@ namespace Modules.MCP4725
 
         #endregion
 
-        protected override IEnumerable<IRegister> Registers => new[]
+        protected IEnumerable<IRegister> Registers => new[]
         {
             Setting
         };
@@ -72,8 +70,12 @@ namespace Modules.MCP4725
             SetSpeedPersistent(0.50f);
         }
 
-        public MCP4725_4_20mA_CurrentTransmitterV2(IBridge apiToSerialBridge) : base(apiToSerialBridge)
-        { }
+        public MCP4725_4_20mA_CurrentTransmitterV2(IOutputModule comModule)
+        {
+            ComModule = comModule;
+
+            ComModule.SetupOnlyOnce(Registers, DefaultAddressValue);
+        }
 
         /// <summary>
         /// Range 0..4095, by overflow is set 4095.
@@ -82,7 +84,7 @@ namespace Modules.MCP4725
         protected void SetSpeed(ulong speed)
         {
             Speed.Value = Math.Min(4095, speed);
-            Send();
+            ComModule.Send();
         }
 
         /// <summary>
@@ -119,6 +121,11 @@ namespace Modules.MCP4725
             if (value.IsOutsideRange(0.0f, 1.0f)) { throw new ArgumentOutOfRangeException(nameof(value), value, "Valid: [0...1[ (float)"); }
 
             return (int)Math.Round(value * 4096f, 0);
+        }
+
+        public void Send()
+        {
+            ComModule.Send();
         }
     }
 }

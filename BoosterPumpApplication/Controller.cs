@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using eu.iamia.Util;
 using BoosterPumpLibrary.Logger;
 using BoosterPumpConfiguration;
+using eu.iamia.BaseModule.Contract;
 using eu.iamia.NCD.API;
 using eu.iamia.NCD.API.Contract;
 using eu.iamia.NCD.Serial.Contract;
@@ -74,8 +75,8 @@ namespace BoosterPumpApplication
             SystemPressure = scope.ServiceProvider.GetRequiredService<AMS5812_0300_A_Pressure>();
 
             BarometerModule1 = scope.ServiceProvider.GetRequiredService<LPS25HB_Barometer>();
-            BarometerModule2 = scope.ServiceProvider.GetRequiredService<LPS25HB_Barometer>();
-            BarometerModule2.SetAddressIncrement(1);
+            //BarometerModule2 = scope.ServiceProvider.GetRequiredService<LPS25HB_Barometer>();
+            //BarometerModule2.SetAddressIncrement(1);
 
             Multiplexer = scope.ServiceProvider.GetRequiredService<TCA9546A_Multiplexer>();
 

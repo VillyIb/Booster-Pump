@@ -12,8 +12,4 @@
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\eu.iamia.NCD.Shared\eu.iamia.NCD.Shared.csproj" />
-  </ItemGroup>
-
 </Project>

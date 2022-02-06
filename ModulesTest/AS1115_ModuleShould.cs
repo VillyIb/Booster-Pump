@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using eu.iamia.BaseModule;
-using eu.iamia.NCD.Bridge;
+using eu.iamia.BaseModule.Contract;
+using eu.iamia.i2c.communication.contract;
 using eu.iamia.NCD.Serial.Contract;
 using eu.iamia.NCD.Shared;
 using NSubstitute;
@@ -13,11 +14,16 @@ namespace ModulesTest
     {
         private readonly As1115Module Sut;
         private readonly IGateway FakeGateway;
+        private readonly IBridge FakeBridge;
+        private readonly IOutputModule ComModule;
 
         public As1115ModuleShould()
         {
             FakeGateway = Substitute.For<IGateway>();
-            Sut = new(new ApiToSerialBridge(FakeGateway));
+            FakeBridge = Substitute.For<IBridge>();
+            ComModule = new OutputModule(FakeBridge);
+
+            Sut = new As1115Module(ComModule);
 
             var fakeReturnValue = new NcdApiProtocol(new List<byte> { OutputModule.ResponseWriteSuccess }); // OK successful transmission.
             FakeGateway.Execute(Arg.Any<NcdApiProtocol>()).Returns(fakeReturnValue);

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using eu.iamia.NCD.Shared;
 
 namespace eu.iamia.NCD.API.Contract
 {

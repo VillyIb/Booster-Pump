@@ -1,4 +1,4 @@
-﻿using eu.iamia.NCD.API.Contract;
+﻿using eu.iamia.i2c.communication.contract;
 
 namespace Modules.AMS5812
 {
@@ -9,7 +9,7 @@ namespace Modules.AMS5812
         protected override float OutputPressureMax => 2068f;
         protected override float OutputPressureMin => 0f;
 
-        public AMS5812_0300_A_Pressure(IBridge apiToSerialBridge) : base(apiToSerialBridge)
+        public AMS5812_0300_A_Pressure(IInputModule comModule) : base(comModule)
         { }
     }
 }

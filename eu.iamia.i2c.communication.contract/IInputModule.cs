@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using eu.iamia.BaseModule.Contract;
 
 namespace eu.iamia.i2c.communication.contract
 {
@@ -22,5 +23,9 @@ namespace eu.iamia.i2c.communication.contract
 
         void SetupOnlyOnce(IEnumerable<IRegister> registers, byte deviceAddress);
 
+        // TODO in separate interface for both input and output 
+        void Send();
+
+        void SendSpecificRegister(IRegister register);
     }
 }

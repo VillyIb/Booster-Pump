@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using BoosterPumpLibrary.Settings;
 using EnsureThat;
-using eu.iamia.BaseModule;
-using eu.iamia.NCD.API.Contract;
+using eu.iamia.BaseModule.Contract;
+using eu.iamia.i2c.communication.contract;
 using eu.iamia.Util.Extensions;
 
 namespace Modules.AS1115
@@ -12,8 +12,9 @@ namespace Modules.AS1115
     /// <summary>
     /// Display module 3 digits
     /// </summary>
-    public class As1115Module : OutputModule
+    public class As1115Module 
     {
+        private readonly IOutputModule ComModule;
         // see:https://s3.amazonaws.com/controleverything.media/controleverything/Production%20Run%2013/45_AS1115_I2CL_3CE_AMB/Datasheets/AS1115_Datasheet_EN_v2.pdf
         // see:https://store.ncd.io/product/7-segment-3-character-led-display-i2c-mini-module/
 
@@ -203,12 +204,14 @@ namespace Modules.AS1115
 
         public static byte DefaultAddressValue => 0x00;
 
-        public override byte DefaultAddress => DefaultAddressValue;
 
-        public As1115Module(IBridge apiToSerialBridge) : base(apiToSerialBridge)
-        { }
+        public As1115Module(IOutputModule comModule)
+        {
+            ComModule = comModule;
+            ComModule.SetupOnlyOnce(Registers, DefaultAddressValue);
+        }
 
-        protected override IEnumerable<Register> Registers => new[] {
+        protected IEnumerable<IRegister> Registers => new[] {
             // Notice the order is important!
             Setting0X0C,
             Setting0X0E,
@@ -309,7 +312,7 @@ namespace Modules.AS1115
                 Digit2.Value = (byte)(value % 10);
             }
 
-            Send();
+            ComModule.Send();
         }
 
         /// <summary>
@@ -324,6 +327,11 @@ namespace Modules.AS1115
             Digit0.Value = value[0];
             Digit1.Value = value[1];
             Digit2.Value = value[2];
+        }
+
+        public void Send()
+        {
+            ComModule.Send();
         }
     }
 }

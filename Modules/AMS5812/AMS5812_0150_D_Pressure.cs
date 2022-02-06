@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using BoosterPumpLibrary.Settings;
-using eu.iamia.BaseModule;
 using eu.iamia.i2c.communication.contract;
-using eu.iamia.NCD.API.Contract;
 using eu.iamia.Util.Extensions;
 
 namespace Modules.AMS5812
@@ -12,7 +10,7 @@ namespace Modules.AMS5812
     // ReSharper disable once InconsistentNaming
     // see: https://store.ncd.io/product/ams5812-0150-d-b-amplified-pressure-sensor-1034-to-1034-mbar-15-to-15-psi-i2c-mini-module/
 
-    public class AMS5812_0150_D_Pressure //: InputModule  // TODO should not extend but reference by interface
+    public class AMS5812_0150_D_Pressure
     {
         private readonly IInputModule ComModule;
 
@@ -75,12 +73,10 @@ namespace Modules.AMS5812
         /// <summary>
         /// Pressure module
         /// </summary>
-        /// <param name="apiToSerialBridge"></param>
-        public AMS5812_0150_D_Pressure(IBridge apiToSerialBridge, IInputModule comModule) //: base(apiToSerialBridge)
+        public AMS5812_0150_D_Pressure( IInputModule comModule) //: base(apiToSerialBridge)
         {
             ComModule = comModule;
-            ComModule.Registers.Add(Readings); // provide method Setup(Registers, DeviceAddress)
-            ComModule.DeviceAddress = DefaultAddress;
+            ComModule.SetupOnlyOnce(Registers, DefaultAddressValue);
             Clear();
         }
 

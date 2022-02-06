@@ -1,5 +1,8 @@
 ﻿using System.Collections.Generic;
-using eu.iamia.NCD.Bridge;
+using eu.iamia.BaseModule;
+using eu.iamia.BaseModule.Contract;
+using eu.iamia.i2c.communication.contract;
+using eu.iamia.NCD.API.Contract;
 using eu.iamia.NCD.Serial.Contract;
 using eu.iamia.NCD.Shared;
 using NSubstitute;
@@ -14,14 +17,18 @@ namespace ModulesTest
     {
         private readonly AMS5812_0150_D_Pressure _Sut;
         private readonly IGateway _FakeGateway;
+        private readonly IBridge _FakeBridge;
+        private readonly IInputModule _ComModule;
 
         public AMS5812_0150_D_B_ModuleShould()
         {
             _FakeGateway = Substitute.For<IGateway>();
-            _Sut = new AMS5812_0150_D_Pressure( new ApiToSerialBridge(_FakeGateway))
-            {
-                RetryCount = 1
-            };
+            _FakeBridge = Substitute.For<IBridge>();
+            _ComModule = new InputModule(_FakeBridge);
+            _Sut = new AMS5812_0150_D_Pressure(_ComModule);
+
+            _ComModule.RetryCount = 1;
+
         }
 
         [Fact]
@@ -54,7 +61,7 @@ namespace ModulesTest
         {
             const int retryCount = 3;
             _FakeGateway.Execute(Arg.Any<NcdApiProtocol>()).Returns((NcdApiProtocol)null);
-            _Sut.RetryCount = retryCount;
+            _ComModule.RetryCount = retryCount;
             _Sut.ReadFromDevice();
             _FakeGateway.Received(retryCount).Execute(Arg.Is<NcdApiProtocol>(cmd => cmd.PayloadAsHex == "BF 78 04 "));
             Assert.False(_Sut.IsInputValid);

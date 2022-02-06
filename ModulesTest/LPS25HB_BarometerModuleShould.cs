@@ -1,6 +1,9 @@
 ﻿// ReSharper disable InconsistentNaming
 // ReSharper disable UnusedVariable
 
+using eu.iamia.BaseModule;
+using eu.iamia.BaseModule.Contract;
+using eu.iamia.i2c.communication.contract;
 using Modules.LPS25HB;
 
 namespace ModulesTest
@@ -16,11 +19,16 @@ namespace ModulesTest
     {
         private readonly LPS25HB_Barometer Sut;
         private readonly IGateway _FakeGateway;
+        private readonly IBridge _FakeBridge;
+        private readonly IInputModule ComModule;
 
         public LPS25HB_BarometerModuleShould()
         {
             _FakeGateway = Substitute.For<IGateway>();
-            Sut = new(new ApiToSerialBridge(_FakeGateway));
+            _FakeBridge = Substitute.For<IBridge>();
+            ComModule = new InputModule(_FakeBridge);
+
+            Sut = new LPS25HB_Barometer(ComModule);
 
             _FakeGateway.Execute(Arg.Any<NcdApiProtocol>()).Returns(NcdApiProtocol.WriteSuccess);
         }

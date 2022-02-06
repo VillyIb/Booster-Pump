@@ -1,4 +1,6 @@
-﻿namespace eu.iamia.NCD.Bridge
+﻿using eu.iamia.BaseModule.Contract;
+
+namespace eu.iamia.NCD.Bridge
 {
     using System.Collections.Generic;
     using EnsureThat;

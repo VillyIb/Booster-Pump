@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using BoosterPumpLibrary.Settings;
-using eu.iamia.BaseModule;
+using eu.iamia.BaseModule.Contract;
 using eu.iamia.i2c.communication.contract;
-using eu.iamia.NCD.API.Contract;
 
 // ReSharper disable UnusedMember.Global
 
@@ -24,22 +23,25 @@ namespace Modules.TCA9546A
     }
 
     // ReSharper disable once InconsistentNaming
-    public class TCA9546A_Multiplexer : OutputModule
+    public class TCA9546A_Multiplexer 
     {
+        private readonly IOutputModule ComModule;
         // See: https://media.ncd.io/sites/2/20170721134413/tca9546a.pdf
 
         public static byte DefaultAddressValue => 0x70;
 
-        public override byte DefaultAddress => DefaultAddressValue;
 
         private readonly Register Setting0X00 = new(0x00, "Open channels", 1, Direction.Output);
 
         private IBitSetting ChannelSelection => Setting0X00.GetOrCreateSubRegister(4, 0, "Open Channels");
 
-        protected override IEnumerable<Register> Registers => new List<Register> { Setting0X00 };
+        protected  IEnumerable<IRegister> Registers => new List<IRegister> { Setting0X00 };
 
-        public TCA9546A_Multiplexer(IBridge apiToSerialBridge) : base(apiToSerialBridge)
-        { }
+        public TCA9546A_Multiplexer(IOutputModule comModule)
+        {
+            ComModule = comModule;
+            ComModule.SetupOnlyOnce(Registers, DefaultAddressValue);
+        }
 
         /// <summary>
         /// Specify one or more channels {0...3} separated by , (comma).
@@ -49,7 +51,7 @@ namespace Modules.TCA9546A
         {
             var aggregateBitPattern = channels.Aggregate<MultiplexerChannels, byte>(0, (current, channel) => (byte)(current | (byte)channel));
             ChannelSelection.Value = aggregateBitPattern;
-            Send();
+            ComModule.Send();
         }
     }
 }

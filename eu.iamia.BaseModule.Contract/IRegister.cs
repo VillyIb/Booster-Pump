@@ -44,7 +44,6 @@ public interface IRegister
     /// <param name="offsetInBits"></param>
     /// <param name="description"></param>
     /// <returns></returns>
-    /// <exception cref="ArgumentOutOfRangeException"></exception>
     IBitSetting GetOrCreateSubRegister(ushort numberOfBits, ushort offsetInBits, string description = "");
 
     string ToString();

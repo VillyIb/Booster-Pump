@@ -5,13 +5,14 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using eu.iamia.BaseModule.Contract;
 using eu.iamia.i2c.communication.contract;
 using eu.iamia.NCD.API;
 using eu.iamia.NCD.API.Contract;
 
 namespace eu.iamia.BaseModule
 {
-    public abstract partial class OutputModule
+    public partial class OutputModule
     {
         public class OutputModuleEnumerator : IEnumerator<ICommand?>, IOutputModuleEnumerator
         {

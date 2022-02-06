@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
-using eu.iamia.NCD.Bridge;
+using eu.iamia.BaseModule;
+using eu.iamia.BaseModule.Contract;
+using eu.iamia.i2c.communication.contract;
 using eu.iamia.NCD.Serial.Contract;
 using eu.iamia.NCD.Shared;
 using NSubstitute;
@@ -15,11 +17,17 @@ namespace ModulesTest
     {
         private readonly MCP4725_4_20mA_CurrentTransmitterV2 Sut;
         private readonly IGateway FakeGateway;
+        private readonly IBridge _FakeBridge;
 
         public MCP4725_4_20mA_CurrentTransmitterV2Should()
         {
             FakeGateway = Substitute.For<IGateway>();
-            Sut = new(new ApiToSerialBridge(FakeGateway));
+
+            _FakeBridge = Substitute.For<IBridge>();
+
+            IOutputModule _ComModule = new OutputModule(_FakeBridge);
+
+            Sut = new MCP4725_4_20mA_CurrentTransmitterV2(_ComModule);
 
             var fakeReturnValue = new NcdApiProtocol(new List<byte> { 0x55 }); // OK successful transmission.
             FakeGateway.Execute(Arg.Any<NcdApiProtocol>()).Returns(fakeReturnValue);

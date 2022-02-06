@@ -4,14 +4,14 @@
 using System;
 using System.Collections.Generic;
 using BoosterPumpLibrary.Settings;
-using eu.iamia.BaseModule;
+using eu.iamia.i2c.communication.contract;
 using eu.iamia.NCD.API;
-using eu.iamia.NCD.API.Contract;
 
 namespace Modules.LPS25HB
 {
-    public class LPS25HB_Barometer : InputModule
+    public class LPS25HB_Barometer
     {
+        private readonly IInputModule ComModule;
         // see: https://store.ncd.io/product/lps25hb-mems-pressure-sensor-260-1260-hpa-absolute-digital-output-barometer-i2c-mini-module/
         // Description see: https://media.ncd.io/sites/2/20170721134650/LPS25hb.pdf
         // Technical note regarding calculating values.
@@ -54,8 +54,6 @@ namespace Modules.LPS25HB
         #endregion
 
         #region Settings
-
-        public override byte DefaultAddress => DefaultAddressValue;
 
         /// <summary>
         /// see: Description 8.5 Res_Conf Pressure and temperature resolution.
@@ -116,10 +114,13 @@ namespace Modules.LPS25HB
             internal set => TemperatureHex.Value = MapTemperature(value);
         }
 
-        protected override IEnumerable<Register> Registers => new List<Register> { Settings0X20, Settings0X10, Reading0X28 };
+        protected IEnumerable<Register> Registers => new List<Register> { Settings0X20, Settings0X10, Reading0X28 };
 
-        public LPS25HB_Barometer(IBridge apiToSerialBridge) : base(apiToSerialBridge)
-        { }
+        public LPS25HB_Barometer(IInputModule comModule)
+        {
+            ComModule = comModule;
+            ComModule.SetupOnlyOnce(Registers, DefaultAddressValue);
+        }
 
         public virtual void Init()
         {
@@ -127,20 +128,23 @@ namespace Modules.LPS25HB
             OutputDataRate.Value = 1;
             PressureResolution.Value = 2;
             TemperatureResolution.Value = 2;
-            Send();
+            ComModule.Send();
 
-            SendSpecificRegister(Reading0X28);
-            var readCommand = new CommandRead(DeviceAddress, 5);
-            // ReSharper disable once UnusedVariable
-            var returnValue = ApiToSerialBridge.Execute(readCommand);
+            ComModule.SendSpecificRegister(Reading0X28);
+            
+            // TODO ADD DELAY
+
+            // todo FIX
+            ReadFromDevice();
+            //var returnValue = ApiToSerialBridge.Execute(readCommand);
         }
 
-        public override void ReadFromDevice()
+        public  void ReadFromDevice()
         {
             Reading0X28.IsInputDirty = true;
-            base.ReadFromDevice();
+            ComModule.ReadFromDevice();
         }
 
-        public override bool IsInputValid => !Reading0X28.IsInputDirty;
+        public  bool IsInputValid => !Reading0X28.IsInputDirty;
     }
 }
