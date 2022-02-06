@@ -3,7 +3,7 @@
     /// <summary>
     /// Values: {Undefined|ExpectHeader|ExpectLength|ExpectPayload|ExpectChecksum|Overflow}
     /// </summary>
-    public enum NcdState
+    internal enum NcdState
     {
         // ReSharper disable once UnusedMember.Global
         Undefined = 0,

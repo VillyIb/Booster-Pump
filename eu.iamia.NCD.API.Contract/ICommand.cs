@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-
-namespace eu.iamia.NCD.API.Contract
+﻿namespace eu.iamia.NCD.API.Contract
 {
+    using System.Collections.Generic;
+
     /// <summary>
     /// Raw I2C Command Request.
     /// </summary>

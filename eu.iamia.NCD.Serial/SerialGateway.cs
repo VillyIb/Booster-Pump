@@ -81,8 +81,6 @@ namespace eu.iamia.NCD.Serial
 
         private bool IsInitialized;
 
-        public List<byte> XReceived = new();
-
         private void Init()
         {
             State = NcdState.ExpectHeader;
@@ -94,7 +92,6 @@ namespace eu.iamia.NCD.Serial
 
             SerialPort.Open();
             SerialPort.DataReceived += ProcessInput;
-            SerialPort.DataReceived += (_, args) => { XReceived.AddRange(args.Data); };
             IsInitialized = true;
         }
 
