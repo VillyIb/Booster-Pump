@@ -4,7 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO.Ports;
 using System.Linq;
 using System.Threading;
-using BoosterPumpConfiguration;
+using eu.iamia.SerialPortSetting.Contract;
 using Microsoft.Extensions.Options;
 
 namespace eu.iamia.ReliableSerialPort
@@ -16,7 +16,7 @@ namespace eu.iamia.ReliableSerialPort
 
         [ExcludeFromCodeCoverage]
         // ReSharper disable once UnusedMember.Global
-        public SerialPortDecorator(IOptions<SerialPortSettings> settings)
+        public SerialPortDecorator(IOptions<ISerialPortSettings> settings)
         {
             SerialPortSettings = settings.Value;
         }

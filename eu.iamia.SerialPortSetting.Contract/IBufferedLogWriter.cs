@@ -2,11 +2,11 @@
 
 // ReSharper disable UnusedMemberInSuper.Global
 
-namespace BoosterPumpLibrary.Logger
+namespace eu.iamia.SerialPortSetting.Contract
 {
     public interface IBufferedLogWriter
     {
-        void Add(BufferLine payload);
+        void Add(IBufferLine payload);
 
 
         void AggregateFlush(DateTime window);

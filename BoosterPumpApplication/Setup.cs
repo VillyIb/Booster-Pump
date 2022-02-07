@@ -7,6 +7,7 @@ using eu.iamia.NCD.API.Contract;
 using eu.iamia.NCD.Bridge;
 using eu.iamia.NCD.Serial;
 using eu.iamia.ReliableSerialPort;
+using eu.iamia.SerialPortSetting.Contract;
 using Modules.AMS5812;
 using Modules.AS1115;
 using Modules.LPS25HB;

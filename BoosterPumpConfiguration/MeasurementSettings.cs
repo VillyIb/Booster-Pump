@@ -3,7 +3,7 @@
     /// <summary>
     /// Only read at startup
     /// </summary>
-    public class MeasurementSettings
+    public class MeasurementSettings : IMeasurementSettings
     {
         public static string Name => "Measurement";
 

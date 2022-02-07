@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using eu.iamia.SerialPortSetting.Contract;
 
 namespace BoosterPumpLibrary.Logger
 {
-    public class BufferLine
+    public class BufferLine : IBufferLine
     {
         public DateTime Timestamp { get; }
 

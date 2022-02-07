@@ -5,9 +5,12 @@ using System.Collections.Generic;
 using System.Threading;
 using BoosterPumpConfiguration;
 using Xunit;
+using eu.iamia.Configuration;
 
 namespace eu.iamia.ReliableSerialPort.SystemTest
 {
+    using eu.iamia.SerialPortSetting.Contract;
+
     /// <summary>
     /// NOTE System tests requires attached hardware AND executed in sequence.
     /// </summary>

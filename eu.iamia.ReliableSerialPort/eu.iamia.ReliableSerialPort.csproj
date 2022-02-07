@@ -22,7 +22,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BoosterPumpConfiguration\BoosterPumpConfiguration.csproj" />
+    <ProjectReference Include="..\eu.iamia.i2c.communication.contract\eu.iamia.i2c.communication.contract.csproj" />
+    <ProjectReference Include="..\eu.iamia.SerialPortSetting.Contract\eu.iamia.SerialPortSetting.Contract.csproj" />
   </ItemGroup>
 
 </Project>

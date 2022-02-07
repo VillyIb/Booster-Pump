@@ -1,4 +1,4 @@
-﻿namespace BoosterPumpConfiguration
+﻿namespace eu.iamia.SerialPortSetting.Contract
 {
     public interface ISerialPortSettings
     {

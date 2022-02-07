@@ -1,5 +1,7 @@
 ﻿namespace BoosterPumpConfiguration
 {
+    using eu.iamia.SerialPortSetting.Contract;
+
     /// <summary>
     /// Only read at startup
     /// </summary>

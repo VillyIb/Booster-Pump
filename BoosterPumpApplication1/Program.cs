@@ -8,6 +8,7 @@ using BoosterPumpLibrary.Logger;
 using eu.iamia.Configuration;
 using eu.iamia.NCD.API;
 using eu.iamia.NCD.API.Contract;
+using eu.iamia.SerialPortSetting.Contract;
 
 namespace BoosterPumpApplication1
 {
