@@ -18,9 +18,9 @@ namespace BoosterPumpLibrary.Logger
             Settings = settings.Value;
         }
 
-        private string CurrentFilename { get; set; }
+        private string? CurrentFilename { get; set; }
 
-        private StreamWriter Sw { get; set; }
+        private StreamWriter? Sw { get; set; }
 
         private static string GetFilename(DateTime timestamp, string suffix)
         {

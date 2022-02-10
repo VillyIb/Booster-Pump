@@ -1,4 +1,6 @@
-﻿using System;
+﻿#nullable enable
+using System;
+// ReSharper disable UnusedMemberInSuper.Global
 
 namespace eu.iamia.i2c.communication.contract;
 

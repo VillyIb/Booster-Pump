@@ -1,5 +1,6 @@
 ﻿using System;
 using eu.iamia.NCD.API.Contract;
+// ReSharper disable UnusedMemberInSuper.Global
 
 namespace eu.iamia.i2c.communication.contract;
 

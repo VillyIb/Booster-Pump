@@ -1,6 +1,7 @@
-﻿namespace eu.iamia.SerialPortSetting.Contract
-{
+﻿// ReSharper disable UnusedMemberInSuper.Global
 
+namespace eu.iamia.SerialPortSetting.Contract
+{
     public interface IMeasurementSettings
     {
         int RoundTripTime { get; set; }

@@ -5,6 +5,7 @@ using BoosterPumpLibrary.Settings;
 using EnsureThat;
 using eu.iamia.i2c.communication.contract;
 using eu.iamia.Util.Extensions;
+// ReSharper disable UnusedMember.Global
 
 namespace Modules.AS1115
 {
@@ -17,7 +18,8 @@ namespace Modules.AS1115
         // see:https://s3.amazonaws.com/controleverything.media/controleverything/Production%20Run%2013/45_AS1115_I2CL_3CE_AMB/Datasheets/AS1115_Datasheet_EN_v2.pdf
         // see:https://store.ncd.io/product/7-segment-3-character-led-display-i2c-mini-module/
 
-        public enum Level0xF
+        // ReSharper disable once InconsistentNaming
+        public enum Level0XF
         {
             Level0,
             Level1,
@@ -82,7 +84,7 @@ namespace Modules.AS1115
         /// <summary>
         /// 0..15
         /// </summary>
-        public EnumBitSettings<Level0xF> GlobalIntensity => new(Setting0X0A.GetOrCreateSubRegister(4, 0, "Global Intensity"));
+        public EnumBitSettings<Level0XF> GlobalIntensity => new(Setting0X0A.GetOrCreateSubRegister(4, 0, "Global Intensity"));
 
         #endregion
 
@@ -137,8 +139,11 @@ namespace Modules.AS1115
         /// </summary>
         public enum Decoding
         {
+            // ReSharper disable once InconsistentNaming
             BCD = 0,
 
+            // ReSharper disable once UnusedMember.Global
+            // ReSharper disable once InconsistentNaming
             HEX = 1
         }
 
@@ -187,17 +192,17 @@ namespace Modules.AS1115
         /// <summary>
         /// 0..15
         /// </summary>
-        public EnumBitSettings<Level0xF> Digit0Intensity => new(Setting0X10.GetOrCreateSubRegister(4, 0, "Digit 0 intensity"));
+        public EnumBitSettings<Level0XF> Digit0Intensity => new(Setting0X10.GetOrCreateSubRegister(4, 0, "Digit 0 intensity"));
 
         /// <summary>
         /// 0..15
         /// </summary>
-        public EnumBitSettings<Level0xF> Digit1Intensity => new(Setting0X10.GetOrCreateSubRegister(4, 4, "Digit 1 intensity"));
+        public EnumBitSettings<Level0XF> Digit1Intensity => new(Setting0X10.GetOrCreateSubRegister(4, 4, "Digit 1 intensity"));
 
         /// <summary>
         /// 0..15
         /// </summary>
-        public EnumBitSettings<Level0xF> Digit2Intensity => new(Setting0X10.GetOrCreateSubRegister(4, 8, "Digit 2 intensity"));
+        public EnumBitSettings<Level0XF> Digit2Intensity => new(Setting0X10.GetOrCreateSubRegister(4, 8, "Digit 2 intensity"));
 
         #endregion
 
@@ -229,7 +234,7 @@ namespace Modules.AS1115
             SetPrimarySettingsDirty();
             ShutdownRegister.Value = ShutdownRegisterSettings.NormalOperationResetFeatureRegisterToDefaultSettings;
             DecodingSetting.Value = Decoding.BCD;
-            GlobalIntensity.Value = Level0xF.LevelF;
+            GlobalIntensity.Value = Level0XF.LevelF;
             ScanLimit.Value = ActiveDigits.FirstToThird;
         }
 

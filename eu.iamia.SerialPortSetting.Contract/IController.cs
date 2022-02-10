@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+// ReSharper disable UnusedMemberInSuper.Global
 
 namespace eu.iamia.SerialPortSetting.Contract
 {

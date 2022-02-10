@@ -9,7 +9,7 @@ namespace BoosterPumpLibrary.Settings
     using System.Text;
     using eu.iamia.Util.Extensions;
 
-    public class Register : IRegister
+    public sealed class Register : IRegister
     {
         /// <summary>
         /// Maximum number of bytes matching in register.
@@ -29,7 +29,7 @@ namespace BoosterPumpLibrary.Settings
         /// <summary>
         /// Information.
         /// </summary>
-        public string Description { get; protected set; }
+        public string Description { get; }
 
         /// <summary>
         /// Indicate the Register is read from an I2C Device
@@ -54,19 +54,13 @@ namespace BoosterPumpLibrary.Settings
         /// <summary>
         /// Number of bytes this Register is managing {1..8}
         /// </summary>
-        public ushort Size { get; protected set; }
+        public ushort Size { get; }
 
-        public byte RegisterAddress { get; protected internal set; }
+        public byte RegisterAddress { get; }
 
-        protected Dictionary<string, IBitSetting> SubRegisters { get; }
-
+        private Dictionary<string, IBitSetting> SubRegisters { get; }
 
         #endregion
-
-        protected Register()
-        {
-            SubRegisters = new();
-        }
 
         /// <summary>
         /// Defines a subview <em>numberOfBits</em> bits long shifted <em>offsetInBits</em> bits with <em>description</em> as name.
@@ -129,7 +123,7 @@ namespace BoosterPumpLibrary.Settings
             return result;
         }
 
-        protected ulong ValueField;
+        private ulong ValueField;
 
         public ulong Value
         {
@@ -142,10 +136,12 @@ namespace BoosterPumpLibrary.Settings
             }
         }
 
-        public Register(byte registerAddress, string description, ushort sizeInBytes, Direction direction) : this()
+        public Register(byte registerAddress, string description, ushort sizeInBytes, Direction direction)
         {
             CheckRange(registerAddress, 0, 127, nameof(registerAddress));
             CheckRange(sizeInBytes, 1, MaxSize, nameof(sizeInBytes));
+
+            SubRegisters = new();
 
             RegisterAddress = registerAddress;
             Description = description;

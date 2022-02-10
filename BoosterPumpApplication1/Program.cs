@@ -14,16 +14,16 @@ namespace BoosterPumpApplication1
     [ExcludeFromCodeCoverage]
     public class Program
     {
-        private static IConfiguration Configuration;
+        private static IConfiguration _configuration;
 
         // ReSharper disable once UnusedParameter.Local
         public static void Main(string[] args)
         {
             Console.WriteLine("Executing in SYNC mode");
 
-            Configuration = ConfigurationSetup.Init();
+            _configuration = ConfigurationSetup.Init();
 
-            var setup = new Setup(Configuration);
+            var setup = new Setup(_configuration);
             IServiceCollection services = new ServiceCollection();
             setup.Register(services);
 
@@ -42,6 +42,7 @@ namespace BoosterPumpApplication1
             //serialPort.Open();
 
             if (false)
+                // ReSharper disable HeuristicUnreachableCode
             {
                 var ncdCommand = new CommandControllerControllerHardReboot();
                 var serialConverter = scope.ServiceProvider.GetRequiredService<IBridge>();
@@ -52,6 +53,7 @@ namespace BoosterPumpApplication1
                 }
                 Thread.Sleep(100);
             }
+            // ReSharper restore HeuristicUnreachableCode
 
             {
 

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using EnsureThat;
 using eu.iamia.NCD.API.Contract;
+// ReSharper disable UnusedMember.Global
 
 namespace eu.iamia.NCD.API
 {
@@ -18,6 +19,7 @@ namespace eu.iamia.NCD.API
 
         public abstract I2CCommandCode GetI2CCommandCode { get; }
 
+        // ReSharper disable once UnusedMember.Global
         public string I2CDataAsHex
         {
             get

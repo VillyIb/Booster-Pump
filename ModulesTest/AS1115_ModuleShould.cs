@@ -121,7 +121,7 @@ namespace ModulesTest
         [Fact]
         public void SettingDigit0Intensity()
         {
-            Sut.Digit0Intensity.Value = As1115Module.Level0xF.LevelB;
+            Sut.Digit0Intensity.Value = As1115Module.Level0XF.LevelB;
             Sut.Send();
             _FakeGateway.Received(1).Execute(Arg.Any<NcdApiProtocol>());
             _FakeGateway.Received(1).Execute(Arg.Is<NcdApiProtocol>(c => c.PayloadAsHex == "BE 00 10 00 0B ")); // {digit3 & digit2} {digit1 & digit0}
@@ -130,7 +130,7 @@ namespace ModulesTest
         [Fact]
         public void SettingDigit1Intensity()
         {
-            Sut.Digit1Intensity.Value = As1115Module.Level0xF.LevelC;
+            Sut.Digit1Intensity.Value = As1115Module.Level0XF.LevelC;
             Sut.Send();
             _FakeGateway.Received(1).Execute(Arg.Any<NcdApiProtocol>());
             _FakeGateway.Received(1).Execute(Arg.Is<NcdApiProtocol>(c => c.PayloadAsHex == "BE 00 10 00 C0 "));
@@ -139,7 +139,7 @@ namespace ModulesTest
         [Fact]
         public void SettingDigit2Intensity()
         {
-            Sut.Digit2Intensity.Value = As1115Module.Level0xF.LevelD;
+            Sut.Digit2Intensity.Value = As1115Module.Level0XF.LevelD;
             Sut.Send();
             _FakeGateway.Received(1).Execute(Arg.Any<NcdApiProtocol>());
             _FakeGateway.Received(1).Execute(Arg.Is<NcdApiProtocol>(c => c.PayloadAsHex == "BE 00 10 0D 00 "));

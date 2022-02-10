@@ -65,12 +65,17 @@ namespace BoosterPumpLibrary.Settings
 
     public class EnumBitSettings<T> : BitSettingsWrapperBase where T : Enum
     {
-        public EnumBitSettings(IBitSetting server) : base(server)
-        { }
+        private readonly T[] Enums;
 
-        public T Value
+        public EnumBitSettings(IBitSetting server) : base(server)
         {
-            get => ((T[])Enum.GetValues(typeof(T))).FirstOrDefault(current => Convert.ToUInt64(current) == Server.Value);
+            Enums = (T[])Enum.GetValues(typeof(T));
+        }
+
+        public T? Value
+        {
+            get => Enums.FirstOrDefault(current => Convert.ToUInt64(current) == Server.Value);
+
             set => Server.Value = Convert.ToUInt64(value);
         }
     }

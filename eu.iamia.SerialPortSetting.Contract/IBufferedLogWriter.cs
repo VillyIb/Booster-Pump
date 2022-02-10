@@ -6,6 +6,8 @@ namespace eu.iamia.SerialPortSetting.Contract
 {
     public interface IBufferedLogWriter
     {
+        event EventHandler Disposed;
+
         void Add(IBufferLine payload);
 
 

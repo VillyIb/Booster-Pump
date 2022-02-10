@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace eu.iamia.NCD.Bridge
+﻿namespace eu.iamia.NCD.Bridge
 {
     using System.Collections.Generic;
     using EnsureThat;

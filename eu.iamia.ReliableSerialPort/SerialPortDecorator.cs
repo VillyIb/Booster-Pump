@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading;
 using eu.iamia.SerialPortSetting.Contract;
 using Microsoft.Extensions.Options;
+// ReSharper disable UnusedMember.Global
 
 namespace eu.iamia.ReliableSerialPort
 {

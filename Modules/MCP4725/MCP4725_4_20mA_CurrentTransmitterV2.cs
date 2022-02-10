@@ -30,7 +30,7 @@ namespace Modules.MCP4725
 
         private readonly Register Setting = new(0, "Settings", 3, Direction.Output);
 
-        // Values acording to figure 6-2
+        // Values according to figure 6-2
         // 1.byte is ignored (protocol level)
         // 2 byte: Register offset 16
         // 3 byte: Register offset 8
@@ -49,6 +49,7 @@ namespace Modules.MCP4725
         }
 
         // ReSharper disable once StringLiteralTypo
+        // ReSharper disable once IdentifierTypo
         private EnumBitSettings<WriteCommandType> WriteToDacOrEEPROM => new(Setting.GetOrCreateSubRegister(3, 5 + 16, "Write to DAC or EEPROM"));
 
         /// <summary>

@@ -7,11 +7,6 @@
     /// </summary>
     public class SerialPortSettings : ISerialPortSettings
     {
-        public SerialPortSettings()
-        {
-
-        }
-
         public static string Name => "SerialPort";
 
         // ReSharper disable once UnusedMember.Global

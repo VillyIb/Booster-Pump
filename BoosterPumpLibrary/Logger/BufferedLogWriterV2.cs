@@ -146,7 +146,11 @@ namespace BoosterPumpLibrary.Logger
         }
 
         [ExcludeFromCodeCoverage]
-        public ISite Site { get => throw new NotImplementedException(); set { } }
+        public ISite Site
+        {
+            get => throw new NotImplementedException(); 
+            set { }
+        }
 
         public event EventHandler Disposed;
 
