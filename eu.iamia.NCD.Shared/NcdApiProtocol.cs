@@ -1,7 +1,7 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using EnsureThat;
@@ -9,7 +9,7 @@ using eu.iamia.NCD.API.Contract;
 
 namespace eu.iamia.NCD.Shared
 {
-    public class NcdApiProtocol : INcdApiProtocol
+    public sealed class NcdApiProtocol : INcdApiProtocol, IEquatable<INcdApiProtocol>
     {
         public byte Header { get; }
 
@@ -21,13 +21,20 @@ namespace eu.iamia.NCD.Shared
 
         public byte Checksum { get; }
 
+        private byte? CalculatedChecksumField;
+
         internal byte CalculatedChecksum
         {
             get
             {
+                if (CalculatedChecksumField is not null)
+                {
+                    return CalculatedChecksumField.Value;
+                }
                 var checksum = Header + ByteCount;
                 checksum = PayloadField.Aggregate(checksum, (current1, current) => current1 + current) & 0xff;
-                return (byte)checksum;
+                CalculatedChecksumField = (byte)checksum;
+                return CalculatedChecksumField.Value;
             }
         }
 
@@ -35,8 +42,10 @@ namespace eu.iamia.NCD.Shared
         {
             get
             {
-                if (PayloadField is null) { return false; }
-                if (ByteCount != PayloadField.Count) { return false; }
+                if (ByteCount != PayloadField.Count)
+                {
+                    return false;
+                }
                 return CalculatedChecksum == Checksum;
             }
         }
@@ -47,40 +56,39 @@ namespace eu.iamia.NCD.Shared
         {
             get
             {
-                var payload = Payload;
+                var result = false;
 
-                var result =
-                        ByteCount == 0x04 &&
-                        payload[0] == 0xBC &&
-                        payload[2] == 0xA5 &&
-                        payload[3] == 0x43 &&
-                        (
-                            payload[1] == 0x5A |
-                            payload[1] == 0x5B |
-                            payload[1] == 0x5C
-                        )
-                ;
+                result |= Equals(NcdApiProtocol.NoResponse);
+                result |= Equals(NcdApiProtocol.InvalidAddress);
+                result |= Equals(NcdApiProtocol.Timeout);
 
                 return result;
             }
         }
+
+        private ulong? ValueField;
 
         public ulong Value
         {
             get
             {
-                ulong result = 0UL;
+                if (ValueField is not null)
+                {
+                    return ValueField.Value;
+                }
+
+                ValueField = 0UL;
 
                 foreach (var current in Payload)
                 {
-                    result = (result << 8) + current;
+                    ValueField = (ValueField << 8) + current;
                 }
 
-                return result;
+                return ValueField.Value;
             }
         }
 
-        public NcdApiProtocol(byte header, byte byteCount, [NotNull] IEnumerable<byte> payload, byte checksum)
+        public NcdApiProtocol(byte header, byte byteCount, IEnumerable<byte> payload, byte checksum)
         {
             EnsureArg.IsNotNull(payload, nameof(payload));
             PayloadField = payload.ToList();
@@ -89,28 +97,30 @@ namespace eu.iamia.NCD.Shared
             Header = header;
             ByteCount = byteCount;
             Checksum = checksum;
+
+            GetHashCodeField = Header.GetHashCode() ^ ByteCount.GetHashCode() ^ Checksum.GetHashCode() ^ Value.GetHashCode();
         }
 
-        public NcdApiProtocol([NotNull] IEnumerable<byte> payload) : this(0xAA, 0, payload, 0)
+        public NcdApiProtocol(IEnumerable<byte> payload) : this(0xAA, 0, payload, 0)
         {
             ByteCount = (byte)PayloadField.Count;
             Checksum = CalculatedChecksum;
+
+            GetHashCodeField = Header.GetHashCode() ^ ByteCount.GetHashCode() ^ Checksum.GetHashCode() ^ Value.GetHashCode();
         }
 
         public IEnumerable<byte> GetApiEncodedData()
         {
             yield return Header;
             yield return ByteCount;
-            if (null != Payload)
+            foreach (var current in Payload)
             {
-                foreach (var current in Payload)
-                {
-                    yield return current;
-                }
+                yield return current;
             }
             yield return Checksum;
         }
 
+        // ReSharper disable once UnusedMember.Global
         public string PayloadAsHex
         {
             get
@@ -124,6 +134,39 @@ namespace eu.iamia.NCD.Shared
 
                 return result.ToString();
             }
+        }
+
+        public bool Equals(INcdApiProtocol? other)
+        {
+            if (other is null)
+            {
+                return false;
+            }
+
+            if (GetHashCode() != other.GetHashCode())
+            {
+                return false;
+            }
+
+            var result = true;
+            result &= Value == other.Value;
+            result &= ByteCount == other.ByteCount;
+            result &= Checksum == other.Checksum;
+            result &= Header == other.Header;
+
+            return result;
+        }
+
+        private readonly int GetHashCodeField;
+
+        public override int GetHashCode()
+        {
+            return GetHashCodeField;
+        }
+
+        public override bool Equals(object? obj)
+        {
+            return Equals((INcdApiProtocol?)obj);
         }
 
         public override string ToString()

@@ -8,7 +8,7 @@ namespace eu.iamia.NCD.Shared.UnitTest
 {
     public class NcdApiProtocolShould
     {
-        private static INcdApiProtocol Sut => new NcdApiProtocol(new byte[] {0x55});
+        private static NcdApiProtocol Sut => NcdApiProtocol.WriteSuccess;
 
         [Fact]
         public void BeAssignableToINcdApiProtocol()
@@ -19,10 +19,9 @@ namespace eu.iamia.NCD.Shared.UnitTest
 
         [Fact]
         public void ReturnRightValueForCalculateChecksum()
-        {
-            var sut = new NcdApiProtocol(new byte[] { 0x55, 0x44, 0x33 });
-            var checksum = sut.CalculatedChecksum;
-            Assert.Equal(121,checksum);
+        {       
+            var checksum = Sut.CalculatedChecksum;
+            Assert.Equal(0, checksum);
         }
 
         [Fact]
@@ -30,7 +29,7 @@ namespace eu.iamia.NCD.Shared.UnitTest
         {
             Assert.Equal(0xAA, Sut.Header);
             Assert.Equal(0x01, Sut.ByteCount);
-            Assert.Equal(new byte[] {0x55}, Sut.Payload);
+            Assert.Equal(new byte[] { 0x55 }, Sut.Payload);
             Assert.Equal(0x00, Sut.Checksum);
         }
 
@@ -72,14 +71,14 @@ namespace eu.iamia.NCD.Shared.UnitTest
         [Fact]
         public void ReturnRightByteSequenceForGetApiEncodedData()
         {
-            var expectedByteSequence = new List<byte> {0xAA, 0x01, 0x55, 0x00};
+            var expectedByteSequence = new List<byte> { 0xAA, 0x01, 0x55, 0x00 };
             Assert.Equal(expectedByteSequence, Sut.GetApiEncodedData());
         }
 
         [Fact]
         public void ReturnRightStringForPayloadAsHex()
         {
-            Assert.Equal("55 ", ((NcdApiProtocol) Sut).PayloadAsHex);
+            Assert.Equal("55 ", ((NcdApiProtocol)Sut).PayloadAsHex);
         }
 
         [Fact]
@@ -88,14 +87,49 @@ namespace eu.iamia.NCD.Shared.UnitTest
             Assert.Equal("AA 01 55 00 ", Sut.ToString());
         }
 
-        [Theory]
-        [InlineData(new byte[] { 0xBC, 0x5A, 0xA5, 0x43 })]
-        [InlineData(new byte[] { 0xBC, 0x5B, 0xA5, 0x43 })]
-        [InlineData(new byte[] { 0xBC, 0x5C, 0xA5, 0x43 })]
-        public void ReturnErrorForSpecificPayload(byte[] payload)
+        [Fact]
+        public void ReturnErrorForNoResponse()
         {
-            var sut = new NcdApiProtocol(payload);
-            Assert.True(sut.IsError);
+            Assert.True(NcdApiProtocol.NoResponse.IsError);
         }
+
+        [Fact]
+        public void ReturnErrorForInvalidAddress()
+        {
+            Assert.True(NcdApiProtocol.InvalidAddress.IsError);
+        }
+
+        [Fact]
+        public void ReturnErrorForTimeout()
+        {
+            Assert.True(NcdApiProtocol.Timeout.IsError);
+        }
+
+        [Fact]
+        public void BeEqualForIdenticalConent()
+        {
+            var expected = new NcdApiProtocol(new byte[] { 0x55, 0x56 });
+            var actual = new NcdApiProtocol(new byte[] { 0x55, 0x56 });
+
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void BeDifferentForDifferentContent()
+        {
+            var expected = new NcdApiProtocol(new byte[] { 0x55, 0x56 });
+            var actual = new NcdApiProtocol(new byte[] { 0x55, 0x57 });
+
+            Assert.NotEqual(expected, actual);
+        }
+
+        [Fact]
+        public void BeDifferentForNull()
+        {
+            var expected = new NcdApiProtocol(new byte[] { 0x55, 0x56 });
+
+            Assert.False(expected.Equals(null));
+            Assert.False(expected.Equals((object)null));
+        }       
     }
 }
