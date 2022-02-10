@@ -22,7 +22,7 @@ namespace BoosterPumpApplication
     public class Controller : IController
     {
         private readonly IBridge ApiToSerialBridge;
-        public MeasurementSettings MeasurementSettings { get; }
+        public IMeasurementSettings MeasurementSettings { get; }
 
         public IGateway Gateway { get; }
 

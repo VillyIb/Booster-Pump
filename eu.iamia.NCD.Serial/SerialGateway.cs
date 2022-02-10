@@ -31,7 +31,7 @@ namespace eu.iamia.NCD.Serial
 
         private byte Checksum { get; set; }
 
-        private void ProcessInput(object sender, DataReceivedArgs args)
+        private void ProcessInput(object sender, IDataReceivedArgs args)
         {
             foreach (var current in args.Data)
             {
@@ -118,9 +118,10 @@ namespace eu.iamia.NCD.Serial
 
             //Thread.Sleep(100);
 
-            if (WaitForResultToBeReady()) { eu.iamia.NCD.API.Contract.INcdApiProtocol result = new NcdApiProtocol(Header, ByteCount, Payload, Checksum); }
-
-            return null;
+            return WaitForResultToBeReady() 
+                ? new NcdApiProtocol(Header, ByteCount, Payload, Checksum) 
+                : null
+            ;
         }
     }
 

@@ -4,7 +4,6 @@ using System.Threading;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using BoosterPumpApplication;
-using BoosterPumpLibrary.Logger;
 using eu.iamia.Configuration;
 using eu.iamia.NCD.API;
 using eu.iamia.NCD.API.Contract;

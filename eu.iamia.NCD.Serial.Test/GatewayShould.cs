@@ -1,15 +1,16 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using eu.iamia.NCD.API.Contract;
-using eu.iamia.NCD.Shared;
-using eu.iamia.ReliableSerialPort;
-using NSubstitute;
-using Xunit;
-
 namespace eu.iamia.NCD.Serial.UnitTest
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
+    using eu.iamia.NCD.API.Contract;
+    using eu.iamia.NCD.Shared;
+    using eu.iamia.ReliableSerialPort;
+    using eu.iamia.SerialPortSetting.Contract;
+    using NSubstitute;
+    using Xunit;
+
     public class GatewayShould
     {
         private SerialGateway Sut;
@@ -93,13 +94,15 @@ namespace eu.iamia.NCD.Serial.UnitTest
     [ExcludeFromCodeCoverage]
     public class FakeSerialPortDecorator : ISerialPortDecorator
     {
+    
+
         public virtual IEnumerable<byte> GetResponse() => new List<byte> {0x00};
 
         public void Dispose()
         {
         }
 
-        public event EventHandler<DataReceivedArgs> DataReceived;
+        public event EventHandler<IDataReceivedArgs> DataReceived;
 
         public void Open()
         {
@@ -108,7 +111,7 @@ namespace eu.iamia.NCD.Serial.UnitTest
         public void Write(IEnumerable<byte> byteSequence)
         {
             // Response is passed as DataReceived.
-            DataReceived?.Invoke(this, new() {Data = GetResponse().ToArray()});
+            DataReceived?.Invoke(this, new DataReceivedArgs() {Data = GetResponse().ToArray()});
         }
     }
 }

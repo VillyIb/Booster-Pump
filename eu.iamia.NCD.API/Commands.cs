@@ -10,6 +10,8 @@ namespace eu.iamia.NCD.API
 {
     // see:https://ncd.io/serial-to-i2c-conversion/
 
+    // TODO Refactor to let Command implement Execute method calling Gateway.Execute(command) and verify the response is valid eg. requested length is OK
+
     public abstract class Command : ICommand
     {
         public abstract IEnumerable<byte> I2C_Data();

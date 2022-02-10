@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using BoosterPumpLibrary.Logger;
 using eu.iamia.Util;
+using eu.iamia.i2c.communication.contract;
 using NSubstitute;
 using Xunit;
 
@@ -67,12 +68,12 @@ namespace BoosterPumpLibrary.UnitTest.Logger
         private void SetupBufferLines()
         {
             InitSystemDateTime(10);
-            Sut.Add(new("A", SystemDateTime.UtcNow));
+            Sut.Add(new BufferLine("A", SystemDateTime.UtcNow));
             InitSystemDateTime(11);
-            Sut.Add(new("B", SystemDateTime.UtcNow));
-            Sut.Add(new("C", SystemDateTime.UtcNow));
+            Sut.Add(new BufferLine("B", SystemDateTime.UtcNow));
+            Sut.Add(new BufferLine("C", SystemDateTime.UtcNow));
             InitSystemDateTime(12);
-            Sut.Add(new("D", SystemDateTime.UtcNow));
+            Sut.Add(new BufferLine("D", SystemDateTime.UtcNow));
         }
 
         private void SetupBufferLineMeasurements()

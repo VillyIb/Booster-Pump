@@ -17,12 +17,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Options" Version="5.0.0" />
-    <PackageReference Include="System.IO.Ports" Version="5.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" />
+    <PackageReference Include="System.IO.Ports" Version="6.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\eu.iamia.i2c.communication.contract\eu.iamia.i2c.communication.contract.csproj" />
     <ProjectReference Include="..\eu.iamia.SerialPortSetting.Contract\eu.iamia.SerialPortSetting.Contract.csproj" />
   </ItemGroup>
 

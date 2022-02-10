@@ -7,6 +7,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using eu.iamia.i2c.communication.contract;
 using eu.iamia.SerialPortSetting.Contract;
 using eu.iamia.Util;
 
@@ -18,7 +19,7 @@ namespace BoosterPumpLibrary.Logger
 
         private readonly IOutputFileHandler AggregateFile;
 
-        private readonly ConcurrentQueue<BufferLine> Queue;
+        private readonly ConcurrentQueue<IBufferLine> Queue;
 
         public BufferedLogWriterV2(IOutputFileHandler aggregateFile)
         {
@@ -98,7 +99,7 @@ namespace BoosterPumpLibrary.Logger
                 }
                 catch (Exception ex)
                 {
-                    Queue.Enqueue(new(ex.Message, SystemDateTime.UtcNow));
+                    Queue.Enqueue(new BufferLine(ex.Message, SystemDateTime.UtcNow));
                 }
             }
             if (!string.IsNullOrEmpty(aggregateValue))
@@ -156,7 +157,7 @@ namespace BoosterPumpLibrary.Logger
         }
 
         [ExcludeFromCodeCoverage]
-        public void Add(BufferLine payload)
+        public void Add(IBufferLine payload)
         {
             Queue.Enqueue(payload);
         }

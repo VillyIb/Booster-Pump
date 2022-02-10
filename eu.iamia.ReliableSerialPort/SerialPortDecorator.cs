@@ -35,7 +35,7 @@ namespace eu.iamia.ReliableSerialPort
         /// <summary>
         /// Subscribe to this EventHandler for data read.
         /// </summary>
-        public event EventHandler<DataReceivedArgs> DataReceived;
+        public event EventHandler<IDataReceivedArgs> DataReceived;
 
         private void OnDataReceived(byte[] data)
         {
@@ -44,7 +44,7 @@ namespace eu.iamia.ReliableSerialPort
                 throw new InvalidOperationException("No receivers");
             }
 
-            DataReceived?.Invoke(this, new() { Data = data });
+            DataReceived?.Invoke(this, new DataReceivedArgs() { Data = data });
         }
 
         private void ReadContinuously()

@@ -7,6 +7,7 @@ using eu.iamia.NCD.API.Contract;
 using eu.iamia.NCD.Serial;
 using eu.iamia.NCD.Shared;
 using eu.iamia.ReliableSerialPort;
+using eu.iamia.SerialPortSetting.Contract;
 using NSubstitute;
 using Xunit;
 
@@ -118,7 +119,7 @@ namespace eu.iamia.NCD.Bridge.UnitTest
         }
 
         [Fact]
-        public void CallSerialPortDisposeForCallToDispose()
+        public void DisposeSerialPortForDispose()
         {
             Init();
 
@@ -131,25 +132,66 @@ namespace eu.iamia.NCD.Bridge.UnitTest
         }
 
         [Fact]
-        public void Execute_WhenCalled_ReturnValidResponse()
+        public void ReturnValidResponseForReadCommand()
         {
             Init();
 
-            var expectedResponse = new List<byte> {0x55, 0x56};
-            var overflow = new List<byte> {0x99, 0xFF};
+            var expectedResponse = new List<byte> { 0x55, 0x56 };
+            var overflow = new List<byte> { 0x99, 0xFF };
             var fakeResponse = new NcdApiProtocol(expectedResponse).GetApiEncodedData().ToList();
             fakeResponse.AddRange(overflow);
-            var command = new CommandRead(0xf1, 1);
+
+            var command = new CommandRead(0xf1, 2);
 
 
-            var fakeSerialPortDecorator = Substitute.ForPartsOf<FakeSerialPortDecorator>();
+            var fakeSerialPortDecorator = Substitute.For<FakeSerialPortDecorator>();
             fakeSerialPortDecorator.GetResponse().Returns(fakeResponse);
-            Sut = new(new SerialGateway(fakeSerialPortDecorator));
+
+            Sut = new ApiToSerialBridge(new SerialGateway(fakeSerialPortDecorator));
 
             var response = Sut.Execute(command);
 
             Assert.Equal(expectedResponse, response.Payload);
             Assert.True(response.IsValid);
+        }
+
+        [Fact]
+        public void ReturnInvalidResponseForReadCommandWithWrongChecksum()
+        {
+            Init();
+
+            var fakeResponse = new List<byte> { 0xAA, 0x02, 0x55, 0x56, 0x59 };
+
+            var command = new CommandRead(0xf1, 2);
+
+            var fakeSerialPortDecorator = Substitute.For<FakeSerialPortDecorator>();
+            fakeSerialPortDecorator.GetResponse().Returns(fakeResponse);
+
+            Sut = new ApiToSerialBridge(new SerialGateway(fakeSerialPortDecorator));
+
+            var response = Sut.Execute(command);
+
+            Assert.False(response.IsValid);
+        }
+
+        [Fact]
+        public void XReturnInvalidResponseForReadCommandWithWrongChecksum()
+        {
+            Init();
+
+            var fakeResponse = new List<byte> { 0xAA, 0x03, 0x55, 0x56, 0x57 };
+
+            var command = new CommandRead(0xf1, 2);
+
+            var fakeSerialPortDecorator = Substitute.For<FakeSerialPortDecorator>();
+            fakeSerialPortDecorator.GetResponse().Returns(fakeResponse);
+
+            Sut = new ApiToSerialBridge(new SerialGateway(fakeSerialPortDecorator));
+
+            var response = Sut.Execute(command);
+
+            Assert.True(response.IsValid);
+            Assert.Equal(NcdApiProtocol.NoResponse, response);
         }
     }
 
@@ -159,19 +201,17 @@ namespace eu.iamia.NCD.Bridge.UnitTest
         public virtual IEnumerable<byte> GetResponse() => new List<byte> {0x00};
 
         public void Dispose()
-        {
-        }
+        { }
 
-        public event EventHandler<DataReceivedArgs> DataReceived;
+        public event EventHandler<IDataReceivedArgs> DataReceived;
 
         public void Open()
-        {
-        }
+        { }
 
         public void Write(IEnumerable<byte> byteSequence)
         {
             // Response is passed as DataReceived.
-            DataReceived?.Invoke(this, new() {Data = GetResponse().ToArray()});
+            DataReceived?.Invoke(this, new DataReceivedArgs() {Data = GetResponse().ToArray()});
         }
     }
 }

@@ -3,21 +3,10 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using Microsoft.Extensions.Options;
 using BoosterPumpConfiguration;
+using eu.iamia.i2c.communication.contract;
 
 namespace BoosterPumpLibrary.Logger
 {
-    public interface IOutputFileHandler
-    {
-        /// <summary>
-        /// Character og separate columns in file.
-        /// </summary>
-        char SeparatorCharacter { get; }
-
-        void WriteLine(DateTime timestamp, string suffix, string line);
-
-        void Close();
-    }
-
     [ExcludeFromCodeCoverage]
     // ReSharper disable once UnusedMember.Global
     public class OutputFileHandler : IOutputFileHandler, IDisposable
