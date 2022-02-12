@@ -1,6 +1,6 @@
 ﻿namespace eu.iamia.NCD.API.Contract
 {
-    public enum I2CCommandCode : byte
+    public enum I2CDeviceOperation : byte
     {
         // ReSharper disable once UnusedMember.Global
         Undefined = 0,

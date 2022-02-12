@@ -32,7 +32,7 @@ namespace ModulesTest
         [Fact]
         public void ReadFromDevice_CallExecute_WithSpecificByteSequence_And_Expect_ReadingsBack()
         {
-            var expectedPayloadAsHex = new NcdApiProtocol(new[] { (byte)I2CCommandCode.DeviceRead, _Sut.DefaultAddress, _Sut.LengthRequested }).PayloadAsHex;
+            var expectedPayloadAsHex = new NcdApiProtocol(new[] { (byte)I2CDeviceOperation.DeviceRead, _Sut.DefaultAddress, _Sut.LengthRequested }).PayloadAsHex;
 
             var fakeReturnValue = new NcdApiProtocol(new List<byte> { 0x3F, 0xEB, 0x36, 0xE2 }); // Defines Pressure and Temperature.
             _FakeGateway.Execute(Arg.Is<NcdApiProtocol>(cmd => cmd.PayloadAsHex == expectedPayloadAsHex)).Returns(fakeReturnValue);

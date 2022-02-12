@@ -9,6 +9,6 @@
     {
         IEnumerable<byte> I2C_Data();
 
-        I2CCommandCode GetI2CCommandCode { get; }
+        I2CDeviceOperation GetI2CDeviceOperation { get; }
     }
 }

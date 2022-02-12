@@ -60,8 +60,8 @@ namespace eu.iamia.NCD.Bridge.UnitTest
         public void ReturnRightCodeForGetI2CCommandCode(ICommand command, byte expectedI2CommandCode)
         {
             Init();
-            var actual = command.GetI2CCommandCode;
-            Assert.Equal((I2CCommandCode) expectedI2CommandCode, actual);
+            var actual = command.GetI2CDeviceOperation;
+            Assert.Equal((I2CDeviceOperation) expectedI2CommandCode, actual);
         }
 
         [ExcludeFromCodeCoverage]
@@ -72,14 +72,14 @@ namespace eu.iamia.NCD.Bridge.UnitTest
                 throw new NotImplementedException();
             }
 
-            public I2CCommandCode GetI2CCommandCode => throw new NotImplementedException();
+            public I2CDeviceOperation GetI2CDeviceOperation => throw new NotImplementedException();
         }
 
         [Fact]
         public void ThrowExceptionForInvalidCommand()
         {
             Init();
-            Assert.Throws<NotImplementedException>(() => new NotValidCommand().GetI2CCommandCode);
+            Assert.Throws<NotImplementedException>(() => new NotValidCommand().GetI2CDeviceOperation);
         }
 
         [Theory]

@@ -34,8 +34,8 @@ namespace eu.iamia.NCD.API.UnitTest
         [Fact]
         public void ReturnRightCommandCode()
         {
-            var actual = Sut.GetI2CCommandCode;
-            Assert.Equal(I2CCommandCode.DeviceBusScan, actual);
+            var actual = Sut.GetI2CDeviceOperation;
+            Assert.Equal(I2CDeviceOperation.DeviceBusScan, actual);
         }
     }
 
@@ -59,8 +59,8 @@ namespace eu.iamia.NCD.API.UnitTest
         [Fact]
         public void ReturnRightCommandCode()
         {
-            var actual = Sut.GetI2CCommandCode;
-            Assert.Equal(I2CCommandCode.DeviceConverterCommand, actual);
+            var actual = Sut.GetI2CDeviceOperation;
+            Assert.Equal(I2CDeviceOperation.DeviceConverterCommand, actual);
         }
     }
 
@@ -83,8 +83,8 @@ namespace eu.iamia.NCD.API.UnitTest
         [Fact]
         public void ReturnRightCommandCode()
         {
-            var actual = Sut.GetI2CCommandCode;
-            Assert.Equal(I2CCommandCode.DeviceConverterCommand, actual);
+            var actual = Sut.GetI2CDeviceOperation;
+            Assert.Equal(I2CDeviceOperation.DeviceConverterCommand, actual);
         }
     }
 
@@ -108,8 +108,8 @@ namespace eu.iamia.NCD.API.UnitTest
         [Fact]
         public void ReturnRightCommandCode()
         {
-            var actual = Sut.GetI2CCommandCode;
-            Assert.Equal(I2CCommandCode.DeviceConverterCommand, actual);
+            var actual = Sut.GetI2CDeviceOperation;
+            Assert.Equal(I2CDeviceOperation.DeviceConverterCommand, actual);
         }
     }
 
@@ -133,8 +133,8 @@ namespace eu.iamia.NCD.API.UnitTest
         [Fact]
         public void ReturnRightCommandCode()
         {
-            var actual = Sut.GetI2CCommandCode;
-            Assert.Equal(I2CCommandCode.DeviceConverterCommand, actual);
+            var actual = Sut.GetI2CDeviceOperation;
+            Assert.Equal(I2CDeviceOperation.DeviceConverterCommand, actual);
         }
     }
 
@@ -158,8 +158,8 @@ namespace eu.iamia.NCD.API.UnitTest
         [Fact]
         public void ReturnRightCommandCode()
         {
-            var actual = Sut.GetI2CCommandCode;
-            Assert.Equal(I2CCommandCode.DeviceRead, actual);
+            var actual = Sut.GetI2CDeviceOperation;
+            Assert.Equal(I2CDeviceOperation.DeviceRead, actual);
         }
     }
 
@@ -198,8 +198,8 @@ namespace eu.iamia.NCD.API.UnitTest
         [Fact]
         public void ReturnRightCommandCode()
         {
-            var actual = Sut.GetI2CCommandCode;
-            Assert.Equal(I2CCommandCode.DeviceWrite, actual);
+            var actual = Sut.GetI2CDeviceOperation;
+            Assert.Equal(I2CDeviceOperation.DeviceWrite, actual);
         }
     }
 
@@ -241,8 +241,8 @@ namespace eu.iamia.NCD.API.UnitTest
         [Fact]
         public void ReturnRightCommandCode()
         {
-            var actual = Sut.GetI2CCommandCode;
-            Assert.Equal(I2CCommandCode.DeviceWriteRead, actual);
+            var actual = Sut.GetI2CDeviceOperation;
+            Assert.Equal(I2CDeviceOperation.DeviceWriteRead, actual);
         }
     }
 }

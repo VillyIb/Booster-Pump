@@ -20,7 +20,7 @@
 
         internal static INcdApiProtocol GetI2CCommand(ICommand command)
         {
-            var payload = new List<byte> { (byte)command.GetI2CCommandCode };
+            var payload = new List<byte> { (byte)command.GetI2CDeviceOperation };
             payload.AddRange(command.I2C_Data());
             INcdApiProtocol result = new NcdApiProtocol(payload);
             return result;

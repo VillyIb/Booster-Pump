@@ -17,7 +17,7 @@ namespace eu.iamia.NCD.API
     {
         public abstract IEnumerable<byte> I2C_Data();
 
-        public abstract I2CCommandCode GetI2CCommandCode { get; }
+        public abstract I2CDeviceOperation GetI2CDeviceOperation { get; }
 
         // ReSharper disable once UnusedMember.Global
         public string I2CDataAsHex
@@ -62,7 +62,7 @@ namespace eu.iamia.NCD.API
             yield return LengthRequested;
         }
 
-        public override I2CCommandCode GetI2CCommandCode => I2CCommandCode.DeviceRead;
+        public override I2CDeviceOperation GetI2CDeviceOperation => I2CDeviceOperation.DeviceRead;
     }
 
     public class CommandWrite : CommandDevice
@@ -86,7 +86,7 @@ namespace eu.iamia.NCD.API
             }
         }
 
-        public override I2CCommandCode GetI2CCommandCode => I2CCommandCode.DeviceWrite;
+        public override I2CDeviceOperation GetI2CDeviceOperation => I2CDeviceOperation.DeviceWrite;
     }
 
     public class CommandWriteRead : CommandDevice
@@ -118,7 +118,7 @@ namespace eu.iamia.NCD.API
             }
         }
 
-        public override I2CCommandCode GetI2CCommandCode => I2CCommandCode.DeviceWriteRead;
+        public override I2CDeviceOperation GetI2CDeviceOperation => I2CDeviceOperation.DeviceWriteRead;
     }
 
     public abstract class CommandController : Command
@@ -144,7 +144,7 @@ namespace eu.iamia.NCD.API
         {
         }
 
-        public override I2CCommandCode GetI2CCommandCode => I2CCommandCode.DeviceBusScan;
+        public override I2CDeviceOperation GetI2CDeviceOperation => I2CDeviceOperation.DeviceBusScan;
     }
 
     public class CommandControllerControllerStop : CommandController
@@ -155,7 +155,7 @@ namespace eu.iamia.NCD.API
         {
         }
 
-        public override I2CCommandCode GetI2CCommandCode => I2CCommandCode.DeviceConverterCommand;
+        public override I2CDeviceOperation GetI2CDeviceOperation => I2CDeviceOperation.DeviceConverterCommand;
     }
 
     public class CommandControllerControllerReboot : CommandController
@@ -166,7 +166,7 @@ namespace eu.iamia.NCD.API
         {
         }
 
-        public override I2CCommandCode GetI2CCommandCode => I2CCommandCode.DeviceConverterCommand;
+        public override I2CDeviceOperation GetI2CDeviceOperation => I2CDeviceOperation.DeviceConverterCommand;
     }
 
     public class CommandControllerControllerHardReboot : CommandController
@@ -177,7 +177,7 @@ namespace eu.iamia.NCD.API
         {
         }
 
-        public override I2CCommandCode GetI2CCommandCode => I2CCommandCode.DeviceConverterCommand;
+        public override I2CDeviceOperation GetI2CDeviceOperation => I2CDeviceOperation.DeviceConverterCommand;
     }
 
     public class CommandControllerControllerTest2WayCommunication : CommandController
@@ -188,6 +188,6 @@ namespace eu.iamia.NCD.API
         {
         }
 
-        public override I2CCommandCode GetI2CCommandCode => I2CCommandCode.DeviceConverterCommand;
+        public override I2CDeviceOperation GetI2CDeviceOperation => I2CDeviceOperation.DeviceConverterCommand;
     }
 }
