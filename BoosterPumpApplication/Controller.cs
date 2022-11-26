@@ -95,7 +95,7 @@ namespace BoosterPumpApplication
             var command = new CommandControllerControllerBusSCan();
             var dataFromDevice = ApiToSerialBridge.Execute(command);
 
-            if (dataFromDevice is not null && !dataFromDevice.IsValid)
+            if (dataFromDevice is not null && !dataFromDevice.IsValid && !dataFromDevice.IsError)
             {
                 throw new ApplicationException(dataFromDevice.ToString());
             }

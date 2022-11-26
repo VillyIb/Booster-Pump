@@ -19,6 +19,13 @@ namespace eu.iamia.NCD.API
 
         public abstract I2CDeviceOperation GetI2CDeviceOperation { get; }
 
+        public byte LengthRequested { get; init; }
+
+        protected Command(byte lengthRequested)
+        {
+            LengthRequested = lengthRequested;
+        }
+
         // ReSharper disable once UnusedMember.Global
         public string I2CDataAsHex
         {
@@ -40,7 +47,7 @@ namespace eu.iamia.NCD.API
     {
         public byte DeviceAddress { get; set; }
 
-        protected CommandDevice(byte deviceAddress)
+        protected CommandDevice(byte deviceAddress, byte lengthRequested) : base(lengthRequested)
         {
             DeviceAddress = deviceAddress;
         }
@@ -48,13 +55,9 @@ namespace eu.iamia.NCD.API
 
     public class CommandRead : CommandDevice
     {
-        public byte LengthRequested { get; }
-
         public CommandRead(byte deviceAddress, byte lengthRequested)
-            : base(deviceAddress)
-        {
-            LengthRequested = lengthRequested;
-        }
+            : base(deviceAddress, lengthRequested)
+        { }
 
         public override IEnumerable<byte> I2C_Data()
         {
@@ -70,7 +73,7 @@ namespace eu.iamia.NCD.API
         public List<byte> Payload { get; set; }
 
         public CommandWrite(byte deviceAddress, IEnumerable<byte> payload)
-            : base(deviceAddress)
+            : base(deviceAddress, 1)
         {
             Ensure.That(payload, nameof(payload)).IsNotNull();
             Payload = payload.ToList();
@@ -91,19 +94,16 @@ namespace eu.iamia.NCD.API
 
     public class CommandWriteRead : CommandDevice
     {
-        public List<byte> Payload { get; set; }
+        public List<byte> Payload { get; }
 
-        public byte LengthRequested { get; set; }
-
-        public byte Delay { get; set; }
+        public byte Delay { get;  }
 
         public CommandWriteRead(byte deviceAddress, IEnumerable<byte> payload, byte lengthRequested, byte delay = 0x16)
-            : base(deviceAddress)
+            : base(deviceAddress, lengthRequested)
         {
             Ensure.That(payload, nameof(payload)).IsNotNull();
             Payload = payload.ToList();
             Ensure.That(Payload, nameof(payload)).SizeIs(Math.Min(255, Payload.Count));
-            LengthRequested = lengthRequested;
             Delay = delay;
         }
 
@@ -125,7 +125,7 @@ namespace eu.iamia.NCD.API
     {
         private IImmutableList<byte> Payload { get; }
 
-        protected CommandController(IEnumerable<byte> payload)
+        protected CommandController(IEnumerable<byte> payload) : base(0)
         {
             Payload = ImmutableList<byte>.Empty.AddRange(payload);
         }

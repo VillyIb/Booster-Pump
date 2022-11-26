@@ -7,7 +7,7 @@ using eu.iamia.SerialPortSetting.Contract;
 
 namespace eu.iamia.NCD.Serial
 {
-    public class SerialGateway : IGateway 
+    public class SerialGateway : IGateway
     {
         private static TimeSpan ReadTimeout => TimeSpan.FromSeconds(10); // TODO move to settings.
 
@@ -109,7 +109,7 @@ namespace eu.iamia.NCD.Serial
             ResultReady?.Dispose();
         }
 
-        public INcdApiProtocol Execute(INcdApiProtocol i2CCommand)
+        public INcdApiProtocol Execute(INcdApiProtocol i2CCommand, int requestedLength)
         {
             Init();
 
@@ -117,10 +117,16 @@ namespace eu.iamia.NCD.Serial
 
             //Thread.Sleep(100);
 
-            return WaitForResultToBeReady() 
-                ? new NcdApiProtocol(Header, ByteCount, Payload, Checksum) 
-                : null
-            ;
+            if (WaitForResultToBeReady())
+            {
+                if (requestedLength == ByteCount)
+                {
+                    return new NcdApiProtocol(Header, ByteCount, Payload, Checksum);
+                }
+                return NcdApiProtocol.NoResponse;
+            }
+
+            return NcdApiProtocol.NoResponse;
         }
     }
 

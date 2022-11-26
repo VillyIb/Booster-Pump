@@ -29,9 +29,9 @@
         public INcdApiProtocol Execute(ICommand command)
         {
             var i2CCommand = GetI2CCommand(command);
-            var i2CResponse = Gateway.Execute(i2CCommand);
+            var i2CResponse = Gateway.Execute(i2CCommand, command.LengthRequested);
 
-            return i2CResponse ?? NcdApiProtocol.NoResponse;
+            return i2CResponse;
         }
 
         public void Dispose()

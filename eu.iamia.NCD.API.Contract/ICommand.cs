@@ -10,5 +10,7 @@
         IEnumerable<byte> I2C_Data();
 
         I2CDeviceOperation GetI2CDeviceOperation { get; }
+
+        byte LengthRequested { get; }
     }
 }

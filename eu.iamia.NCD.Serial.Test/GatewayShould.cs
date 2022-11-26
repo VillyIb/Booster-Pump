@@ -37,22 +37,22 @@ namespace eu.iamia.NCD.Serial.UnitTest
 
             var i2CCommand = new NcdApiProtocol(Array.Empty<byte>());
 
-            Sut.Execute(i2CCommand);
-            Sut.Execute(i2CCommand);
+            Sut.Execute(i2CCommand,0);
+            Sut.Execute(i2CCommand,0);
 
             FakeSerialPortDecorator.Received(1).Open();
             FakeSerialPortDecorator.Received(2).Write(Arg.Any<IEnumerable<byte>>());
         }
 
         [Fact]
-        public void CallSerialPortWrieForEachCallToExecute()
+        public void CallSerialPortWriteForEachCallToExecute()
         {
             Init();
 
             var i2CCommand = new NcdApiProtocol(0xf1, 1, new byte[] {0x00}, 0);
 
-            Sut.Execute(i2CCommand);
-            Sut.Execute(i2CCommand);
+            Sut.Execute(i2CCommand,0);
+            Sut.Execute(i2CCommand,0);
 
             FakeSerialPortDecorator.Received(2).Write(Arg.Any<IEnumerable<byte>>());
         }
@@ -64,7 +64,7 @@ namespace eu.iamia.NCD.Serial.UnitTest
 
             var i2CCommand = new NcdApiProtocol(0xf1, 1, new byte[] {0x00}, 0);
 
-            Sut.Execute(i2CCommand);
+            Sut.Execute(i2CCommand,0);
             Sut.Dispose();
 
             FakeSerialPortDecorator.Received(1).Dispose();
@@ -84,7 +84,7 @@ namespace eu.iamia.NCD.Serial.UnitTest
             Sut = new(fakeSerialPortDecorator);
 
             var i2CCommand = new NcdApiProtocol(Array.Empty<byte>());
-            var response = Sut.Execute(i2CCommand);
+            var response = Sut.Execute(i2CCommand,2);
 
             Assert.Equal(new List<byte> {0x55, 0x56}, response.Payload);
             Assert.True(response.IsValid);

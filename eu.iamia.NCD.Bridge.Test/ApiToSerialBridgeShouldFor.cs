@@ -73,6 +73,8 @@ namespace eu.iamia.NCD.Bridge.UnitTest
             }
 
             public I2CDeviceOperation GetI2CDeviceOperation => throw new NotImplementedException();
+
+            public byte LengthRequested => 0;
         }
 
         [Fact]
